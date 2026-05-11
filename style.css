@@ -1,107 +1,90 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Segoe UI", Arial, sans-serif;
-}
-
 body {
-  height: 100vh;
+  margin: 0;
+  font-family: Arial, sans-serif;
   background: #f5f7fb;
 }
 
-/* Layout */
-.container {
+/* LOGIN */
+.login-body {
   display: flex;
+  justify-content: center;
+  align-items: center;
   height: 100vh;
-}
-
-/* LEFT SIDE (branding) */
-.left-panel {
-  flex: 1;
   background: linear-gradient(135deg, #0b3a66, #1f6feb);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 60px;
 }
 
-.branding h1 {
-  font-size: 42px;
-  margin-bottom: 20px;
-}
-
-.branding p {
-  font-size: 18px;
-  opacity: 0.9;
-  max-width: 300px;
-  line-height: 1.5;
-}
-
-/* RIGHT SIDE */
-.right-panel {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.login-box {
-  width: 360px;
+.login-card {
   background: white;
   padding: 40px;
-  border-radius: 14px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+  border-radius: 16px;
+  width: 320px;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.2);
 }
 
-.login-box h2 {
+.logo {
+  font-size: 28px;
+  font-weight: bold;
   margin-bottom: 10px;
-  color: #0b3a66;
+  color: #1f6feb;
 }
 
-.subtitle {
-  font-size: 14px;
-  color: #777;
-  margin-bottom: 25px;
-}
-
-/* INPUT */
 input {
   width: 100%;
   padding: 12px;
-  margin-bottom: 15px;
-  border: 1px solid #ddd;
+  margin-top: 15px;
   border-radius: 8px;
-  outline: none;
-  transition: 0.2s;
+  border: 1px solid #ddd;
 }
 
-input:focus {
-  border-color: #1f6feb;
-  box-shadow: 0 0 0 3px rgba(31,111,235,0.15);
-}
-
-/* BUTTON */
 button {
   width: 100%;
+  margin-top: 15px;
   padding: 12px;
   background: #1f6feb;
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: bold;
-  transition: 0.2s;
 }
 
-button:hover {
-  background: #0b3a66;
-}
-
-/* ERROR */
 #error {
-  margin-top: 10px;
   color: red;
-  font-size: 13px;
+  margin-top: 10px;
+}
+
+/* APP */
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 40px;
+  background: white;
+  border-bottom: 1px solid #eee;
+}
+
+.header a {
+  margin-left: 15px;
+  text-decoration: none;
+  color: #333;
+}
+
+.hero {
+  padding: 60px 40px;
+  background: linear-gradient(135deg, #00AEEF, #1f6feb);
+  color: white;
+  text-align: center;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 40px;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
