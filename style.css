@@ -1,90 +1,126 @@
-body {
+* {
   margin: 0;
-  font-family: Arial, sans-serif;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+/* BACKGROUND */
+.auth-body {
+  height: 100vh;
   background: #f5f7fb;
 }
 
-/* LOGIN */
-.login-body {
+/* LAYOUT */
+.auth-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
   height: 100vh;
+}
+
+/* LEFT PANEL (branding) */
+.auth-left {
+  flex: 1;
   background: linear-gradient(135deg, #0b3a66, #1f6feb);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px;
 }
 
-.login-card {
+.auth-left h1 {
+  font-size: 44px;
+  margin-bottom: 20px;
+}
+
+.auth-left p {
+  font-size: 18px;
+  opacity: 0.85;
+  max-width: 320px;
+  line-height: 1.6;
+}
+
+/* RIGHT PANEL */
+.auth-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* LOGIN CARD */
+.auth-card {
+  width: 380px;
   background: white;
-  padding: 40px;
-  border-radius: 16px;
-  width: 320px;
+  padding: 45px;
+  border-radius: 18px;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.12);
   text-align: center;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.2);
 }
 
+/* LOGO */
 .logo {
-  font-size: 28px;
+  width: 55px;
+  height: 55px;
+  margin: 0 auto 15px;
+  background: linear-gradient(135deg, #1f6feb, #00aeef);
+  color: white;
   font-weight: bold;
-  margin-bottom: 10px;
-  color: #1f6feb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  font-size: 20px;
 }
 
+/* TEXT */
+h2 {
+  color: #0b3a66;
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #777;
+  margin-bottom: 25px;
+}
+
+/* INPUT */
 input {
   width: 100%;
-  padding: 12px;
-  margin-top: 15px;
-  border-radius: 8px;
+  padding: 13px;
+  border-radius: 10px;
   border: 1px solid #ddd;
+  outline: none;
+  transition: 0.2s;
+  margin-bottom: 15px;
 }
 
+input:focus {
+  border-color: #1f6feb;
+  box-shadow: 0 0 0 3px rgba(31,111,235,0.15);
+}
+
+/* BUTTON */
 button {
   width: 100%;
-  margin-top: 15px;
-  padding: 12px;
+  padding: 13px;
   background: #1f6feb;
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
+  font-weight: bold;
   cursor: pointer;
+  transition: 0.2s;
 }
 
+button:hover {
+  background: #0b3a66;
+}
+
+/* ERROR */
 #error {
   color: red;
-  margin-top: 10px;
-}
-
-/* APP */
-.header {
-  display: flex;
-  justify-content: space-between;
-  padding: 20px 40px;
-  background: white;
-  border-bottom: 1px solid #eee;
-}
-
-.header a {
-  margin-left: 15px;
-  text-decoration: none;
-  color: #333;
-}
-
-.hero {
-  padding: 60px 40px;
-  background: linear-gradient(135deg, #00AEEF, #1f6feb);
-  color: white;
-  text-align: center;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  padding: 40px;
-}
-
-.card {
-  background: white;
-  padding: 20px;
-  border-radius: 14px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  margin-top: 12px;
+  font-size: 13px;
 }
