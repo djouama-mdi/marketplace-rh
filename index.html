@@ -1,26 +1,44 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accès sécurisé</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marketplace RH - Accès</title>
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-    <div class="login-container">
+  <div class="container">
+
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+      <div class="branding">
         <h1>Marketplace RH</h1>
+        <p>La plateforme de mise en relation RH nouvelle génération</p>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+
+      <div class="login-box">
+
+        <h2>Accès sécurisé</h2>
+        <p class="subtitle">Veuillez entrer votre mot de passe</p>
 
         <input type="password" id="password" placeholder="Mot de passe">
 
-        <button onclick="checkPassword()">
-            Accéder
-        </button>
+        <button onclick="checkPassword()">Se connecter</button>
 
         <p id="error"></p>
+
+      </div>
+
     </div>
 
-    <script src="script.js"></script>
+  </div>
 
+  <script src="script.js"></script>
 </body>
 </html>

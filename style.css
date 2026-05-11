@@ -1,49 +1,107 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f4f7fb;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  height: 100vh;
+  background: #f5f7fb;
 }
 
-.login-container {
-    background: white;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    width: 300px;
-    text-align: center;
+/* Layout */
+.container {
+  display: flex;
+  height: 100vh;
 }
 
-h1 {
-    margin-bottom: 20px;
+/* LEFT SIDE (branding) */
+.left-panel {
+  flex: 1;
+  background: linear-gradient(135deg, #0b3a66, #1f6feb);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px;
 }
 
+.branding h1 {
+  font-size: 42px;
+  margin-bottom: 20px;
+}
+
+.branding p {
+  font-size: 18px;
+  opacity: 0.9;
+  max-width: 300px;
+  line-height: 1.5;
+}
+
+/* RIGHT SIDE */
+.right-panel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-box {
+  width: 360px;
+  background: white;
+  padding: 40px;
+  border-radius: 14px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+}
+
+.login-box h2 {
+  margin-bottom: 10px;
+  color: #0b3a66;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #777;
+  margin-bottom: 25px;
+}
+
+/* INPUT */
 input {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  transition: 0.2s;
 }
 
+input:focus {
+  border-color: #1f6feb;
+  box-shadow: 0 0 0 3px rgba(31,111,235,0.15);
+}
+
+/* BUTTON */
 button {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    background: #0057ff;
-    color: white;
-    border-radius: 8px;
-    cursor: pointer;
+  width: 100%;
+  padding: 12px;
+  background: #1f6feb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
 }
 
 button:hover {
-    opacity: 0.9;
+  background: #0b3a66;
 }
 
+/* ERROR */
 #error {
-    color: red;
-    margin-top: 10px;
+  margin-top: 10px;
+  color: red;
+  font-size: 13px;
 }
