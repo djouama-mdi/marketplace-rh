@@ -4,7 +4,7 @@ function checkPassword() {
 
     if(password === "sbp@mdi_2026") {
 
-        window.location.href = "app.html";
+        window.location.href = "app.jsx";
 
     } else {
 
