@@ -1,352 +1,333 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HR Market DZ - Marketplace RH</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marketplace RH</title>
+
   <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family: Arial, Helvetica, sans-serif;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", Arial, sans-serif;
     }
 
-    body{
-      background:#f5f7fb;
-      color:#0f172a;
+    body {
+      background: #f5f7fb;
+      color: #1e293b;
+    }
+
+    /* HEADER */
+    header {
+      background: white;
+      padding: 18px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eef2f7;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-img {
+      height: 38px;
+      object-fit: contain;
+    }
+
+    nav a {
+      margin-left: 18px;
+      text-decoration: none;
+      color: #334155;
+      font-size: 14px;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+
+    nav a:hover {
+      color: #1f6feb;
     }
 
     /* HERO */
-    .hero{
-      background: linear-gradient(135deg,#00AEEF,#0095D9,#0f172a);
-      color:white;
-      padding:40px 20px 80px;
-      position:relative;
-      overflow:hidden;
+    .hero {
+      background: linear-gradient(135deg, #00AEEF, #1f6feb);
+      color: white;
+      padding: 70px 40px;
+      text-align: center;
     }
 
-    .hero-header{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      max-width:1200px;
-      margin:auto;
+    .hero h1 {
+      font-size: 42px;
+      margin-bottom: 10px;
     }
 
-    .logo{
-      display:flex;
-      align-items:center;
-      gap:10px;
+    .hero p {
+      max-width: 700px;
+      margin: auto;
+      opacity: 0.9;
+      font-size: 16px;
+      line-height: 1.5;
     }
-
-    .logo-box{
-      width:45px;
-      height:45px;
-      border-radius:12px;
-      background:rgba(255,255,255,0.2);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-weight:bold;
-    }
-
-    nav a{
-      color:rgba(255,255,255,0.8);
-      margin:0 10px;
-      text-decoration:none;
-      font-size:14px;
-    }
-
-    nav a:hover{ color:white; }
-
-    .btn{
-      background:white;
-      color:#0284c7;
-      padding:10px 16px;
-      border-radius:10px;
-      border:none;
-      font-weight:bold;
-      cursor:pointer;
-    }
-
-    .hero-content{
-      max-width:1200px;
-      margin:60px auto 0;
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:40px;
-      align-items:center;
-    }
-
-    .hero h1{
-      font-size:42px;
-      font-weight:900;
-      margin-bottom:20px;
-    }
-
-    .hero p{
-      opacity:0.85;
-      line-height:1.6;
-    }
-
-    .stats{
-      display:flex;
-      gap:30px;
-      margin-top:30px;
-    }
-
-    .stat h3{ font-size:28px; }
-    .stat p{ font-size:12px; opacity:0.8; }
 
     /* SEARCH */
-    .search{
-      max-width:1100px;
-      margin:-40px auto 40px;
-      background:white;
-      padding:20px;
-      border-radius:20px;
-      display:grid;
-      grid-template-columns:2fr 1fr 1fr auto;
-      gap:10px;
-      box-shadow:0 10px 30px rgba(0,0,0,0.1);
+    .search-bar {
+      max-width: 1000px;
+      margin: -30px auto 40px;
+      display: flex;
+      gap: 10px;
+      background: white;
+      padding: 15px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
     }
 
-    .search input,
-    .search select{
-      padding:12px;
-      border:1px solid #e2e8f0;
-      border-radius:12px;
+    .search-bar input {
+      flex: 1;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      outline: none;
     }
 
-    .search button{
-      background:linear-gradient(90deg,#00c2ff,#0284c7);
-      color:white;
-      border:none;
-      border-radius:12px;
-      font-weight:bold;
-      cursor:pointer;
+    .search-bar button {
+      padding: 12px 18px;
+      border: none;
+      background: #1f6feb;
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
     }
 
-    /* COMPANIES */
-    .section{
-      max-width:1200px;
-      margin:auto;
-      padding:40px 20px;
+    /* GRID */
+    .container {
+      padding: 40px;
+      max-width: 1200px;
+      margin: auto;
     }
 
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-      gap:20px;
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 22px;
     }
 
-    .card{
-      background:white;
-      border-radius:20px;
-      overflow:hidden;
-      box-shadow:0 10px 25px rgba(0,0,0,0.08);
-      transition:0.3s;
+    /* CARD */
+    .card {
+      background: white;
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+      transition: 0.3s;
+      border: 1px solid #eef2f7;
     }
 
-    .card:hover{
-      transform:translateY(-5px);
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.12);
     }
 
-    .bar{
-      height:6px;
-      background:linear-gradient(90deg,#00c2ff,#0284c7);
+    .badge {
+      display: inline-block;
+      padding: 5px 10px;
+      font-size: 12px;
+      border-radius: 20px;
+      background: #e0f2fe;
+      color: #0284c7;
+      margin-bottom: 10px;
     }
 
-    .card-content{
-      padding:20px;
+    .card h3 {
+      font-size: 18px;
+      margin-bottom: 5px;
     }
 
-    .badge{
-      background:#fef3c7;
-      color:#b45309;
-      padding:5px 10px;
-      border-radius:10px;
-      font-size:12px;
-      float:right;
+    .meta {
+      font-size: 13px;
+      color: #64748b;
+      margin-bottom: 12px;
     }
 
-    .meta{
-      margin-top:10px;
-      font-size:13px;
-      color:#64748b;
+    .desc {
+      font-size: 14px;
+      color: #475569;
+      margin-bottom: 12px;
+      line-height: 1.4;
     }
 
-    .btn-card{
-      margin-top:15px;
-      width:100%;
-      padding:10px;
-      border:none;
-      border-radius:12px;
-      color:white;
-      background:linear-gradient(90deg,#00c2ff,#0284c7);
-      cursor:pointer;
-      font-weight:bold;
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: #475569;
+      margin-top: 10px;
     }
 
-    /* FEATURES */
-    .features{
-      background:#0f172a;
-      color:white;
-      padding:60px 20px;
+    .btn {
+      margin-top: 15px;
+      width: 100%;
+      padding: 10px;
+      border: none;
+      background: linear-gradient(135deg, #1f6feb, #00AEEF);
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
     }
 
-    .features-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-      gap:20px;
-      max-width:1200px;
-      margin:auto;
-    }
-
-    .feature{
-      background:rgba(255,255,255,0.05);
-      padding:20px;
-      border-radius:20px;
-    }
-
-    /* CTA */
-    .cta{
-      max-width:1100px;
-      margin:60px auto;
-      padding:40px;
-      border-radius:30px;
-      background:linear-gradient(90deg,#00c2ff,#0284c7,#2563eb);
-      color:white;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      flex-wrap:wrap;
-      gap:20px;
-    }
-
-    .cta button{
-      background:white;
-      color:#0284c7;
-      padding:12px 18px;
-      border:none;
-      border-radius:12px;
-      font-weight:bold;
-      cursor:pointer;
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 30px;
+      font-size: 13px;
+      color: #94a3b8;
+      margin-top: 40px;
     }
 
     /* RESPONSIVE */
-    @media(max-width:900px){
-      .hero-content{ grid-template-columns:1fr; }
-      .search{ grid-template-columns:1fr; }
-      nav{ display:none; }
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .hero h1 {
+        font-size: 28px;
+      }
+
+      .search-bar {
+        flex-direction: column;
+      }
     }
+
   </style>
 </head>
+
 <body>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-header">
-    <div class="logo">
-      <div class="logo-box">RH</div>
-      <div>
-        <strong>HR Market DZ</strong><br/>
-        <small>Powered by Emploitic</small>
-      </div>
+  <!-- HEADER -->
+  <header>
+    <div class="brand">
+      <img 
+        src="https://emploitic.com/images/svg/logo-emploitic.svg" 
+        alt="Emploitic"
+        class="logo-img"
+      />
     </div>
 
     <nav>
       <a href="#">Entreprises</a>
+      <a href="#">Offres</a>
       <a href="#">Solutions</a>
-      <a href="#">Marketplace</a>
       <a href="#">Contact</a>
     </nav>
+  </header>
 
-    <button class="btn">Publier une offre</button>
+  <!-- HERO -->
+  <section class="hero">
+    <h1>Marketplace RH B2B en Algérie</h1>
+    <p>
+      Une plateforme moderne inspirée des standards des solutions RH digitales,
+      connectant entreprises, cabinets et experts du recrutement.
+    </p>
+  </section>
+
+  <!-- SEARCH -->
+  <div class="search-bar">
+    <input type="text" placeholder="Rechercher une entreprise RH, un service...">
+    <button>Rechercher</button>
   </div>
 
-  <div class="hero-content">
-    <div>
-      <h1>Le marketplace RH moderne pour les entreprises</h1>
-      <p>
-        Une plateforme inspirée d’Emploitic pour connecter les entreprises RH,
-        cabinets de recrutement et experts du talent management.
-      </p>
+  <!-- GRID -->
+  <div class="container">
+    <div class="grid">
 
-      <div class="stats">
-        <div class="stat"><h3>500+</h3><p>Entreprises</p></div>
-        <div class="stat"><h3>10K+</h3><p>Talents</p></div>
-        <div class="stat"><h3>98%</h3><p>Satisfaction</p></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- SEARCH -->
-<section class="search">
-  <input placeholder="Rechercher une entreprise RH..." />
-  <select><option>Secteur</option></select>
-  <select><option>Ville</option></select>
-  <button>Rechercher</button>
-</section>
-
-<!-- COMPANIES -->
-<section class="section">
-  <h2>Entreprises RH</h2>
-  <div class="grid">
-
-    <div class="card">
-      <div class="bar"></div>
-      <div class="card-content">
-        <span class="badge">★ 4.8</span>
+      <div class="card">
+        <span class="badge">Recrutement IT</span>
         <h3>TalentSphere</h3>
-        <p class="meta">Recrutement IT - Alger</p>
-        <button class="btn-card">Voir profil</button>
+        <div class="meta">Alger • 120+ employés</div>
+        <div class="desc">Cabinet spécialisé en recrutement IT et digital transformation.</div>
+        <div class="stats">
+          <span>⭐ 4.8</span>
+          <span>18 offres</span>
+        </div>
+        <button class="btn">Voir profil</button>
       </div>
-    </div>
 
-    <div class="card">
-      <div class="bar"></div>
-      <div class="card-content">
-        <span class="badge">★ 4.7</span>
+      <div class="card">
+        <span class="badge">Conseil RH</span>
         <h3>HR Nova</h3>
-        <p class="meta">Conseil RH - Oran</p>
-        <button class="btn-card">Voir profil</button>
+        <div class="meta">Oran • 75+ employés</div>
+        <div class="desc">Expert en stratégie RH et transformation organisationnelle.</div>
+        <div class="stats">
+          <span>⭐ 4.7</span>
+          <span>12 offres</span>
+        </div>
+        <button class="btn">Voir profil</button>
       </div>
-    </div>
 
-    <div class="card">
-      <div class="bar"></div>
-      <div class="card-content">
-        <span class="badge">★ 4.9</span>
+      <div class="card">
+        <span class="badge">Formation</span>
         <h3>PeopleSync</h3>
-        <p class="meta">Formation RH - Constantine</p>
-        <button class="btn-card">Voir profil</button>
+        <div class="meta">Constantine • 200+ employés</div>
+        <div class="desc">Solutions de formation et développement des talents.</div>
+        <div class="stats">
+          <span>⭐ 4.9</span>
+          <span>26 offres</span>
+        </div>
+        <button class="btn">Voir profil</button>
       </div>
+
+      <div class="card">
+        <span class="badge">Externalisation</span>
+        <h3>WorkBridge</h3>
+        <div class="meta">Blida • 95+ employés</div>
+        <div class="desc">Solutions d’externalisation et gestion RH moderne.</div>
+        <div class="stats">
+          <span>⭐ 4.5</span>
+          <span>9 offres</span>
+        </div>
+        <button class="btn">Voir profil</button>
+      </div>
+
+      <div class="card">
+        <span class="badge">Recrutement</span>
+        <h3>NextHire Group</h3>
+        <div class="meta">Sétif • 60+ employés</div>
+        <div class="desc">Cabinet de recrutement middle & top management.</div>
+        <div class="stats">
+          <span>⭐ 4.6</span>
+          <span>15 offres</span>
+        </div>
+        <button class="btn">Voir profil</button>
+      </div>
+
+      <div class="card">
+        <span class="badge">Freelance RH</span>
+        <h3>SkillMatch Pro</h3>
+        <div class="meta">Annaba • 140+ employés</div>
+        <div class="desc">Marketplace de talents RH et experts freelances.</div>
+        <div class="stats">
+          <span>⭐ 4.8</span>
+          <span>21 offres</span>
+        </div>
+        <button class="btn">Voir profil</button>
+      </div>
+
     </div>
-
   </div>
-</section>
 
-<!-- FEATURES -->
-<section class="features">
-  <div class="features-grid">
-    <div class="feature">Matching IA intelligent</div>
-    <div class="feature">Dashboard RH</div>
-    <div class="feature">Marketplace B2B</div>
-    <div class="feature">Responsive Design</div>
-  </div>
-</section>
-
-<!-- CTA -->
-<section class="cta">
-  <div>
-    <h2>Lancez votre plateforme RH</h2>
-    <p>Créez un écosystème moderne pour le recrutement</p>
-  </div>
-  <button>Demander une démo</button>
-</section>
+  <!-- FOOTER -->
+  <footer>
+    © 2026 Marketplace RH — Prototype inspiré des plateformes modernes type Emploitic
+  </footer>
 
 </body>
 </html>
