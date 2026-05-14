@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Recherche d'offres RH — Emploitic</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a class="nav-brand" href="index.html"><span class="logo-mark">e</span> emplo<b>itic</b></a>
+      <nav class="nav-links">
+        <a class="nav-link" href="index.html">Accueil</a>
+        <a class="nav-link active" href="recherche.html">Offres</a>
+        <a class="nav-link" href="recherche.html">Freelances</a>
+        <a class="nav-link" href="messagerie.html">Messages</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="login.html" class="btn btn-ghost">Connexion</a>
+        <a href="register.html" class="btn btn-primary">S'inscrire</a>
+        <button class="nav-burger" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <section class="search-top">
+    <div class="container">
+      <h1 style="font-size:1.6rem;letter-spacing:-.02em;margin-bottom:14px">Trouvez votre prochaine mission RH</h1>
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Mot-clé, entreprise, compétence..." data-search-input>
+        <button class="btn btn-primary"><i class="fa-solid fa-sliders"></i> Rechercher</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="container search-grid">
+
+    <!-- Filters -->
+    <aside class="filters">
+      <h3 style="font-size:1rem;margin-bottom:6px"><i class="fa-solid fa-filter" style="color:var(--primary);margin-right:6px"></i>Filtres</h3>
+
+      <div class="filter-group">
+        <h4>Budget max</h4>
+        <input type="range" min="50000" max="500000" step="10000" value="500000" data-budget style="width:100%;accent-color:var(--primary)">
+        <div style="font-size:.85rem;color:var(--text-soft);margin-top:6px"><b data-budget-val>500 000 DZD</b></div>
+      </div>
+
+      <div class="filter-group">
+        <h4>Catégorie</h4>
+        <div class="checks">
+          <label><input type="checkbox" data-filter="cats" value="sirh"> SIRH</label>
+          <label><input type="checkbox" data-filter="cats" value="recrutement"> Recrutement</label>
+          <label><input type="checkbox" data-filter="cats" value="formation"> Formation</label>
+          <label><input type="checkbox" data-filter="cats" value="conseil"> Conseil RH</label>
+          <label><input type="checkbox" data-filter="cats" value="marketing"> Marque employeur</label>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <h4>Expérience</h4>
+        <div class="checks">
+          <label><input type="checkbox" data-filter="xps" value="Junior"> Junior</label>
+          <label><input type="checkbox" data-filter="xps" value="Confirmé"> Confirmé</label>
+          <label><input type="checkbox" data-filter="xps" value="Senior"> Senior</label>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <h4>Type de contrat</h4>
+        <div class="checks">
+          <label><input type="checkbox" data-filter="types" value="CDI"> CDI</label>
+          <label><input type="checkbox" data-filter="types" value="CDD"> CDD</label>
+          <label><input type="checkbox" data-filter="types" value="Mission"> Mission freelance</label>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <h4>Format</h4>
+        <div class="checks">
+          <label><input type="checkbox" data-filter="remotes" value="Remote"> Remote</label>
+          <label><input type="checkbox" data-filter="remotes" value="Hybride"> Hybride</label>
+          <label><input type="checkbox" data-filter="remotes" value="Présentiel"> Présentiel</label>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Results -->
+    <div>
+      <div class="results-head">
+        <h3><span data-results-count>0</span> offres disponibles</h3>
+        <select class="select" data-sort>
+          <option value="recent">Plus récentes</option>
+          <option value="budget-desc">Budget décroissant</option>
+          <option value="budget-asc">Budget croissant</option>
+        </select>
+      </div>
+      <div class="results-list" data-search-list></div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container footer-bottom" style="border:0;padding-top:0">
+      <span>© 2026 Emploitic</span>
+      <a href="index.html" style="color:#94a3b8">Retour à l'accueil</a>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
