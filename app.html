@@ -1,333 +1,537 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Marketplace RH</title>
-
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Emploitic — Marketplace B2B RH</title>
+  <meta name="description" content="La première marketplace B2B RH en Algérie. Connectez vos projets RH aux meilleurs experts." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: "Segoe UI", Arial, sans-serif;
+    /* ---- Landing-only tweaks ---- */
+    .lang-select{
+      appearance:none;border:1px solid var(--border);background:#fff;border-radius:10px;
+      padding:8px 30px 8px 12px;font-weight:600;color:var(--text);cursor:pointer;
+      background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%230f172a' stroke-width='3'><path d='M6 9l6 6 6-6'/></svg>");
+      background-repeat:no-repeat;background-position:right 10px center;background-size:10px;
+      transition:var(--transition);
+    }
+    .lang-select:hover{border-color:var(--primary);color:var(--primary)}
+    .offers-grid{
+      display:grid;gap:22px;
+      grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+      margin-top:32px;
+    }
+    .offer-tile{
+      background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);
+      padding:28px 26px 22px;display:flex;flex-direction:column;gap:16px;
+      transition:var(--transition);cursor:pointer;position:relative;overflow:hidden;
+      min-height:340px;
+    }
+    .offer-tile::before{
+      content:"";position:absolute;inset:0 0 auto 0;height:4px;background:var(--grad-primary);
+      transform:scaleX(0);transform-origin:left;transition:transform .35s ease;
+    }
+    .offer-tile:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg);border-color:transparent}
+    .offer-tile:hover::before{transform:scaleX(1)}
+    .ot-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+    .ot-logo{
+      width:54px;height:54px;border-radius:14px;display:grid;place-items:center;
+      background:var(--grad-soft);color:var(--primary);font-weight:800;font-size:1.05rem;
+      border:1px solid var(--primary-light);flex-shrink:0;
+    }
+    .ot-verified{
+      width:32px;height:32px;border-radius:50%;background:var(--primary-50);color:var(--primary);
+      display:grid;place-items:center;font-size:.85rem;border:2px dashed var(--primary-light);
+    }
+    .ot-eyebrow{
+      color:var(--primary);font-weight:700;font-size:.72rem;
+      text-transform:uppercase;letter-spacing:.08em;margin-top:4px;
+    }
+    .offer-tile h3{font-size:1.25rem;line-height:1.3;color:var(--text);font-weight:700;letter-spacing:-.01em}
+    .offer-tile p{color:var(--text-soft);font-size:.92rem;line-height:1.6;flex:1}
+    .ot-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto}
+    .ot-budget{font-weight:700;color:var(--text);font-size:.9rem}
+    .ot-budget small{display:block;color:var(--text-muted);font-size:.7rem;font-weight:500;text-transform:uppercase;letter-spacing:.05em}
+    .ot-more{
+      display:inline-flex;align-items:center;gap:8px;font-weight:600;color:#fff;
+      padding:10px 18px;border-radius:999px;background:var(--primary);font-size:.85rem;
+      transition:var(--transition);box-shadow:0 6px 16px rgba(37,99,235,.25);border:none;cursor:pointer;
+    }
+    .ot-more:hover{background:var(--primary-dark);transform:translateX(2px);box-shadow:0 10px 22px rgba(37,99,235,.35)}
+    .ot-more i{transition:transform .25s ease}
+    .offer-tile:hover .ot-more i{transform:translateX(3px)}
+    @media (max-width:720px){
+      .offer-tile{min-height:auto;padding:22px}
+      .offer-tile h3{font-size:1.1rem}
     }
 
-    body {
-      background: #f5f7fb;
-      color: #1e293b;
+    /* ---- Modal ---- */
+    .modal{
+      position:fixed;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(6px);
+      display:none;align-items:center;justify-content:center;z-index:100;padding:20px;
+      animation:fadeIn .2s ease;
     }
-
-    /* HEADER */
-    header {
-      background: white;
-      padding: 18px 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid #eef2f7;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+    .modal.open{display:flex}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    @keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+    .modal-card{
+      background:#fff;border-radius:var(--radius-xl);width:min(640px,100%);
+      max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg);
+      animation:slideUp .3s cubic-bezier(.4,0,.2,1);
     }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
+    .modal-head{
+      padding:24px 24px 16px;display:flex;align-items:flex-start;gap:14px;
+      border-bottom:1px solid var(--border);position:sticky;top:0;background:#fff;z-index:1;
     }
-
-    .logo-img {
-      height: 38px;
-      object-fit: contain;
+    .modal-head .ot-logo{width:56px;height:56px;font-size:1.15rem;flex-shrink:0}
+    .modal-head h2{font-size:1.25rem;line-height:1.3;margin-bottom:4px}
+    .modal-close{
+      margin-left:auto;width:36px;height:36px;border-radius:10px;display:grid;place-items:center;
+      background:var(--bg-soft);color:var(--text-soft);transition:var(--transition);flex-shrink:0;
     }
-
-    nav a {
-      margin-left: 18px;
-      text-decoration: none;
-      color: #334155;
-      font-size: 14px;
-      font-weight: 500;
-      transition: 0.2s;
+    .modal-close:hover{background:var(--danger);color:#fff}
+    .modal-body{padding:20px 24px}
+    .modal-body h4{font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin:18px 0 8px}
+    .modal-body h4:first-child{margin-top:0}
+    .modal-body p{color:var(--text-soft);line-height:1.6}
+    .info-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:8px}
+    .info-cell{background:var(--bg);padding:12px 14px;border-radius:12px;border:1px solid var(--border)}
+    .info-cell small{display:block;color:var(--text-muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+    .info-cell b{color:var(--text);font-size:.95rem}
+    .modal-foot{
+      padding:18px 24px 24px;border-top:1px solid var(--border);
+      position:sticky;bottom:0;background:#fff;
     }
+    .modal-foot .btn{width:100%;justify-content:center}
 
-    nav a:hover {
-      color: #1f6feb;
+    /* ---- Pricing / Abonnements ---- */
+    .pricing-grid{
+      display:grid;gap:24px;margin-top:36px;
+      grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
+      align-items:stretch;
     }
-
-    /* HERO */
-    .hero {
-      background: linear-gradient(135deg, #00AEEF, #1f6feb);
-      color: white;
-      padding: 70px 40px;
-      text-align: center;
+    .price-card{
+      background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);
+      padding:32px 28px;display:flex;flex-direction:column;gap:18px;
+      position:relative;transition:var(--transition);
     }
-
-    .hero h1 {
-      font-size: 42px;
-      margin-bottom: 10px;
+    .price-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg)}
+    .price-card.featured{
+      border-color:transparent;background:var(--grad-primary);color:#fff;
+      box-shadow:0 20px 50px -15px rgba(37,99,235,.45);transform:translateY(-6px);
     }
-
-    .hero p {
-      max-width: 700px;
-      margin: auto;
-      opacity: 0.9;
-      font-size: 16px;
-      line-height: 1.5;
+    .price-card.featured .price-name,
+    .price-card.featured .price-amount,
+    .price-card.featured .price-feat{color:#fff}
+    .price-card.featured .price-feat i{color:#fff}
+    .price-card.featured .price-desc{color:rgba(255,255,255,.85)}
+    .price-badge{
+      position:absolute;top:-12px;left:50%;transform:translateX(-50%);
+      background:#fff;color:var(--primary);font-weight:700;font-size:.72rem;
+      padding:6px 14px;border-radius:999px;text-transform:uppercase;letter-spacing:.08em;
+      box-shadow:var(--shadow);
     }
-
-    /* SEARCH */
-    .search-bar {
-      max-width: 1000px;
-      margin: -30px auto 40px;
-      display: flex;
-      gap: 10px;
-      background: white;
-      padding: 15px;
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    .price-tier{
+      display:inline-flex;align-items:center;gap:10px;font-weight:700;
+      font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;
     }
-
-    .search-bar input {
-      flex: 1;
-      padding: 12px;
-      border-radius: 10px;
-      border: 1px solid #ddd;
-      outline: none;
-    }
-
-    .search-bar button {
-      padding: 12px 18px;
-      border: none;
-      background: #1f6feb;
-      color: white;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    /* GRID */
-    .container {
-      padding: 40px;
-      max-width: 1200px;
-      margin: auto;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 22px;
-    }
-
-    /* CARD */
-    .card {
-      background: white;
-      border-radius: 18px;
-      padding: 22px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.06);
-      transition: 0.3s;
-      border: 1px solid #eef2f7;
-    }
-
-    .card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 18px 40px rgba(0,0,0,0.12);
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 5px 10px;
-      font-size: 12px;
-      border-radius: 20px;
-      background: #e0f2fe;
-      color: #0284c7;
-      margin-bottom: 10px;
-    }
-
-    .card h3 {
-      font-size: 18px;
-      margin-bottom: 5px;
-    }
-
-    .meta {
-      font-size: 13px;
-      color: #64748b;
-      margin-bottom: 12px;
-    }
-
-    .desc {
-      font-size: 14px;
-      color: #475569;
-      margin-bottom: 12px;
-      line-height: 1.4;
-    }
-
-    .stats {
-      display: flex;
-      justify-content: space-between;
-      font-size: 13px;
-      color: #475569;
-      margin-top: 10px;
-    }
-
-    .btn {
-      margin-top: 15px;
-      width: 100%;
-      padding: 10px;
-      border: none;
-      background: linear-gradient(135deg, #1f6feb, #00AEEF);
-      color: white;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    /* FOOTER */
-    footer {
-      text-align: center;
-      padding: 30px;
-      font-size: 13px;
-      color: #94a3b8;
-      margin-top: 40px;
-    }
-
-    /* RESPONSIVE */
-    @media (max-width: 768px) {
-      header {
-        flex-direction: column;
-        gap: 10px;
-      }
-
-      .hero h1 {
-        font-size: 28px;
-      }
-
-      .search-bar {
-        flex-direction: column;
-      }
-    }
-
+    .price-tier .dot{width:14px;height:14px;border-radius:50%;display:inline-block}
+    .price-tier.bronze .dot{background:linear-gradient(135deg,#cd7f32,#8b5a2b)}
+    .price-tier.silver .dot{background:linear-gradient(135deg,#e5e7eb,#9ca3af)}
+    .price-tier.gold .dot{background:linear-gradient(135deg,#fde047,#ca8a04)}
+    .price-name{font-size:1.6rem;font-weight:800;color:var(--text);letter-spacing:-.02em}
+    .price-desc{color:var(--text-soft);font-size:.92rem;line-height:1.5}
+    .price-feat-list{list-style:none;padding:0;margin:8px 0;display:flex;flex-direction:column;gap:12px;flex:1}
+    .price-feat{display:flex;align-items:flex-start;gap:10px;color:var(--text);font-size:.92rem}
+    .price-feat i{color:var(--primary);margin-top:3px;font-size:.85rem}
+    .price-card .btn{width:100%;justify-content:center;margin-top:auto}
+    .price-card.featured .btn{background:#fff;color:var(--primary)}
+    .price-card.featured .btn:hover{background:rgba(255,255,255,.9)}
   </style>
 </head>
-
 <body>
 
-  <!-- HEADER -->
-  <header>
-    <div class="brand">
-      <img 
-        src="https://emploitic.com/images/svg/logo-emploitic.svg" 
-        alt="Emploitic"
-        class="logo-img"
-      />
+  <!-- ========== NAVBAR ========== -->
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a class="nav-brand" href="index.html">
+        <span class="logo-mark">e</span> emploitic</b>
+      </a>
+      <nav class="nav-links">
+        <a class="nav-link active" href="index.html" data-i18n="nav.home">Accueil</a>
+        <a class="nav-link" href="#about" data-i18n="nav.about">Sur nous</a>
+        <a class="nav-link" href="login.html" data-i18n="nav.contact">Contactez-nous</a>
+      </nav>
+      <div class="nav-actions">
+        <select class="lang-select" id="langSelect" aria-label="Langue">
+          <option value="fr">🇫🇷 FR</option>
+          <option value="en">🇬🇧 EN</option>
+          <option value="ar">🇩🇿 AR</option>
+        </select>
+        <a href="login.html" class="btn btn-primary" data-i18n="nav.login">Connexion</a>
+        <button class="nav-burger" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+      </div>
     </div>
-
-    <nav>
-      <a href="#">Entreprises</a>
-      <a href="#">Offres</a>
-      <a href="#">Solutions</a>
-      <a href="#">Contact</a>
-    </nav>
   </header>
 
-  <!-- HERO -->
+  <!-- ========== HERO (centré, sans mock-cards) ========== -->
   <section class="hero">
-    <h1>Marketplace RH B2B en Algérie</h1>
-    <p>
-      Une plateforme moderne inspirée des standards des solutions RH digitales,
-      connectant entreprises, cabinets et experts du recrutement.
-    </p>
+    <div class="container" style="text-align:center;max-width:860px">
+      <span class="hero-badge"><i class="fa-solid fa-bolt"></i> <span data-i18n="hero.badge">Marketplace B2B RH n°1 en Algérie</span></span>
+      <h1 data-i18n="hero.title" style="margin-inline:auto">Connectez vos projets RH aux <span class="grad">meilleurs experts</span> du marché.</h1>
+      <p class="lead" data-i18n="hero.lead" style="margin-inline:auto">Recrutement, SIRH, formation, conseil, paie : trouvez en quelques clics le freelance ou cabinet RH idéal pour votre entreprise.</p>
+      <div class="hero-cta" style="justify-content:center">
+        <a href="#offres" class="btn btn-primary btn-lg"><i class="fa-solid fa-magnifying-glass"></i> <span data-i18n="hero.cta1">Voir les offres</span></a>
+        <a href="login.html" class="btn btn-outline btn-lg"><i class="fa-solid fa-plus"></i> <span data-i18n="hero.cta2">Publier une offre</span></a>
+      </div>
+      <div class="hero-trust" style="justify-content:center">
+        <span><i class="fa-solid fa-shield-halved"></i><span data-i18n="hero.trust1">Hébergé en Algérie</span></span>
+        <span><i class="fa-solid fa-circle-check"></i><span data-i18n="hero.trust2">Profils vérifiés</span></span>
+        <span><i class="fa-solid fa-handshake"></i><span data-i18n="hero.trust3">Paiement sécurisé</span></span>
+      </div>
+    </div>
   </section>
 
-  <!-- SEARCH -->
-  <div class="search-bar">
-    <input type="text" placeholder="Rechercher une entreprise RH, un service...">
-    <button>Rechercher</button>
-  </div>
+  <!-- ========== OFFRES ========== -->
+  <section id="offres">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-eyebrow" data-i18n="offers.eyebrow">Offres populaires</span>
+        <h2 data-i18n="offers.title">Les missions RH du moment</h2>
+        <p data-i18n="offers.sub">Découvrez les opportunités les plus consultées par notre communauté.</p>
+      </div>
+      <div class="offers-grid" id="offersGrid"></div>
+    </div>
+  </section>
 
-  <!-- GRID -->
-  <div class="container">
-    <div class="grid">
-
-      <div class="card">
-        <span class="badge">Recrutement IT</span>
-        <h3>TalentSphere</h3>
-        <div class="meta">Alger • 120+ employés</div>
-        <div class="desc">Cabinet spécialisé en recrutement IT et digital transformation.</div>
-        <div class="stats">
-          <span>⭐ 4.8</span>
-          <span>18 offres</span>
-        </div>
-        <button class="btn">Voir profil</button>
+  <!-- ========== AVANTAGES ========== -->
+  <section>
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-eyebrow">Pourquoi Emploitic</span>
+        <h2>Une plateforme pensée pour les RH</h2>
+        <p>Tous les outils dont vous avez besoin pour gérer vos projets RH, en un seul endroit.</p>
       </div>
 
-      <div class="card">
-        <span class="badge">Conseil RH</span>
-        <h3>HR Nova</h3>
-        <div class="meta">Oran • 75+ employés</div>
-        <div class="desc">Expert en stratégie RH et transformation organisationnelle.</div>
-        <div class="stats">
-          <span>⭐ 4.7</span>
-          <span>12 offres</span>
+      <div class="features-grid">
+        <div class="feature reveal">
+          <div class="ico"><i class="fa-solid fa-bolt"></i></div>
+          <h3>Mise en relation rapide</h3>
+          <p>Trouvez le bon prestataire en moins de 48h grâce à notre algorithme de matching.</p>
         </div>
-        <button class="btn">Voir profil</button>
+
+        <div class="feature reveal">
+          <div class="ico"><i class="fa-solid fa-shield-halved"></i></div>
+          <h3>Profils vérifiés</h3>
+          <p>Tous les freelances et cabinets sont validés par notre équipe avant publication.</p>
+        </div>
+
+        <div class="feature reveal">
+          <div class="ico"><i class="fa-solid fa-comments"></i></div>
+          <h3>Messagerie intégrée</h3>
+          <p>Échangez, négociez et signez vos contrats directement depuis la plateforme.</p>
+        </div>
+
+        <div class="feature reveal">
+          <div class="ico"><i class="fa-solid fa-credit-card"></i></div>
+          <h3>Paiement sécurisé</h3>
+          <p>Système de paiement sécurisé conforme aux réglementations algériennes.</p>
+        </div>
+
+        <div class="feature reveal">
+          <div class="ico"><i class="fa-solid fa-chart-pie"></i></div>
+          <h3>Tableau de bord pro</h3>
+          <p>Pilotez vos missions, candidatures et facturation depuis un dashboard unique.</p>
+        </div>
+
+        <div class="feature reveal">
+          <div class="ico"><i class="fa-solid fa-headset"></i></div>
+          <h3>Support dédié</h3>
+          <p>Une équipe à votre écoute du lundi au samedi pour vous accompagner.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== ABONNEMENTS ========== -->
+  <section id="abonnements">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-eyebrow">Nos formules</span>
+        <h2>Choisissez votre abonnement</h2>
+        <p>Trois formules pensées pour accompagner votre croissance, du lancement à la scale-up.</p>
       </div>
 
-      <div class="card">
-        <span class="badge">Formation</span>
-        <h3>PeopleSync</h3>
-        <div class="meta">Constantine • 200+ employés</div>
-        <div class="desc">Solutions de formation et développement des talents.</div>
-        <div class="stats">
-          <span>⭐ 4.9</span>
-          <span>26 offres</span>
+      <div class="pricing-grid">
+        <!-- BRONZE -->
+        <div class="price-card reveal">
+          <span class="price-tier bronze"><span class="dot"></span> Bronze</span>
+          <div class="price-name">Starter</div>
+          <p class="price-desc">Pour découvrir la marketplace et publier vos premières missions RH.</p>
+          <ul class="price-feat-list">
+            <li class="price-feat"><i class="fa-solid fa-check"></i> Jusqu'à 3 missions actives / mois</li>
+            <li class="price-feat"><i class="fa-solid fa-check"></i> Accès au catalogue d'experts</li>
+            <li class="price-feat"><i class="fa-solid fa-check"></i> Messagerie intégrée</li>
+            <li class="price-feat"><i class="fa-solid fa-check"></i> Support par email</li>
+          </ul>
+          <a href="login.html" class="btn btn-outline">Commencer</a>
         </div>
-        <button class="btn">Voir profil</button>
-      </div>
 
-      <div class="card">
-        <span class="badge">Externalisation</span>
-        <h3>WorkBridge</h3>
-        <div class="meta">Blida • 95+ employés</div>
-        <div class="desc">Solutions d’externalisation et gestion RH moderne.</div>
-        <div class="stats">
-          <span>⭐ 4.5</span>
-          <span>9 offres</span>
+        <!-- SILVER (featured) -->
+        <div class="price-card featured reveal">
+          <span class="price-badge">Le plus populaire</span>
+          <span class="price-tier silver"><span class="dot"></span> Silver</span>
+          <div class="price-name">Business</div>
+          <p class="price-desc">La formule idéale pour les PME qui structurent leurs projets RH.</p>
+          <ul class="price-feat-list">
+            <li class="price-feat"><i class="fa-solid fa-check"></i> Missions illimitées</li>
+            <li class="price-feat"><i class="fa-solid fa-check"></i> Mise en avant des offres</li>
+            <li class="price-feat"><i class="fa-solid fa-check"></i> Tableau de bord avancé</li>
+            <li class="price-feat"><i class="fa-solid fa-check"></i> Account manager dédié</li>
+            <li class="price-feat"><i class="fa-solid fa-check"></i> Support prioritaire 6j/7</li>
+          </ul>
+          <a href="login.html" class="btn btn-primary">Choisir Silver</a>
         </div>
-        <button class="btn">Voir profil</button>
-      </div>
 
-      <div class="card">
-        <span class="badge">Recrutement</span>
-        <h3>NextHire Group</h3>
-        <div class="meta">Sétif • 60+ employés</div>
-        <div class="desc">Cabinet de recrutement middle & top management.</div>
-        <div class="stats">
-          <span>⭐ 4.6</span>
-          <span>15 offres</span>
+        <!-- GOLD -->
+        <div class="price-card reveal">
+          <span class="price-tier gold"><span class="dot"></span> Gold</span>
+          <div class="price-name">Enterprise</div>
+          <p class="price-desc">Pour les grands comptes qui pilotent des projets RH stratégiques à grande échelle.</p>
+          <ul class="price-feat-list">
+            <li class="price-feat"><i class="fa-solid fa-check"></i> Tout le plan Silver inclus</li>
+            <li class="price-feat"><i class="fa-solid fa-check"></i> Multi-utilisateurs & rôles</li>
+            <li class="price-feat"><i class="fa-solid fa-check"></i> SSO & sécurité renforcée</li>
+            <li class="price-feat"><i class="fa-solid fa-check"></i> API & intégrations sur mesure</li>
+            <li class="price-feat"><i class="fa-solid fa-check"></i> SLA & support 24/7</li>
+          </ul>
+          <a href="login.html" class="btn btn-outline">Contacter les ventes</a>
         </div>
-        <button class="btn">Voir profil</button>
       </div>
+    </div>
+  </section>
 
-      <div class="card">
-        <span class="badge">Freelance RH</span>
-        <h3>SkillMatch Pro</h3>
-        <div class="meta">Annaba • 140+ employés</div>
-        <div class="desc">Marketplace de talents RH et experts freelances.</div>
-        <div class="stats">
-          <span>⭐ 4.8</span>
-          <span>21 offres</span>
+  <!-- ========== À PROPOS (Sur nous) ========== -->
+  <section id="about" style="padding-top:0">
+    <div class="container">
+      <div class="cta-band reveal">
+        <div>
+          <h2 data-i18n="about.title">Sur nous</h2>
+          <p data-i18n="about.text">Emploitic est la première marketplace B2B RH en Algérie. Notre mission : connecter les entreprises aux meilleurs experts RH du marché — recrutement, SIRH, formation, conseil et paie.</p>
         </div>
-        <button class="btn">Voir profil</button>
+        <a href="login.html" class="btn btn-lg" data-i18n="about.cta">Nous rejoindre <i class="fa-solid fa-arrow-right"></i></a>
       </div>
+    </div>
+  </section>
 
+   <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand"><span class="logo-mark">e</span> emploitic</div>
+          <p class="about">La première marketplace B2B RH en Algérie. Connectons les entreprises et les meilleurs experts du marché.</p>
+          <div class="socials" style="margin-top:18px">
+            <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="#"><i class="fa-brands fa-instagram"></i></a>
+          </div>
+        </div>
+        <div>
+          <h5>Plateforme</h5>
+          <ul>
+            <li><a href="recherche.html">Trouver une mission</a></li>
+            <li><a href="register.html">Publier une offre</a></li>
+            <li><a href="recherche.html">Freelances</a></li>
+            <li><a href="messagerie.html">Messagerie</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Entreprise</h5>
+          <ul>
+            <li><a href="#">À propos</a></li>
+            <li><a href="#">Carrières</a></li>
+            <li><a href="#">Blog RH</a></li>
+            <li><a href="#">Presse</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Support</h5>
+          <ul>
+            <li><a href="#">Centre d'aide</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">CGU</a></li>
+            <li><a href="#">Confidentialité</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Emploitic — Tous droits réservés. Hébergé en Algérie 🇩🇿</span>
+        <span>Made with <i class="fa-solid fa-heart" style="color:#ef4444"></i> à Alger</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
+  <!-- ========== MODAL DETAILS ========== -->
+  <div class="modal" id="offerModal" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div class="ot-logo" id="mLogo">SR</div>
+        <div>
+          <div class="ot-company" id="mCompany">Sonatrach RH</div>
+          <h2 id="mTitle">Mission SIRH</h2>
+        </div>
+        <button class="modal-close" id="mClose" aria-label="Fermer"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <h4 data-i18n="modal.desc">Description du projet</h4>
+        <p id="mDesc"></p>
+        <h4 data-i18n="modal.info">Informations clés</h4>
+        <div class="info-row">
+          <div class="info-cell"><small data-i18n="modal.loc">Lieu</small><b id="mLoc"></b></div>
+          <div class="info-cell"><small data-i18n="modal.type">Type</small><b id="mType"></b></div>
+          <div class="info-cell"><small data-i18n="modal.remote">Mode</small><b id="mRemote"></b></div>
+          <div class="info-cell"><small data-i18n="modal.xp">Expérience</small><b id="mXp"></b></div>
+        </div>
+        <h4 data-i18n="modal.skills">Compétences attendues</h4>
+        <div class="tags" id="mTags"></div>
+      </div>
+      <div class="modal-foot">
+        <a href="login.html" class="btn btn-primary btn-lg">
+          <i class="fa-solid fa-paper-plane"></i> <span data-i18n="modal.contact">Contactez-nous</span>
+        </a>
+      </div>
     </div>
   </div>
 
-  <!-- FOOTER -->
-  <footer>
-    © 2026 Marketplace RH — Prototype inspiré des plateformes modernes type Emploitic
-  </footer>
+  <script src="script.js"></script>
+  <script>
+    /* ===== Offres en tuiles ===== */
+    (function renderTiles(){
+      const grid = document.getElementById('offersGrid');
+      if (!grid || typeof OFFERS === 'undefined') return;
+      grid.innerHTML = OFFERS.map(o => `
+        <article class="offer-tile reveal visible" data-id="${o.id}">
+          <div class="ot-top">
+            <div class="ot-logo">${o.initials}</div>
+            <div class="ot-verified" title="Entreprise vérifiée"><i class="fa-solid fa-check"></i></div>
+          </div>
+          <div>
+            <div class="ot-eyebrow">${o.eyebrow || o.company}</div>
+            <h3 style="margin-top:6px">${o.company}</h3>
+          </div>
+          <p>${o.desc}</p>
+          <div class="ot-foot" style="justify-content:flex-end">
+            <button class="ot-more" type="button">Voir plus <i class="fa-solid fa-arrow-right"></i></button>
+          </div>
+        </article>
+      `).join('');
 
+      const modal = document.getElementById('offerModal');
+      const open = (o) => {
+        document.getElementById('mLogo').textContent = o.initials;
+        document.getElementById('mCompany').textContent = o.company;
+        document.getElementById('mTitle').textContent = o.title;
+        document.getElementById('mDesc').textContent = o.desc;
+        
+        document.getElementById('mLoc').textContent = o.loc;
+        document.getElementById('mType').textContent = o.type;
+        document.getElementById('mRemote').textContent = o.remote;
+        document.getElementById('mXp').textContent = o.xp;
+        document.getElementById('mTags').innerHTML = o.tags.map(t=>`<span class="tag">${t}</span>`).join('');
+        modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      };
+      const close = () => { modal.classList.remove('open'); document.body.style.overflow = ''; };
+
+      grid.querySelectorAll('.offer-tile').forEach(tile => {
+        tile.addEventListener('click', () => {
+          const o = OFFERS.find(x => x.id === parseInt(tile.dataset.id, 10));
+          if (o) open(o);
+        });
+      });
+      document.getElementById('mClose').addEventListener('click', close);
+      modal.addEventListener('click', e => { if (e.target === modal) close(); });
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+    })();
+
+    /* ===== i18n simple FR / EN / AR ===== */
+    const I18N = {
+      fr: {
+        'nav.home':'Accueil','nav.about':'Sur nous','nav.contact':'Contactez-nous','nav.login':'Connexion',
+        'hero.badge':'Marketplace B2B RH n°1 en Algérie',
+        'hero.title':'Connectez vos projets RH aux <span class="grad">meilleurs experts</span> du marché.',
+        'hero.lead':'Recrutement, SIRH, formation, conseil, paie : trouvez en quelques clics le freelance ou cabinet RH idéal pour votre entreprise.',
+        'hero.cta1':'Voir les offres','hero.cta2':'Publier une offre',
+        'hero.trust1':'Hébergé en Algérie','hero.trust2':'Profils vérifiés','hero.trust3':'Paiement sécurisé',
+        'offers.eyebrow':'Offres populaires','offers.title':'Les missions RH du moment',
+        'offers.sub':'Découvrez les opportunités les plus consultées par notre communauté.',
+        'about.title':'Sur nous',
+        'about.text':"Emploitic est la première marketplace B2B RH en Algérie. Notre mission : connecter les entreprises aux meilleurs experts RH du marché — recrutement, SIRH, formation, conseil et paie.",
+        'about.cta':'Nous rejoindre',
+        'modal.desc':'Description du projet','modal.info':'Informations clés','modal.skills':'Compétences attendues',
+        'modal.budget':'Budget','modal.loc':'Lieu','modal.type':'Type','modal.remote':'Mode','modal.xp':'Expérience',
+        'modal.contact':'Contactez-nous',
+      },
+      en: {
+        'nav.home':'Home','nav.about':'About us','nav.contact':'Contact us','nav.login':'Sign in',
+        'hero.badge':'#1 B2B HR Marketplace in Algeria',
+        'hero.title':'Connect your HR projects with the <span class="grad">best experts</span> on the market.',
+        'hero.lead':'Recruitment, HRIS, training, consulting, payroll: find the ideal freelancer or HR firm for your company in just a few clicks.',
+        'hero.cta1':'Browse offers','hero.cta2':'Post an offer',
+        'hero.trust1':'Hosted in Algeria','hero.trust2':'Verified profiles','hero.trust3':'Secure payment',
+        'offers.eyebrow':'Popular offers','offers.title':'Trending HR missions',
+        'offers.sub':'Discover the opportunities most viewed by our community.',
+        'about.title':'About us',
+        'about.text':'Emploitic is the leading B2B HR marketplace in Algeria. Our mission: connect companies with the best HR experts — recruitment, HRIS, training, consulting and payroll.',
+        'about.cta':'Join us',
+        'modal.desc':'Project description','modal.info':'Key information','modal.skills':'Required skills',
+        'modal.budget':'Budget','modal.loc':'Location','modal.type':'Type','modal.remote':'Mode','modal.xp':'Experience',
+        'modal.contact':'Contact us',
+      },
+      ar: {
+        'nav.home':'الرئيسية','nav.about':'من نحن','nav.contact':'اتصل بنا','nav.login':'تسجيل الدخول',
+        'hero.badge':'منصة B2B للموارد البشرية رقم 1 في الجزائر',
+        'hero.title':'اربط مشاريعك في الموارد البشرية بـ<span class="grad">أفضل الخبراء</span> في السوق.',
+        'hero.lead':'التوظيف، نظم معلومات الموارد البشرية، التكوين، الاستشارة، الأجور: ابحث في بضع نقرات عن المستقل أو المكتب المثالي لشركتك.',
+        'hero.cta1':'تصفح العروض','hero.cta2':'نشر عرض',
+        'hero.trust1':'مستضاف في الجزائر','hero.trust2':'ملفات موثقة','hero.trust3':'دفع آمن',
+        'offers.eyebrow':'العروض الشائعة','offers.title':'مهام الموارد البشرية الرائجة',
+        'offers.sub':'اكتشف الفرص الأكثر مشاهدة من قبل مجتمعنا.',
+        'about.title':'من نحن',
+        'about.text':'إمبلويتيك هي أول منصة B2B للموارد البشرية في الجزائر. مهمتنا: ربط الشركات بأفضل خبراء الموارد البشرية — التوظيف، النظم، التكوين، الاستشارة والأجور.',
+        'about.cta':'انضم إلينا',
+        'modal.desc':'وصف المشروع','modal.info':'معلومات أساسية','modal.skills':'المهارات المطلوبة',
+        'modal.budget':'الميزانية','modal.loc':'الموقع','modal.type':'النوع','modal.remote':'النمط','modal.xp':'الخبرة',
+        'modal.contact':'اتصل بنا',
+      }
+    };
+    (function i18n(){
+      const sel = document.getElementById('langSelect');
+      const apply = (lang) => {
+        const dict = I18N[lang] || I18N.fr;
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+          const k = el.dataset.i18n;
+          if (dict[k]) el.innerHTML = dict[k];
+        });
+        document.documentElement.lang = lang;
+        document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+        localStorage.setItem('emploitic.lang', lang);
+      };
+      const saved = localStorage.getItem('emploitic.lang') || 'fr';
+      sel.value = saved;
+      apply(saved);
+      sel.addEventListener('change', e => apply(e.target.value));
+    })();
+  </script>
 </body>
 </html>
