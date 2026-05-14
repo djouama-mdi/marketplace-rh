@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sitemaps — Plateforme RH Emploitic</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+  --blue: #0D47A1;
+    --blue-mid: #1565C0;
+    --blue-light: #90CAF9;
+    --blue-pale: #E3F2FD;
+    --green: #1B5E20;
+    --green-mid: #2E7D32;
+    --green-light: #A5D6A7;
+    --green-pale: #E8F5E9;
+    --orange: #E65100;
+    --orange-mid: #F57C00;
+    --orange-light: #FFCC80;
+    --orange-pale: #FFF3E0;
+    --gray-dark: #1A1A2E;
+    --gray-mid: #4A4A6A;
+    --gray-light: #F4F6F8;
+    --white: #FFFFFF;
+    --shadow: 0 2px 8px rgba(0,0,0,0.12);
+    --shadow-lg: 0 4px 20px rgba(0,0,0,0.15);
+  }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: #F0F2F5;
+    color: var(--gray-dark);
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--gray-dark);
+    color: white;
+    padding: 18px 40px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: var(--shadow-lg);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  header h1 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+
+  header span {
+    font-size: 13px;
+    color: #9999BB;
+    font-weight: 300;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 0;
+    padding: 24px 40px 0;
+    border-bottom: 2px solid #DDE1E7;
+  }
+
+  .tab {
+    padding: 12px 28px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: 8px 8px 0 0;
+    transition: all 0.2s;
+    border: 2px solid transparent;
+    border-bottom: none;
+    margin-bottom: -2px;
+    color: var(--gray-mid);
+    background: transparent;
+  }
+
+  .tab.active-green {
+    background: var(--green-pale);
+    color: var(--green);
+    border-color: var(--green-light);
+    border-bottom-color: var(--green-pale);
+  }
+
+  .tab.active-orange {
+    background: var(--orange-pale);
+    color: var(--orange);
+    border-color: var(--orange-light);
+    border-bottom-color: var(--orange-pale);
+  }
+
+  .tab:hover:not(.active-green):not(.active-orange) {
+    background: white;
+    color: var(--gray-dark);
+  }
+
+  .tab .dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+
+  .dot-green { background: var(--green-mid); }
+  .dot-orange { background: var(--orange-mid); }
+
+  .content { display: none; padding: 32px 40px 60px; }
+  .content.active { display: block; }
+
+  /* ── CANVAS SITEMAP ── */
+  .sitemap-canvas {
+    background: white;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: var(--shadow-lg);
+    overflow-x: auto;
+    position: relative;
+  }
+
+  .canvas-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #EEE;
+  }
+
+  .green .canvas-title { color: var(--green); border-color: var(--green-light); }
+  .orange .canvas-title { color: var(--orange); border-color: var(--orange-light); }
+
+  /* ── FLOW LAYOUT ── */
+  .flow {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    min-width: 1100px;
+  }
+
+  .flow-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    position: relative;
+  }
+
+  /* ── NODES ── */
+  .node-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    flex-shrink: 0;
+  }
+
+  .node {
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+    border: 2px solid;
+    box-shadow: var(--shadow);
+    position: relative;
+    cursor: default;
+    transition: transform 0.15s, box-shadow 0.15s;
+    min-width: 120px;
+  }
+
+  .node:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .node-label {
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--gray-mid);
+    margin-top: 2px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* Green nodes */
+  .g-root { background: var(--green); border-color: var(--green); color: white; font-size: 13px; min-width: 140px; }
+  .g-section { background: var(--green-mid); border-color: var(--green-mid); color: white; }
+  .g-page { background: var(--green-pale); border-color: var(--green-light); color: var(--green); }
+  .g-sub { background: white; border-color: var(--green-light); color: var(--green-mid); font-weight: 400; font-size: 11px; min-width: 100px; }
+  .g-note { background: #FFFDE7; border-color: #F9A825; color: #F57F17; font-size: 10px; border-style: dashed; }
+
+  /* Orange nodes */
+  .o-root { background: var(--orange); border-color: var(--orange); color: white; font-size: 13px; min-width: 140px; }
+  .o-section { background: var(--orange-mid); border-color: var(--orange-mid); color: white; }
+  .o-page { background: var(--orange-pale); border-color: var(--orange-light); color: var(--orange); }
+  .o-sub { background: white; border-color: var(--orange-light); color: var(--orange-mid); font-weight: 400; font-size: 11px; min-width: 100px; }
+
+  /* ── SVG CONNECTOR ── */
+  .connector-svg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    overflow: visible;
+  }
+
+  /* ── TABLE LAYOUT (draw.io style) ── */
+  .sitemap-grid {
+    display: grid;
+    gap: 20px;
+    min-width: 1100px;
+  }
+
+  /* ── SECTION BLOCK ── */
+  .section-block {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 4px;
+  }
+
+  .section-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+    color: white;
+  }
+
+  .section-title {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+
+  .section-desc {
+    font-size: 11px;
+    color: var(--gray-mid);
+    font-weight: 400;
+  }
+
+  .pages-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-left: 40px;
+  }
+
+  .page-card {
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 2px solid;
+    min-width: 120px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    transition: transform 0.15s;
+  }
+
+  .page-card:hover { transform: translateY(-2px); }
+
+  .sub-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-left: 56px;
+  }
+
+  .sub-card {
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 11px;
+    border: 1.5px solid;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    width: fit-content;
+  }
+
+  .sub-icon { font-size: 10px; }
+
+  /* ── CONNECTOR LINES (CSS) ── */
+  .tree-section {
+    position: relative;
+  }
+
+  .tree-row {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .tree-line-v {
+    width: 2px;
+    background: #DDD;
+    margin-left: 19px;
+    margin-right: 19px;
+    flex-shrink: 0;
+  }
+
+  .tree-children {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-left: 0;
+    border-left: 2px solid #DDD;
+    margin-left: 20px;
+    padding-left: 16px;
+  }
+
+  .tree-children.green-line { border-color: var(--green-light); }
+  .tree-children.orange-line { border-color: var(--orange-light); }
+
+  /* ── MAIN SITEMAP TABLE ── */
+  .sm-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    min-width: 1050px;
+  }
+
+  .sm-table td { vertical-align: top; padding: 0; }
+
+  /* ── LEGEND ── */
+  .legend {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--gray-mid);
+  }
+
+  .legend-box {
+    width: 20px;
+    height: 14px;
+    border-radius: 3px;
+    border: 2px solid;
+  }
+
+  /* ── ARROW STYLE ── */
+  .arrow-right::after {
+    content: '→';
+    margin: 0 6px;
+    color: #CCC;
+    font-size: 14px;
+  }
+
+  /* ── MAIN DIAGRAM ── */
+  .diagram {
+    position: relative;
+    min-width: 1100px;
+  }
+
+  /* ROOT ROW */
+  .root-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 0;
+  }
+
+  .root-node {
+    padding: 14px 24px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    text-align: center;
+    min-width: 160px;
+    border: 2px solid;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    z-index: 2;
+    flex-shrink: 0;
+  }
+
+  /* HORIZONTAL TRUNK */
+  .trunk {
+    height: 3px;
+    flex: 1;
+    margin: 0;
+  }
+
+  /* SECTIONS ROW */
+  .sections-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .sec-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    min-width: 140px;
+  }
+
+  .sec-stem {
+    width: 3px;
+    height: 32px;
+    flex-shrink: 0;
+  }
+
+  .sec-node {
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+    border: 2px solid;
+    width: 100%;
+    box-shadow: var(--shadow);
+    margin-bottom: 0;
+  }
+
+  .sec-branch {
+    width: 3px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+
+  .sec-pages {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    align-items: center;
+  }
+
+  .page-node {
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    text-align: center;
+    border: 1.5px solid;
+    width: 90%;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    transition: transform 0.15s;
+  }
+
+  .page-node:hover { transform: translateY(-1px); }
+
+  .page-node-note {
+    font-size: 10px;
+    border-style: dashed;
+    width: 85%;
+    padding: 4px 8px;
+    border-radius: 5px;
+    border: 1.5px dashed;
+    text-align: center;
+  }
+
+  /* ── HORIZONTAL LAYOUT ── */
+  .h-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .h-trunk-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+
+  .h-trunk-line {
+    height: 3px;
+    flex: 1;
+  }
+
+  .h-stems-row {
+    display: flex;
+    gap: 12px;
+  }
+
+  .h-stem-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 130px;
+  }
+
+  .h-stem-line {
+    width: 3px;
+    height: 24px;
+  }
+
+  /* ══════════════════════════════════════
+     FINAL CLEAN SITEMAP DESIGN
+  ══════════════════════════════════════ */
+  .sm-wrapper {
+    overflow-x: auto;
+    padding-bottom: 16px;
+  }
+
+  .sm-diagram {
+    min-width: 1200px;
+    padding: 20px 0;
+  }
+
+  /* Level 0 - Root */
+  .lv0 {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 0;
+  }
+
+  .box {
+    border-radius: 8px;
+    padding: 9px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    border: 2px solid;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    transition: transform 0.15s, box-shadow 0.15s;
+    cursor: default;
+    white-space: nowrap;
+  }
+
+  .box:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+
+  /* sizes */
+  .box-xl { padding: 14px 28px; font-size: 15px; font-weight: 700; border-radius: 10px; min-width: 180px; }
+  .box-lg { padding: 10px 18px; font-size: 13px; font-weight: 700; min-width: 140px; }
+  .box-md { padding: 8px 14px; font-size: 12px; min-width: 120px; }
+  .box-sm { padding: 6px 10px; font-size: 11px; min-width: 100px; }
+  .box-xs { padding: 5px 8px; font-size: 10px; border-style: dashed; }
+
+  /* green palette */
+  .g0 { background: #1B5E20; border-color: #1B5E20; color: white; }
+  .g1 { background: #2E7D32; border-color: #2E7D32; color: white; }
+  .g2 { background: #E8F5E9; border-color: #A5D6A7; color: #1B5E20; }
+  .g3 { background: #F1F8F1; border-color: #C8E6C9; color: #2E7D32; font-weight: 400; }
+  .g-warn { background: #FFFDE7; border-color: #F9A825; color: #795548; border-style: dashed; }
+
+  /* blue palette */
+  .b0 { background: #0D47A1; border-color: #0D47A1; color: white; }
+  .b1 { background: #1565C0; border-color: #1565C0; color: white; }
+  .b2 { background: #E3F2FD; border-color: #90CAF9; color: #0D47A1; }
+  .b3 { background: #F0F8FF; border-color: #BBDEFB; color: #1565C0; font-weight: 400; }
+  .b-warn { background: #FFFDE7; border-color: #F9A825; color: #795548; border-style: dashed; }
+  .b-bar { background: #90CAF9; }
+  .b-border { border-color: #90CAF9; }
+
+  .tab.active-blue {
+    background: var(--blue-pale);
+    color: var(--blue);
+    border-color: var(--blue-light);
+    border-bottom-color: var(--blue-pale);
+  }
+
+  .sitemap-canvas.blue .canvas-title { color: var(--blue); border-color: var(--blue-light); }
+
+  .legend-box.b0 { border-color: #0D47A1; }
+  .legend-box.b1 { border-color: #1565C0; }
+  .legend-box.b2 { border-color: #90CAF9; }
+  .legend-box.b3 { border-color: #BBDEFB; }
+
+  /* orange palette */
+  .o0 { background: #BF360C; border-color: #BF360C; color: white; }
+  .o1 { background: #E65100; border-color: #E65100; color: white; }
+  .o2 { background: #FFF3E0; border-color: #FFCC80; color: #BF360C; }
+  .o3 { background: #FFF8F0; border-color: #FFE0B2; color: #E65100; font-weight: 400; }
+
+  /* connector bars */
+  .vbar { width: 3px; margin: 0 auto; }
+  .hbar { height: 3px; }
+  .g-bar { background: #A5D6A7; }
+  .o-bar { background: #FFCC80; }
+
+  /* ROW LAYOUTS */
+  .row { display: flex; align-items: flex-start; gap: 12px; }
+  .col { display: flex; flex-direction: column; align-items: center; }
+  .col-left { display: flex; flex-direction: column; align-items: flex-start; }
+  .center { align-items: center; }
+
+  /* Tree structure helpers */
+  .tree { display: flex; flex-direction: column; gap: 0; }
+  .children { margin-left: 20px; padding-left: 16px; }
+  .children.g-border { border-left: 2px solid #A5D6A7; }
+  .children.o-border { border-left: 2px solid #FFCC80; }
+  .child-item { position: relative; margin-top: 8px; }
+  .child-item::before {
+    content: '';
+    position: absolute;
+    left: -18px;
+    top: 50%;
+    width: 16px;
+    height: 2px;
+  }
+  .child-item.g-item::before { background: #A5D6A7; }
+  .child-item.o-item::before { background: #FFCC80; }
+
+  /* Tags */
+  .tag {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 20px;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  .tag-priv { background: #FCE4EC; color: #880E4F; }
+  .tag-opt { background: #E8EAF6; color: #283593; }
+  .tag-req { background: #E8F5E9; color: #1B5E20; }
+
+  /* ── SECTION CARDS ── */
+  .s-cards-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: nowrap;
+  }
+
+  .s-card {
+    flex: 1;
+    min-width: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid;
+    box-shadow: var(--shadow);
+  }
+
+  .s-card-header {
+    padding: 10px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+  }
+
+  .s-card-letter {
+    width: 22px;
+    height: 22px;
+    border-radius: 5px;
+    background: rgba(255,255,255,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .s-card-body {
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .s-item {
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 11px;
+    border: 1.5px solid;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .s-item-icon { font-size: 12px; }
+
+  /* green card */
+  .gc-header { background: var(--green-mid); }
+  .gc-border { border-color: var(--green-light); }
+  .gc-body { background: var(--green-pale); }
+  .gc-item { background: white; border-color: var(--green-light); color: var(--green); }
+
+  /* orange card */
+  .oc-header { background: var(--orange-mid); }
+  .oc-border { border-color: var(--orange-light); }
+  .oc-body { background: var(--orange-pale); }
+  .oc-item { background: white; border-color: var(--orange-light); color: var(--orange); }
+
+  /* ── NOTE BOX ── */
+  .note-box {
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 11px;
+    border: 1.5px dashed #F9A825;
+    background: #FFFDE7;
+    color: #795548;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+  }
+
+  /* ── VCONNECT (vertical line + children) ── */
+  .vconnect {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .vline { width: 2px; }
+  .g-vline { background: #A5D6A7; }
+  .o-vline { background: #FFCC80; }
+
+  .hconnect {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+
+  .hline { height: 2px; }
+  .g-hline { background: #A5D6A7; }
+  .o-hline { background: #FFCC80; }
+
+  /* ── GRID DIAGRAM ── */
+  .grid-diagram {
+    display: grid;
+    grid-template-columns: 180px 3px 1fr;
+    gap: 0;
+    min-width: 1100px;
+    align-items: start;
+  }
+
+  .gd-root-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+  }
+
+  .gd-trunk-col {
+    display: flex;
+    justify-content: center;
+    padding-top: 54px;
+  }
+
+  .gd-trunk {
+    width: 3px;
+    height: 100%;
+    min-height: 600px;
+  }
+
+  .gd-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 0 20px 0;
+  }
+
+  .gd-section-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+  }
+
+  .gd-stem {
+    height: 3px;
+    width: 24px;
+    margin-top: 18px;
+    flex-shrink: 0;
+  }
+
+  .gd-section-content {
+    flex: 1;
+  }
+
+  .gd-section-header {
+    margin-bottom: 8px;
+  }
+
+  .gd-pages {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-left: 8px;
+    border-left: 2px solid;
+    margin-left: 4px;
+    margin-top: 8px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+
+  .gd-pages-col {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-left: 8px;
+    border-left: 2px solid;
+    margin-left: 4px;
+    margin-top: 8px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+
+  .gd-pages-inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .gd-sub-section {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .gd-sub-header {
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  .gd-sub-pages {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .tabs { padding: 16px 20px 0; }
+    .content { padding: 20px; }
+    .sitemap-canvas { padding: 20px; }
+    header { padding: 14px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>SITEMAPS — PLATEFORME RH EMPLOITIC</h1>
+    <span>Architecture des pages · Freelance & Administrateur</span>
+  </div>
+</header>
+
+<div class="tabs">
+  <div class="tab active-green" onclick="switchTab('freelance')" id="tab-freelance">
+    <span class="dot dot-green"></span>Freelance
+  </div>
+  <div class="tab" onclick="switchTab('entreprise')" id="tab-entreprise">
+    <span class="dot" style="background:#1565C0;display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;"></span>Entreprise
+  </div>
+  <div class="tab" onclick="switchTab('admin')" id="tab-admin">
+    <span class="dot dot-orange"></span>Administrateur
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SITEMAP FREELANCE
+══════════════════════════════════════ -->
+<div class="content active" id="content-freelance">
+  <div class="sitemap-canvas green">
+    <div class="canvas-title">SITEMAP FREELANCE — Architecture des pages</div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-box g0" style="border-color:#1B5E20"></div> Page racine</div>
+      <div class="legend-item"><div class="legend-box g1" style="border-color:#2E7D32"></div> Section principale</div>
+      <div class="legend-item"><div class="legend-box g2" style="border-color:#A5D6A7"></div> Page</div>
+      <div class="legend-item"><div class="legend-box g3" style="border-color:#C8E6C9"></div> Sous-page</div>
+      <div class="legend-item"><div class="legend-box g-warn" style="border-color:#F9A825; border-style:dashed"></div> Contrainte / Note</div>
+    </div>
+
+    <div class="sm-wrapper">
+    <div class="grid-diagram">
+
+      <!-- ROOT -->
+      <div class="gd-root-col">
+        <div class="box box-xl g0">🟢 Freelance<div style="font-size:10px;font-weight:300;margin-top:3px;opacity:0.8">Plateforme RH</div></div>
+      </div>
+
+      <!-- TRUNK -->
+      <div class="gd-trunk-col">
+        <div class="gd-trunk g-bar" style="background:#A5D6A7"></div>
+      </div>
+
+      <!-- SECTIONS -->
+      <div class="gd-sections">
+
+        <!-- 0. LANDING PUBLIQUE -->
+        <div class="gd-section-row">
+          <div class="gd-stem g-bar"></div>
+          <div class="gd-section-content">
+            <div class="gd-section-header">
+              <div class="box box-lg g1" style="background:#388E3C;border-color:#388E3C;">0 — Landing Publique <span style="font-size:10px;font-weight:400;opacity:0.85;margin-left:4px">🌐 Sans connexion</span></div>
+            </div>
+            <div style="padding-left:12px;margin-top:4px;font-size:11px;color:#555;">Pages accessibles avant toute inscription ou connexion</div>
+            <div class="gd-pages g-border" style="border-color:#A5D6A7; margin-top:8px">
+              <div class="box box-md g2">🏠 Landing — Liste des offres</div>
+              <div class="box box-md g2">📋 Toutes les offres</div>
+              <div class="box box-md g2">🔍 Résultats recherche avec filtre</div>
+              <div class="box box-md g2">📄 Détail d'une offre</div>
+            </div>
+            <div class="note-box" style="margin-top:8px;width:fit-content">🔓 Accès libre — Postuler ou Contacter nécessite un compte</div>
+          </div>
+        </div>
+
+        <!-- A. AUTHENTIFICATION -->
+        <div class="gd-section-row">
+          <div class="gd-stem g-bar"></div>
+          <div class="gd-section-content">
+            <div class="gd-section-header">
+              <div class="box box-lg g1">A — Authentification</div>
+            </div>
+            <div class="gd-pages g-border" style="border-color:#A5D6A7">
+              <div class="box box-md g2">Login / Connexion</div>
+              <div class="box box-md g2">Inscription Freelance</div>
+            </div>
+            <div style="margin-top:8px; padding-left:12px">
+              <div style="font-size:11px;font-weight:700;color:#2E7D32;margin-bottom:6px;">📋 Étapes d'inscription :</div>
+              <div class="gd-pages-inner" style="padding-left:8px; border-left:2px solid #C8E6C9; margin-left:4px">
+                <div class="box box-sm g3">① Infos personnelles</div>
+                <div class="box box-sm g3">② CV / Diplômes / Preuves</div>
+                <div class="box box-sm g3">③ Résumé du profil</div>
+                <div class="box box-sm g3">④ Validation compte</div>
+              </div>
+              <div class="note-box" style="margin-top:8px;width:fit-content">⚠️ Validation par email + téléphone obligatoire avant accès au dashboard</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- B. DASHBOARD -->
+        <div class="gd-section-row">
+          <div class="gd-stem g-bar"></div>
+          <div class="gd-section-content">
+            <div class="gd-section-header">
+              <div class="box box-lg g1">B — Dashboard Freelance</div>
+            </div>
+            <div style="padding-left:12px;margin-top:4px;font-size:11px;color:#555;">Point d'entrée central après connexion — accès à tous les espaces</div>
+            <div class="gd-pages g-border" style="border-color:#A5D6A7; margin-top:8px">
+              <div class="box box-md g2">Messagerie</div>
+              <div class="box box-md g2">Abonnement</div>
+              <div class="box box-md g2">Profil</div>
+              <div class="box box-md g2">Offres</div>
+              <div class="box box-md g2">Missions</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- C. MESSAGERIE -->
+        <div class="gd-section-row">
+          <div class="gd-stem g-bar"></div>
+          <div class="gd-section-content">
+            <div class="gd-section-header">
+              <div class="box box-lg g1">C — Messagerie</div>
+            </div>
+            <div class="gd-pages g-border" style="border-color:#A5D6A7">
+              <div class="box box-md g2">Liste conversations</div>
+              <div class="box box-md g2">Fenêtre de conversation</div>
+              <div class="box box-md g2">Négociation prix</div>
+              <div class="box box-md g2">Contact entreprise</div>
+            </div>
+            <div class="note-box" style="margin-top:6px;width:fit-content">🔒 Coordonnées privées — contact uniquement via messagerie interne</div>
+          </div>
+        </div>
+
+        <!-- D. ABONNEMENT -->
+        <div class="gd-section-row">
+          <div class="gd-stem g-bar"></div>
+          <div class="gd-section-content">
+            <div class="gd-section-header">
+              <div class="box box-lg g1">D — Abonnement</div>
+            </div>
+            <div class="gd-pages g-border" style="border-color:#A5D6A7">
+              <div class="box box-md g2">Abonnement actuel</div>
+              <div class="box box-md g2">Historique abonnement</div>
+              <div class="box box-md g2">Paiement</div>
+              <div class="box box-md g2">Code promo</div>
+            </div>
+            <div style="margin-top:8px;padding-left:12px">
+              <div style="font-size:11px;font-weight:700;color:#2E7D32;margin-bottom:6px;">Formules disponibles :</div>
+              <div class="gd-pages-inner" style="padding-left:8px;border-left:2px solid #C8E6C9;margin-left:4px">
+                <div class="box box-sm g2" style="background:#F3F3F3;border-color:#CCC;color:#555">A — Gratuit<div style="font-size:9px;font-weight:400;margin-top:2px">1 contact possible</div></div>
+                <div class="box box-sm g2">B — Medium<div style="font-size:9px;font-weight:400;margin-top:2px">Visibilité moyenne</div></div>
+                <div class="box box-sm g1" style="background:#1B5E20;color:white">C — Premium<div style="font-size:9px;font-weight:400;margin-top:2px;opacity:0.85">Accès complet</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- E. PROFIL -->
+        <div class="gd-section-row">
+          <div class="gd-stem g-bar"></div>
+          <div class="gd-section-content">
+            <div class="gd-section-header">
+              <div class="box box-lg g1">E — Profil Freelance</div>
+            </div>
+            <div class="gd-pages g-border" style="border-color:#A5D6A7">
+              <div class="box box-md g2">Informations personnelles <span class="tag tag-priv">🔒 Privé</span></div>
+              <div class="box box-md g2">Services proposés</div>
+              <div class="box box-md g2">Diplômes & Certifications</div>
+              <div class="box box-md g2">Portfolio & Réalisations</div>
+              <div class="box box-md g2">CV</div>
+              <div class="box box-md g2">Description professionnelle</div>
+              <div class="box box-md g2">Disponibilité</div>
+            </div>
+            <div class="note-box" style="margin-top:6px;width:fit-content">🔒 1 seul service principal pour un freelance indépendant</div>
+          </div>
+        </div>
+
+        <!-- F. OFFRES -->
+        <div class="gd-section-row">
+          <div class="gd-stem g-bar"></div>
+          <div class="gd-section-content">
+            <div class="gd-section-header">
+              <div class="box box-lg g1">F — Offres</div>
+            </div>
+            <div class="gd-pages g-border" style="border-color:#A5D6A7">
+              <div class="box box-md g2">Landing — Liste des offres</div>
+              <div class="box box-md g2">Toutes les offres</div>
+              <div class="box box-md g2">Résultats recherche avec filtre</div>
+              <div class="box box-md g2">Détail d'une offre</div>
+            </div>
+            <div style="margin-top:8px;padding-left:12px">
+              <div style="font-size:11px;font-weight:700;color:#2E7D32;margin-bottom:6px;">📍 Depuis le détail d'une offre :</div>
+              <div class="gd-pages-inner" style="padding-left:8px;border-left:2px solid #C8E6C9;margin-left:4px">
+                <div class="box box-sm g3">Bouton Postuler</div>
+                <div class="box box-sm g3">Voir profil entreprise</div>
+                <div class="box box-sm g3">Enregistrer l'offre</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- G. MISSIONS -->
+        <div class="gd-section-row">
+          <div class="gd-stem g-bar"></div>
+          <div class="gd-section-content">
+            <div class="gd-section-header">
+              <div class="box box-lg g1">G — Missions</div>
+            </div>
+            <div class="gd-pages g-border" style="border-color:#A5D6A7">
+              <div class="box box-md g2">Liste des missions</div>
+              <div class="box box-md g2">Voir une mission</div>
+            </div>
+            <div style="margin-top:8px;padding-left:12px">
+              <div style="font-size:11px;font-weight:700;color:#2E7D32;margin-bottom:6px;">📍 Depuis une mission :</div>
+              <div class="gd-pages-inner" style="padding-left:8px;border-left:2px solid #C8E6C9;margin-left:4px">
+                <div class="box box-sm g3">Messagerie liée à la mission</div>
+                <div class="box box-sm g3">Statut de la mission</div>
+                <div class="box box-sm g3">Livrer la mission</div>
+                <div class="box box-sm g3">Voir le contrat</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end gd-sections -->
+    </div><!-- end grid-diagram -->
+    </div><!-- end sm-wrapper -->
+  </div><!-- end sitemap-canvas -->
+</div>
+
+<!-- ══════════════════════════════════════
+     SITEMAP ENTREPRISE
+══════════════════════════════════════ -->
+<div class="content" id="content-entreprise">
+  <div class="sitemap-canvas blue">
+    <div class="canvas-title">SITEMAP ENTREPRISE — Architecture des pages</div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-box b0" style="border-color:#0D47A1;background:#0D47A1;"></div> Page racine</div>
+      <div class="legend-item"><div class="legend-box b1" style="border-color:#1565C0;background:#1565C0;"></div> Section principale</div>
+      <div class="legend-item"><div class="legend-box b2" style="border-color:#90CAF9;background:#E3F2FD;"></div> Page</div>
+      <div class="legend-item"><div class="legend-box b3" style="border-color:#BBDEFB;background:#F0F8FF;"></div> Sous-page</div>
+      <div class="legend-item"><div class="legend-box b-warn" style="border-color:#F9A825;border-style:dashed;background:#FFFDE7;"></div> Contrainte / Note</div>
+    </div>
+
+    <div class="sm-wrapper">
+    <div class="grid-diagram">
+
+      <!-- ROOT -->
+      <div class="gd-root-col">
+        <div class="box box-xl b0">🔵 Entreprise<div style="font-size:10px;font-weight:300;margin-top:3px;opacity:0.8">Plateforme RH</div></div>
+      </div>
+
+      <!-- TRUNK -->
+      <div class="gd-trunk-col">
+        <div class="gd-trunk b-bar" style="background:#90CAF9"></div>
+      </div>
+
+      <!-- SECTIONS -->
+      <div class="gd-sections">
+
+        <!-- 0. LANDING PUBLIQUE -->
+        <div class="gd-section-row">
+          <div class="gd-stem b-bar"></div>
+          <div class="gd-section-content">
+            <div class="gd-section-header">
+              <div class="box box-lg b1" style="background:#0D47A1;border-color:#0D47A1;">0 — Landing Publique <span style="font-size:10px;font-weight:400;opacity:0.85;margin-left:4px">🌐 Sans connexion</span></div>
+            </div>
+            <div style="padding-left:12px;margin-top:4px;font-size:11px;color:#555;">Pages accessibles avant toute inscription ou connexion</div>
+            <div class="gd-pages b-border" style="border-color:#90CAF9; margin-top:8px">
+              <div class="box box-md b2">🏠 Landing — Liste des offres</div>
+              <div class="box box-md b2">📋 Toutes les offres</div>
+              <div class="box box-md b2">🔍 Résultats recherche avec filtre</div>
+              <div class="box box-md b2">📄 Détail d'une offre</div>
+            </div>
+            <div class="note-box" style="margin-top:8px;width:fit-content">🔓 Accès libre — Publier ou Contacter nécessite un compte entreprise</div>
+          </div>
+        </div>
+
+        <!-- A. AUTHENTIFICATION -->
+        <div class="gd-section-row">
+          <div class="gd-stem b-bar"></div>
+          <div class="gd-section-content">
+            <div class="gd-section-header">
+              <div class="box box-lg b1">A — Authentification</div>
+            </div>
+            <div class="gd-pages b-border" style="border-color:#90CAF9">
+              <div class="box box-md b2">Login / Connexion</div>
+              <div class="box box-md b2">Inscription Entreprise</div>
+            </div>
+            <div style="margin-top:8px; padding-left:12px">
+              <div style="font-size:11px;font-weight:700;color:#1565C0;margin-bottom:6px;">📋 Étapes d'inscription :</div>
+              <div class="gd-pages-inner" style="padding-left:8px; border-left:2px solid #BBDEFB; margin-left:4px">
+                <div class="box box-sm b3">① Informations administratives</div>
+                <div class="box box-sm b3">② Présentation de l'entreprise</div>
+                <div class="box box-sm b3">③ Services proposés</div>
+                <div class="box box-sm b3">④ Contacts focaux</div>
+                <div class="box box-sm b3">⑤ Validation du compte</div>
+              </div>
+              <div class="note-box" style="margin-top:8px;width:fit-content">⚠️ Validation par email + téléphone obligatoire avant accès au dashboard</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- B. DASHBOARD -->
+        <div class="gd-section-row">
+          <div class="gd-stem b-bar"></div>
+          <div class="gd-section-content">
+            <div class="gd-section-header">
+              <div class="box box-lg b1">B — Dashboard Entreprise</div>
+            </div>
+            <div style="padding-left:12px;margin-top:4px;font-size:11px;color:#555;">Point d'entrée central après connexion — accès à tous les espaces de gestion</div>
+            <div class="gd-pages b-border" style="border-color:#90CAF9; margin-top:8px">
+              <div class="box box-md b2">Messagerie</div>
+              <div class="box box-md b2">Abonnement</div>
+              <div class="box box-md b2">Profil entreprise</div>
+              <div class="box box-md b2">Offres publiées</div>
+              <div class="box box-md b2">Recherche Freelances</div>
+              <div class="box box-md b2">Missions</div>
+              <div class="box box-md b2">Candidatures</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- C. MESSAGERIE -->
+        <div class="gd-section-row">
+          <div class="gd-stem b-bar"></div>
+          <div class="gd-section-content">
+            <div class="gd-section-header">
+              <div class="box box-lg b1">C — Messagerie</div>
+            </div>
+            <div class="gd-pages b-border" style="border-color:#90CAF9">
+              <div class="box box-md b2">Liste conversations</div>
+              <div class="box box-md b2">Fenêtre de conversation</div>
+              <div class="box box-md b2">Négociation conditions</div>
+              <div class="box box-md b2">Contact Freelance</div>
+            </div>
+            <div class="note-box" style="margin-top:6px;width:fit-content">🔒 Coordonnées privées — contact uniquement via messagerie interne</div>
+          </div>
+        </div>
+
+        <!-- D. ABONNEMENT -->
+        <div class="gd-section-row">
+          <div class="gd-stem b-bar"></div>
+          <div class="gd-section-content">
+            <div class="gd-section-header">
+              <div class="box box-lg b1">D — Abonnement</div>
+            </div>
+            <div class="gd-pages b-border" style="border-color:#90CAF9">
+              <div class="box box-md b2">Abonnement actuel</div>
+              <div class="box box-md b2">Historique abonnement</div>
+              <div class="box box-md b2">Paiement</div>
+              <div class="box box-md b2">Code promo</div>
+            </div>
+            <div style="margin-top:8px;padding-left:12px">
+              <div style="font-size:11px;font-weight:700;color:#1565C0;margin-bottom:6px;">Formules disponibles :</div>
+              <div class="gd-pages-inner" style="padding-left:8px;border-left:2px solid #BBDEFB;margin-left:4px">
+                <div class="box box-sm b2" style="background:#F3F3F3;border-color:#CCC;color:#555">A — Gratuit<div style="font-size:9px;font-weight:400;margin-top:2px">Accès limité</div></div>
+                <div class="box box-sm b2">B — Medium<div style="font-size:9px;font-weight:400;margin-top:2px">Visibilité étendue</div></div>
+                <div class="box box-sm b1" style="background:#0D47A1;color:white">C — Premium<div style="font-size:9px;font-weight:400;margin-top:2px;opacity:0.85">Accès complet + Points focaux</div></div>
+              </div>
+            </div>
+            <div class="note-box" style="margin-top:8px;width:fit-content">👥 Gestion des accès points focaux selon abonnement</div>
+          </div>
+        </div>
+
+        <!-- E. PROFIL ENTREPRISE -->
+        <div class="gd-section-row">
+          <div class="gd-stem b-bar"></div>
+          <div class="gd-section-content">
+            <div class="gd-section-header">
+              <div class="box box-lg b1">E — Profil Entreprise</div>
+            </div>
+            <div class="gd-pages b-border" style="border-color:#90CAF9">
+              <div class="box box-md b2">Informations administratives <span class="tag tag-priv">🔒 Privé</span></div>
+              <div class="box box-md b2">Présentation de l'entreprise</div>
+              <div class="box box-md b2">Services gérés</div>
+              <div class="box box-md b2">Contacts focaux</div>
+              <div class="box box-md b2">Documents officiels</div>
+              <div class="box box-md b2">Logo & Médias</div>
+            </div>
+            <div style="margin-top:8px;padding-left:12px">
+              <div style="font-size:11px;font-weight:700;color:#1565C0;margin-bottom:6px;">👥 Gestion des points focaux :</div>
+              <div class="gd-pages-inner" style="padding-left:8px;border-left:2px solid #BBDEFB;margin-left:4px">
+                <div class="box box-sm b3">Ajouter un point focal</div>
+                <div class="box box-sm b3">Attribuer un service</div>
+                <div class="box box-sm b3">Gérer les accès</div>
+                <div class="box box-sm b3">Désactiver un accès</div>
+              </div>
+            </div>
+            <div class="note-box" style="margin-top:6px;width:fit-content">🔒 Plusieurs services possibles — un point focal par service</div>
+          </div>
+        </div>
+
+        <!-- F. OFFRES & DEMANDES -->
+        <div class="gd-section-row">
+          <div class="gd-stem b-bar"></div>
+          <div class="gd-section-content">
+            <div class="gd-section-header">
+              <div class="box box-lg b1">F — Offres & Demandes de prestations</div>
+            </div>
+            <div class="gd-pages b-border" style="border-color:#90CAF9">
+              <div class="box box-md b2">Mes offres publiées</div>
+              <div class="box box-md b2">Créer une offre</div>
+              <div class="box box-md b2">Modifier une offre</div>
+              <div class="box box-md b2">Archiver / Supprimer</div>
+            </div>
+            <div style="margin-top:8px;padding-left:12px">
+              <div style="font-size:11px;font-weight:700;color:#1565C0;margin-bottom:6px;">📍 Depuis une offre publiée :</div>
+              <div class="gd-pages-inner" style="padding-left:8px;border-left:2px solid #BBDEFB;margin-left:4px">
+                <div class="box box-sm b3">Voir les candidatures reçues</div>
+                <div class="box box-sm b3">Consulter profil candidat</div>
+                <div class="box box-sm b3">Consulter CV & documents</div>
+                <div class="box box-sm b3">Contacter via messagerie</div>
+                <div class="box box-sm b3">Accepter / Refuser candidature</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- G. RECHERCHE FREELANCES -->
+        <div class="gd-section-row">
+          <div class="gd-stem b-bar"></div>
+          <div class="gd-section-content">
+            <div class="gd-section-header">
+              <div class="box box-lg b1">G — Recherche Freelances / Prestataires</div>
+            </div>
+            <div class="gd-pages b-border" style="border-color:#90CAF9">
+              <div class="box box-md b2">Liste des freelances</div>
+              <div class="box box-md b2">Résultats avec filtre</div>
+              <div class="box box-md b2">Détail profil freelance</div>
+            </div>
+            <div style="margin-top:8px;padding-left:12px">
+              <div style="font-size:11px;font-weight:700;color:#1565C0;margin-bottom:6px;">📍 Depuis un profil freelance :</div>
+              <div class="gd-pages-inner" style="padding-left:8px;border-left:2px solid #BBDEFB;margin-left:4px">
+                <div class="box box-sm b3">Voir CV & Portfolio</div>
+                <div class="box box-sm b3">Voir diplômes & certifications</div>
+                <div class="box box-sm b3">Contacter via messagerie</div>
+                <div class="box box-sm b3">Enregistrer le profil</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- H. MISSIONS -->
+        <div class="gd-section-row">
+          <div class="gd-stem b-bar"></div>
+          <div class="gd-section-content">
+            <div class="gd-section-header">
+              <div class="box box-lg b1">H — Missions</div>
+            </div>
+            <div class="gd-pages b-border" style="border-color:#90CAF9">
+              <div class="box box-md b2">Liste des missions en cours</div>
+              <div class="box box-md b2">Voir une mission</div>
+            </div>
+            <div style="margin-top:8px;padding-left:12px">
+              <div style="font-size:11px;font-weight:700;color:#1565C0;margin-bottom:6px;">📍 Depuis une mission :</div>
+              <div class="gd-pages-inner" style="padding-left:8px;border-left:2px solid #BBDEFB;margin-left:4px">
+                <div class="box box-sm b3">Messagerie liée à la mission</div>
+                <div class="box box-sm b3">Statut de la mission</div>
+                <div class="box box-sm b3">Valider la livraison</div>
+                <div class="box box-sm b3">Voir le contrat</div>
+                <div class="box box-sm b3">Évaluer le prestataire</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end gd-sections -->
+    </div><!-- end grid-diagram -->
+    </div><!-- end sm-wrapper -->
+  </div><!-- end sitemap-canvas -->
+</div>
+
+<!-- ══════════════════════════════════════
+     SITEMAP ADMIN
+══════════════════════════════════════ -->
+<div class="content" id="content-admin">
+  <div class="sitemap-canvas orange">
+    <div class="canvas-title">SITEMAP ADMINISTRATEUR — Architecture des pages</div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-box o0" style="border-color:#BF360C"></div> Page racine</div>
+      <div class="legend-item"><div class="legend-box o1" style="border-color:#E65100"></div> Section principale</div>
+      <div class="legend-item"><div class="legend-box o2" style="border-color:#FFCC80"></div> Page</div>
+      <div class="legend-item"><div class="legend-box o3" style="border-color:#FFE0B2"></div> Sous-page</div>
+    </div>
+
+    <div class="sm-wrapper">
+    <div class="grid-diagram">
+
+      <!-- ROOT -->
+      <div class="gd-root-col">
+        <div class="box box-xl o0">🔴 Admin<div style="font-size:10px;font-weight:300;margin-top:3px;opacity:0.8">Back-office RH</div></div>
+      </div>
+
+      <!-- TRUNK -->
+      <div class="gd-trunk-col">
+        <div class="gd-trunk o-bar" style="background:#FFCC80"></div>
+      </div>
+
+      <!-- SECTIONS -->
+      <div class="gd-sections">
+
+        <!-- 0. LANDING PUBLIQUE -->
+        <div class="gd-section-row">
+          <div class="gd-stem o-bar"></div>
+          <div class="gd-section-content">
+            <div class="gd-section-header">
+              <div class="box box-lg o1" style="background:#BF360C;border-color:#BF360C;">0 — Landing Publique <span style="font-size:10px;font-weight:400;opacity:0.85;margin-left:4px">🌐 Sans connexion</span></div>
+            </div>
+            <div style="padding-left:12px;margin-top:4px;font-size:11px;color:#555;">Pages visibles par tous avant toute authentification</div>
+            <div class="gd-pages o-border" style="border-color:#FFCC80; margin-top:8px">
+              <div class="box box-md o2">🏠 Landing — Liste des offres</div>
+              <div class="box box-md o2">📋 Toutes les offres</div>
+              <div class="box box-md o2">🔍 Résultats recherche avec filtre</div>
+              <div class="box box-md o2">📄 Détail d'une offre</div>
+            </div>
+            <div style="margin-top:8px;padding:7px 12px;font-size:11px;border:1.5px dashed #F9A825;background:#FFFDE7;color:#795548;border-radius:6px;display:inline-flex;align-items:center;gap:6px;">🔓 Accès libre — Accès admin via login sécurisé uniquement</div>
+          </div>
+        </div>
+
+        <!-- A. AUTHENTIFICATION -->
+        <div class="gd-section-row">
+          <div class="gd-stem o-bar"></div>
+          <div class="gd-section-content">
+            <div class="gd-section-header">
+              <div class="box box-lg o1">A — Authentification Admin</div>
+            </div>
+            <div class="gd-pages o-border" style="border-color:#FFCC80">
+              <div class="box box-md o2">Login Admin</div>
+              <div class="box box-md o2">Dashboard Admin</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- B. DASHBOARD -->
+        <div class="gd-section-row">
+          <div class="gd-stem o-bar"></div>
+          <div class="gd-section-content">
+            <div class="gd-section-header">
+              <div class="box box-lg o1">B — Dashboard Admin</div>
+            </div>
+            <div style="padding-left:12px;margin-top:4px;font-size:11px;color:#555;">Tableau de bord central — accès à toutes les sections de gestion</div>
+            <div class="gd-pages o-border" style="border-color:#FFCC80; margin-top:8px">
+              <div class="box box-md o2">Signalements</div>
+              <div class="box box-md o2">Gestion utilisateurs</div>
+              <div class="box box-md o2">Gestion offres</div>
+              <div class="box box-md o2">Gestion abonnements</div>
+              <div class="box box-md o2">Codes promo</div>
+              <div class="box box-md o2">Statistiques</div>
+              <div class="box box-md o2">Profil admin</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- C. GESTION SIGNALEMENTS -->
+        <div class="gd-section-row">
+          <div class="gd-stem o-bar"></div>
+          <div class="gd-section-content">
+            <div class="gd-section-header">
+              <div class="box box-lg o1">C — Gestion Signalements</div>
+            </div>
+            <div class="gd-pages o-border" style="border-color:#FFCC80">
+              <div class="box box-md o2">Liste des signalements</div>
+              <div class="box box-md o2">Détail signal + offre + entreprise</div>
+            </div>
+            <div style="margin-top:8px;padding-left:12px">
+              <div style="font-size:11px;font-weight:700;color:#E65100;margin-bottom:6px;">⚡ Actions disponibles :</div>
+              <div class="gd-pages-inner" style="padding-left:8px;border-left:2px solid #FFE0B2;margin-left:4px">
+                <div class="box box-sm o2">Accepter</div>
+                <div class="box box-sm o2">Refuser (+ Motif)</div>
+                <div class="box box-sm o2">Bannir l'utilisateur</div>
+                <div class="box box-sm o2">Supprimer le contenu</div>
+                <div class="box box-sm o3">Page Confirmation action</div>
+                <div class="box box-sm o3">Profil de l'admin</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- D. GESTION UTILISATEURS (DEMANDES) -->
+        <div class="gd-section-row">
+          <div class="gd-stem o-bar"></div>
+          <div class="gd-section-content">
+            <div class="gd-section-header">
+              <div class="box box-lg o1">D — Gestion Utilisateurs / Demandes</div>
+            </div>
+            <div class="gd-pages o-border" style="border-color:#FFCC80">
+              <div class="box box-md o2">Liste des demandes d'inscription</div>
+              <div class="box box-md o2">Landing — Liste des offres</div>
+              <div class="box box-md o2">Toutes les offres</div>
+              <div class="box box-md o2">Résultats recherche avec filtre</div>
+              <div class="box box-md o2">Détail d'une offre</div>
+              <div class="box box-md o2">Détail de l'entreprise</div>
+            </div>
+            <div style="margin-top:8px;padding-left:12px">
+              <div style="font-size:11px;font-weight:700;color:#E65100;margin-bottom:6px;">⚡ Actions sur un compte :</div>
+              <div class="gd-pages-inner" style="padding-left:8px;border-left:2px solid #FFE0B2;margin-left:4px">
+                <div class="box box-sm o2">Accepter le compte</div>
+                <div class="box box-sm o2">Refuser (+ Motif)</div>
+                <div class="box box-sm o2">Bannir</div>
+                <div class="box box-sm o3">Page Confirmation</div>
+                <div class="box box-sm o3">Discord / Réinitialisation mot de passe</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- E. GESTION ABONNEMENTS -->
+        <div class="gd-section-row">
+          <div class="gd-stem o-bar"></div>
+          <div class="gd-section-content">
+            <div class="gd-section-header">
+              <div class="box box-lg o1">E — Gestion Abonnements</div>
+            </div>
+            <div style="margin-top:8px;padding-left:4px">
+              <div style="font-size:11px;font-weight:700;color:#E65100;margin-bottom:6px;">Formules gérées :</div>
+              <div class="gd-pages-inner" style="padding-left:8px;border-left:2px solid #FFE0B2;margin-left:4px;margin-bottom:10px">
+                <div class="box box-sm o2" style="background:#F3F3F3;border-color:#CCC;color:#555">A — Gratuit</div>
+                <div class="box box-sm o2">B — Medium</div>
+                <div class="box box-sm o1" style="background:#E65100;color:white">C — Premium</div>
+              </div>
+              <div style="font-size:11px;font-weight:700;color:#E65100;margin-bottom:6px;">Pages :</div>
+              <div class="gd-pages-inner" style="padding-left:8px;border-left:2px solid #FFE0B2;margin-left:4px">
+                <div class="box box-sm o2">Liste des abonnés</div>
+                <div class="box box-sm o2">Jours restants</div>
+                <div class="box box-sm o2">Modifier abonnement</div>
+                <div class="box box-sm o2">Réductions</div>
+                <div class="box box-sm o2">Historique</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- F. CODES PROMO -->
+        <div class="gd-section-row">
+          <div class="gd-stem o-bar"></div>
+          <div class="gd-section-content">
+            <div class="gd-section-header">
+              <div class="box box-lg o1">F — Codes Promo</div>
+            </div>
+            <div class="gd-pages o-border" style="border-color:#FFCC80">
+              <div class="box box-md o2">Liste promo</div>
+            </div>
+            <div style="margin-top:8px;padding-left:12px">
+              <div style="font-size:11px;font-weight:700;color:#E65100;margin-bottom:6px;">Depuis la liste :</div>
+              <div class="gd-pages-inner" style="padding-left:8px;border-left:2px solid #FFE0B2;margin-left:4px">
+                <div class="box box-sm o2">Générer code promo</div>
+                <div class="box box-sm o2">Générer discount</div>
+                <div class="box box-sm o2">Associer à un client</div>
+                <div class="box box-sm o3">Page code généré</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- G. STATISTIQUES -->
+        <div class="gd-section-row">
+          <div class="gd-stem o-bar"></div>
+          <div class="gd-section-content">
+            <div class="gd-section-header">
+              <div class="box box-lg o1">G — Statistiques</div>
+            </div>
+            <div class="gd-pages o-border" style="border-color:#FFCC80">
+              <div class="box box-md o2">Nombre d'utilisateurs</div>
+              <div class="box box-md o2">Nombre d'abonnés actifs</div>
+              <div class="box box-md o2">Revenus générés</div>
+              <div class="box box-md o2">Activité de la plateforme</div>
+              <div class="box box-md o2">Signalements traités</div>
+              <div class="box box-md o2">Missions publiées</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end gd-sections -->
+    </div><!-- end grid-diagram -->
+    </div><!-- end sm-wrapper -->
+  </div><!-- end sitemap-canvas -->
+</div>
+
+<script>
+function switchTab(tab) {
+  document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => {
+    t.classList.remove('active-green', 'active-orange', 'active-blue');
+  });
+
+  document.getElementById('content-' + tab).classList.add('active');
+
+  if (tab === 'freelance') {
+    document.getElementById('tab-freelance').classList.add('active-green');
+  } else if (tab === 'entreprise') {
+    document.getElementById('tab-entreprise').classList.add('active-blue');
+  } else {
+    document.getElementById('tab-admin').classList.add('active-orange');
+  }
+}
+</script>
+
+</body>
+</html>
