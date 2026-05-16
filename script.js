@@ -323,7 +323,7 @@ function searchRowHTML(o) {
       if (errs.length) { errBox.textContent = errs[0]; msgBox.textContent = ''; return; }
       errBox.textContent = '';
       msgBox.textContent = 'Connexion réussie ! Redirection...';
-      setTimeout(() => location.href = 'app.html', 900);
+      setTimeout(() => location.href = 'choixDash.html', 900);
     });
   }
 
