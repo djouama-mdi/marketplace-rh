@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Mon profil — Admin Emploitic</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+<link rel="stylesheet" href="admin.css" />
+</head>
+<body class="admin">
+<div class="admin-shell">
+  <aside class="admin-side">
+    <div class="brand"><span class="logo-mark">e</span><span>emploitic <small style="display:block;font-size:11px;font-weight:500;opacity:.6">Admin Panel</small></span></div>
+    <div class="side-section">Pilotage</div>
+    <a href="admin-dashboard.html" class="side-link"><span class="side-emoji">📊</span><span>Tableau de bord</span></a>
+    <a href="admin-entreprises.html" class="side-link"><span class="side-emoji">🏢</span><span>Entreprises</span></a>
+    <a href="admin-signalements.html" class="side-link"><span class="side-emoji">🚩</span><span>Signalements</span></a>
+    <div class="side-section">Commercial</div>
+    <a href="admin-abonnements.html" class="side-link"><span class="side-emoji">👑</span><span>Abonnements</span></a>
+    <div class="side-section">Compte</div>
+    <a href="admin-profil.html" class="side-link active"><span class="side-emoji">🛡️</span><span>Mon profil</span></a>
+    <div class="side-foot"><a href="../app.html" class="side-link"><span class="side-emoji">🚪</span><span>Déconnexion</span></a></div>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-top">
+      <h1>Mon profil</h1>
+      <div class="top-actions"><button class="theme-toggle" onclick="toggleTheme()" title="Basculer thème" aria-label="Basculer thème"><i class="fa-solid fa-moon icon-dark"></i><i class="fa-solid fa-sun icon-light"></i></button><div class="admin-avatar">AD</div></div>
+    </div>
+
+    <div class="admin-content">
+
+      <div class="profile-hero">
+        <div class="ava">AD</div>
+        <div style="flex:1">
+          <h2>Amine Djellouli</h2>
+          <p>Super Administrateur · Emploitic Marketplace B2B RH</p>
+          <p style="margin-top:6px;font-size:13px"><i class="fa-solid fa-shield-halved"></i> Compte vérifié · 2FA activé · Dernière connexion : aujourd'hui 09:42</p>
+        </div>
+        <button class="btn btn-outline" style="background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);backdrop-filter:blur(8px)"><i class="fa-regular fa-pen-to-square"></i> Modifier</button>
+      </div>
+
+      <div class="grid-2b">
+        <div class="panel">
+          <div class="panel-head"><h2>Informations personnelles</h2></div>
+          <div class="info-list">
+            <div class="row"><span>Prénom</span><span>Amine</span></div>
+            <div class="row"><span>Nom</span><span>Djellouli</span></div>
+            <div class="row"><span>Email</span><span>amine.djellouli@emploitic.dz</span></div>
+            <div class="row"><span>Téléphone</span><span>+213 555 12 34 56</span></div>
+            <div class="row"><span>Date de naissance</span><span>14/08/1989</span></div>
+            <div class="row"><span>Adresse</span><span>Hydra, Alger</span></div>
+            <div class="row"><span>Langues</span><span>FR · EN · AR</span></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h2>Compte & rôle</h2></div>
+          <div class="info-list">
+            <div class="row"><span>Identifiant</span><span>ADM-00001</span></div>
+            <div class="row"><span>Rôle</span><span><span class="chip gold">Super Admin</span></span></div>
+            <div class="row"><span>Département</span><span>Direction Plateforme</span></div>
+            <div class="row"><span>Date d'embauche</span><span>03/01/2022</span></div>
+            <div class="row"><span>Statut</span><span><span class="chip active">Actif</span></span></div>
+            <div class="row"><span>2FA</span><span><span class="chip active">Activée</span></span></div>
+            <div class="row"><span>Dernière connexion</span><span>13/05/2026 — 09:42</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2b">
+        <div class="panel">
+          <div class="panel-head"><h2>Permissions</h2></div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <span class="chip info"><i class="fa-solid fa-check"></i> Gestion entreprises</span>
+            <span class="chip info"><i class="fa-solid fa-check"></i> Validation comptes</span>
+            <span class="chip info"><i class="fa-solid fa-check"></i> Signalements</span>
+            <span class="chip info"><i class="fa-solid fa-check"></i> Abonnements & promos</span>
+            <span class="chip info"><i class="fa-solid fa-check"></i> Sanctions & bannissements</span>
+            <span class="chip info"><i class="fa-solid fa-check"></i> Facturation</span>
+            <span class="chip info"><i class="fa-solid fa-check"></i> Gestion équipe admin</span>
+            <span class="chip info"><i class="fa-solid fa-check"></i> Accès API</span>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h2>Activité récente</h2></div>
+          <div class="info-list">
+            <div class="row"><span>Validation Sonatrach Digital</span><span>il y a 2 h</span></div>
+            <div class="row"><span>Sanction signalement #r5</span><span>hier 16:20</span></div>
+            <div class="row"><span>Création promo GOLD-OOREDOO-25</span><span>11/05/2026</span></div>
+            <div class="row"><span>Refus inscription "Société X"</span><span>10/05/2026</span></div>
+            <div class="row"><span>Modification plan Silver</span><span>08/05/2026</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h2>Sécurité</h2></div>
+        <div style="display:flex;flex-wrap:wrap;gap:12px">
+          <button class="btn btn-outline"><i class="fa-solid fa-key"></i> Changer le mot de passe</button>
+          <button class="btn btn-outline"><i class="fa-solid fa-mobile-screen"></i> Reconfigurer la 2FA</button>
+          <button class="btn btn-outline"><i class="fa-solid fa-clock-rotate-left"></i> Historique de connexion</button>
+          <button class="btn btn-outline" style="color:var(--danger);border-color:var(--danger)"><i class="fa-solid fa-right-from-bracket"></i> Déconnecter toutes les sessions</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+<script src="admin.js"></script>
+<script>
+(function(){
+  const saved = localStorage.getItem('emp.theme');
+  if(saved === 'light') document.body.classList.add('light-mode');
+})();
+function toggleTheme(){
+  document.body.classList.toggle('light-mode');
+  localStorage.setItem('emp.theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+}
+</script>
+</body>
+</html>
+

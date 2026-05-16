@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Signalements — Admin Emploitic</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+<link rel="stylesheet" href="admin.css" />
+</head>
+<body class="admin">
+<div class="admin-shell">
+  <aside class="admin-side">
+    <div class="brand"><span class="logo-mark">e</span><span>emploitic <small style="display:block;font-size:11px;font-weight:500;opacity:.6">Admin Panel</small></span></div>
+    <div class="side-section">Pilotage</div>
+    <a href="admin-dashboard.html" class="side-link"><span class="side-emoji">📊</span><span>Tableau de bord</span></a>
+    <a href="admin-entreprises.html" class="side-link"><span class="side-emoji">🏢</span><span>Entreprises</span></a>
+    <a href="admin-signalements.html" class="side-link active"><span class="side-emoji">🚩</span><span>Signalements</span></a>
+    <div class="side-section">Commercial</div>
+    <a href="admin-abonnements.html" class="side-link"><span class="side-emoji">👑</span><span>Abonnements</span></a>
+    <div class="side-section">Compte</div>
+    <a href="admin-profil.html" class="side-link"><span class="side-emoji">🛡️</span><span>Mon profil</span></a>
+    <div class="side-foot"><a href="../app.html" class="side-link"><span class="side-emoji">🚪</span><span>Déconnexion</span></a></div>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-top">
+      <h1>Signalements</h1>
+      <div class="search"><i class="fa-solid fa-magnifying-glass" style="color:var(--text-muted)"></i><input id="qS" placeholder="Rechercher un signalement…" /></div>
+      <div class="top-actions"><button class="theme-toggle" onclick="toggleTheme()" title="Basculer thème" aria-label="Basculer thème"><i class="fa-solid fa-moon icon-dark"></i><i class="fa-solid fa-sun icon-light"></i></button><div class="admin-avatar">AD</div></div>
+    </div>
+
+    <div class="admin-content">
+      <div class="kpi-grid">
+        <div class="kpi"><div class="ic b3"><i class="fa-solid fa-clock"></i></div><h3>En attente</h3><div class="val" id="kPend">0</div></div>
+        <div class="kpi"><div class="ic b1"><i class="fa-solid fa-spinner"></i></div><h3>En traitement</h3><div class="val" id="kProg">0</div></div>
+        <div class="kpi"><div class="ic b2"><i class="fa-solid fa-check"></i></div><h3>Résolus</h3><div class="val" id="kRes">0</div></div>
+        <div class="kpi"><div class="ic b4"><i class="fa-solid fa-xmark"></i></div><h3>Refusés</h3><div class="val" id="kRef">0</div></div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" data-tab="all">Tous</button>
+        <button class="tab" data-tab="pending">En attente</button>
+        <button class="tab" data-tab="in_progress">En traitement</button>
+        <button class="tab" data-tab="resolved">Résolus</button>
+        <button class="tab" data-tab="refused">Refusés</button>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h2>Liste des signalements</h2></div>
+        <table class="tbl">
+          <thead><tr><th>Cible</th><th>Source</th><th>Motif</th><th>Sévérité</th><th>Date</th><th>Statut</th><th style="text-align:right">Actions</th></tr></thead>
+          <tbody id="tbR"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="admin.js"></script>
+<script>
+let tab = 'all';
+const labels = { pending:'En attente', in_progress:'En traitement', resolved:'Résolu', refused:'Refusé' };
+function counts(){
+  document.getElementById('kPend').textContent = REPORTS.filter(r=>r.status==='pending').length;
+  document.getElementById('kProg').textContent = REPORTS.filter(r=>r.status==='in_progress').length;
+  document.getElementById('kRes').textContent = REPORTS.filter(r=>r.status==='resolved').length;
+  document.getElementById('kRef').textContent = REPORTS.filter(r=>r.status==='refused').length;
+}
+function render(){
+  const q = document.getElementById('qS').value.toLowerCase();
+  const rows = REPORTS.filter(r => (tab==='all'||r.status===tab) && (r.target+r.firm+r.reason).toLowerCase().includes(q));
+  document.getElementById('tbR').innerHTML = rows.map(r=>`
+    <tr>
+      <td><strong>${r.target}</strong></td>
+      <td>${r.firm}</td>
+      <td>${r.reason}</td>
+      <td><span class="chip ${r.severity==='high'?'refused':r.severity==='medium'?'pending':'info'}">${r.severity==='high'?'Haute':r.severity==='medium'?'Moyenne':'Basse'}</span></td>
+      <td>${r.date}</td>
+      <td><span class="chip ${r.status==='pending'?'pending':r.status==='resolved'?'active':r.status==='refused'?'refused':'info'}">${labels[r.status]}</span></td>
+      <td style="text-align:right">
+        <button class="btn-icon" onclick="viewReport('${r.id}')"><i class="fa-regular fa-eye"></i> Détails</button>
+        ${r.status==='pending' || r.status==='in_progress' ? `<button class="btn-icon danger" onclick="actionReport('${r.id}')"><i class="fa-solid fa-gavel"></i> Sanctionner</button>` : ''}
+      </td>
+    </tr>`).join('');
+}
+function viewReport(id){
+  const r = REPORTS.find(x=>x.id===id);
+  openModal(`
+    <div class="modal-head"><h3>Signalement #${r.id.toUpperCase()}</h3><button class="btn-icon" data-close><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <div class="info-list">
+        <div class="row"><span>Cible</span><span>${r.target}</span></div>
+        <div class="row"><span>Source / signalant</span><span>${r.firm}</span></div>
+        <div class="row"><span>Motif</span><span>${r.reason}</span></div>
+        <div class="row"><span>Sévérité</span><span>${r.severity}</span></div>
+        <div class="row"><span>Date</span><span>${r.date}</span></div>
+        <div class="row"><span>Statut</span><span>${labels[r.status]}</span></div>
+        ${r.action?`<div class="row"><span>Action prise</span><span>${r.action}</span></div>`:''}
+      </div>
+      <div style="background:var(--surface-3);border-radius:12px;padding:14px;margin-top:14px">
+        <strong style="font-size:13px">Description complète</strong>
+        <p style="font-size:13px;color:var(--text-soft);margin-top:6px">L'utilisateur a signalé que cet élément ne respecte pas les conditions d'utilisation de la marketplace. Plusieurs signalements similaires ont été reçus. Une vérification approfondie est recommandée.</p>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" data-close>Fermer</button>
+      ${r.status==='pending' || r.status==='in_progress' ? `<button class="btn btn-primary" onclick="actionReport('${r.id}')"><i class="fa-solid fa-gavel"></i> Sanctionner</button>` : ''}
+    </div>`);
+}
+function actionReport(id){
+  const r = REPORTS.find(x=>x.id===id);
+  openModal(`
+    <div class="modal-head"><h3>Sanctionner — ${r.target}</h3><button class="btn-icon" data-close><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <label>Décision</label>
+      <select id="dec">
+        <option>Aucune action — refuser le signalement</option>
+        <option>Avertir l'utilisateur / l'entreprise</option>
+        <option>Supprimer le poste / commentaire</option>
+        <option>Suspendre le compte 7 jours</option>
+        <option>Suspendre le compte 30 jours</option>
+        <option>Retirer l'abonnement actuel</option>
+        <option>Bannir définitivement</option>
+      </select>
+      <label>Justification (envoyée au compte)</label>
+      <textarea>Suite au signalement reçu concernant ${r.target}, et après vérification, nous avons pris la décision suivante conformément à nos conditions d'utilisation.</textarea>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" data-close>Annuler</button>
+      <button class="btn btn-primary" style="background:var(--danger)" onclick="closeModal();toast('⚖️ Sanction appliquée pour ${r.target}')">Appliquer la sanction</button>
+    </div>`);
+}
+document.querySelectorAll('.tab').forEach(t=> t.addEventListener('click', ()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active'); tab = t.dataset.tab; render();
+}));
+document.getElementById('qS').addEventListener('input', render);
+counts(); render();
+</script>
+<script>
+(function(){
+  const saved = localStorage.getItem('emp.theme');
+  if(saved === 'light') document.body.classList.add('light-mode');
+})();
+function toggleTheme(){
+  document.body.classList.toggle('light-mode');
+  localStorage.setItem('emp.theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+}
+</script>
+</body>
+</html>

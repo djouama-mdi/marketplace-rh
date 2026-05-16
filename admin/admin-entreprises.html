@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Entreprises — Admin Emploitic</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+<link rel="stylesheet" href="admin.css" />
+</head>
+<body class="admin">
+<div class="admin-shell">
+  <aside class="admin-side">
+    <div class="brand"><span class="logo-mark">e</span><span>emploitic <small style="display:block;font-size:11px;font-weight:500;opacity:.6">Admin Panel</small></span></div>
+    <div class="side-section">Pilotage</div>
+    <a href="admin-dashboard.html" class="side-link"><span class="side-emoji">📊</span><span>Tableau de bord</span></a>
+    <a href="admin-entreprises.html" class="side-link active"><span class="side-emoji">🏢</span><span>Entreprises</span></a>
+    <a href="admin-signalements.html" class="side-link"><span class="side-emoji">🚩</span><span>Signalements</span></a>
+    <div class="side-section">Commercial</div>
+    <a href="admin-abonnements.html" class="side-link"><span class="side-emoji">👑</span><span>Abonnements</span></a>
+    <div class="side-section">Compte</div>
+    <a href="admin-profil.html" class="side-link"><span class="side-emoji">🛡️</span><span>Mon profil</span></a>
+    <div class="side-foot"><a href="../app.html" class="side-link"><span class="side-emoji">🚪</span><span>Déconnexion</span></a></div>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-top">
+      <h1>Entreprises</h1>
+      <div class="search"><i class="fa-solid fa-magnifying-glass" style="color:var(--text-muted)"></i><input id="qSearch" placeholder="Rechercher une entreprise…" /></div>
+      <div class="top-actions"><button class="theme-toggle" onclick="toggleTheme()" title="Basculer thème" aria-label="Basculer thème"><i class="fa-solid fa-moon icon-dark"></i><i class="fa-solid fa-sun icon-light"></i></button>
+        <button class="icon-btn"><i class="fa-regular fa-bell"></i><span class="dot"></span></button>
+        <div class="admin-avatar">AD</div>
+      </div>
+    </div>
+
+    <div class="admin-content">
+      <div class="tabs">
+        <button class="tab active" data-tab="all">Toutes (<span id="cAll">0</span>)</button>
+        <button class="tab" data-tab="pending">En attente (<span id="cPend">0</span>)</button>
+        <button class="tab" data-tab="active">Actives</button>
+        <button class="tab" data-tab="suspended">Suspendues</button>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h2>Liste des entreprises</h2><span class="sub" id="resCount"></span></div>
+        <table class="tbl">
+          <thead><tr><th>Entreprise</th><th>Secteur</th><th>Plan</th><th>Missions</th><th>Inscription</th><th>Fidélité</th><th>Statut</th><th style="text-align:right">Actions</th></tr></thead>
+          <tbody id="tbAll"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="admin.js"></script>
+<script>
+let currentTab = 'all';
+function rowsFor(tab){
+  if(tab==='pending') return PENDING_COMPANIES.map(c=>({...c, plan:'—', missions:0, status:'pending', loyalty:'—'}));
+  if(tab==='active') return COMPANIES.filter(c=>c.status==='active');
+  if(tab==='suspended') return COMPANIES.filter(c=>c.status==='suspended');
+  return COMPANIES;
+}
+function render(){
+  const q = document.getElementById('qSearch').value.toLowerCase();
+  let rows = rowsFor(currentTab).filter(c => c.name.toLowerCase().includes(q));
+  document.getElementById('resCount').textContent = rows.length+' résultat(s)';
+  document.getElementById('cAll').textContent = COMPANIES.length;
+  document.getElementById('cPend').textContent = PENDING_COMPANIES.length;
+  document.getElementById('tbAll').innerHTML = rows.map(c => `
+    <tr>
+      <td><div class="firm"><div class="ava">${initials(c.name)}</div><div><strong>${c.name}</strong><small>${c.email}</small></div></div></td>
+      <td>${c.sector}</td>
+      <td>${c.plan==='—'?'—':`<span class="chip ${c.plan}">${c.plan.toUpperCase()}</span>`}</td>
+      <td><strong>${c.missions||0}</strong></td>
+      <td>${c.since||c.date}</td>
+      <td>${c.loyalty||'—'}</td>
+      <td><span class="chip ${c.status==='pending'?'pending':c.status==='suspended'?'suspended':'active'}">${c.status==='pending'?'En attente':c.status==='suspended'?'Suspendue':'Active'}</span></td>
+      <td style="text-align:right">
+        ${c.status==='pending' ? `
+          <button class="btn-icon success" onclick="toast('✓ ${c.name} acceptée')"><i class="fa-solid fa-check"></i></button>
+          <button class="btn-icon danger" onclick="toast('✕ ${c.name} refusée')"><i class="fa-solid fa-xmark"></i></button>
+        ` : `
+          <a href="admin-entreprise-details.html?id=${c.id}" class="btn-icon"><i class="fa-regular fa-eye"></i> Détails</a>
+        `}
+      </td>
+    </tr>`).join('');
+}
+document.querySelectorAll('.tab').forEach(t=> t.addEventListener('click', ()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active'); currentTab = t.dataset.tab; render();
+}));
+document.getElementById('qSearch').addEventListener('input', render);
+render();
+</script>
+<script>
+(function(){
+  const saved = localStorage.getItem('emp.theme');
+  if(saved === 'light') document.body.classList.add('light-mode');
+})();
+function toggleTheme(){
+  document.body.classList.toggle('light-mode');
+  localStorage.setItem('emp.theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+}
+</script>
+</body>
+</html>

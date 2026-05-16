@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Abonnements — Admin Emploitic</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+<link rel="stylesheet" href="admin.css" />
+</head>
+<body class="admin">
+<div class="admin-shell">
+  <aside class="admin-side">
+    <div class="brand"><span class="logo-mark">e</span><span>emploitic <small style="display:block;font-size:11px;font-weight:500;opacity:.6">Admin Panel</small></span></div>
+    <div class="side-section">Pilotage</div>
+    <a href="admin-dashboard.html" class="side-link"><span class="side-emoji">📊</span><span>Tableau de bord</span></a>
+    <a href="admin-entreprises.html" class="side-link"><span class="side-emoji">🏢</span><span>Entreprises</span></a>
+    <a href="admin-signalements.html" class="side-link"><span class="side-emoji">🚩</span><span>Signalements</span></a>
+    <div class="side-section">Commercial</div>
+    <a href="admin-abonnements.html" class="side-link active"><span class="side-emoji">👑</span><span>Abonnements</span></a>
+    <div class="side-section">Compte</div>
+    <a href="admin-profil.html" class="side-link"><span class="side-emoji">🛡️</span><span>Mon profil</span></a>
+    <div class="side-foot"><a href="../app.html" class="side-link"><span class="side-emoji">🚪</span><span>Déconnexion</span></a></div>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-top">
+      <h1>Gestion des abonnements</h1>
+      <div class="top-actions"><button class="theme-toggle" onclick="toggleTheme()" title="Basculer thème" aria-label="Basculer thème"><i class="fa-solid fa-moon icon-dark"></i><i class="fa-solid fa-sun icon-light"></i></button><div class="admin-avatar">AD</div></div>
+    </div>
+
+    <div class="admin-content">
+
+      <!-- Switch entreprises / prestataires -->
+      <div class="tabs">
+        <button class="tab active" data-aud="entreprises"><i class="fa-solid fa-building"></i> Pour les entreprises</button>
+        <button class="tab" data-aud="prestataires"><i class="fa-solid fa-user-tie"></i> Pour les prestataires</button>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div><h2 id="audTitle">Plans Entreprises</h2><div class="sub">Configurez prix, durée et fonctionnalités de chaque plan</div></div>
+          <button class="btn-icon success"><i class="fa-solid fa-floppy-disk"></i> Sauvegarder</button>
+        </div>
+
+        <div class="plans-grid" id="plansGrid"></div>
+      </div>
+
+      <!-- Promos -->
+      <div class="panel">
+        <div class="panel-head">
+          <div><h2>Promotions & remises fidélité</h2><div class="sub">Codes débloqués pour les entreprises fidèles</div></div>
+          <button class="btn-icon success" onclick="openPromo()"><i class="fa-solid fa-plus"></i> Nouvelle promo</button>
+        </div>
+
+        <div class="tabs">
+          <button class="tab active" data-pTab="active">Actives</button>
+          <button class="tab" data-pTab="upcoming">À venir</button>
+          <button class="tab" data-pTab="expired">Historique</button>
+        </div>
+
+        <table class="tbl">
+          <thead><tr><th>Code promo</th><th>Entreprise</th><th>Type de remise</th><th>Période</th><th>Statut</th><th style="text-align:right">Actions</th></tr></thead>
+          <tbody id="tbPromo"></tbody>
+        </table>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script src="admin.js"></script>
+<script>
+const PLANS = {
+  entreprises: [
+    { tier:'bronze', name:'Bronze', price:'9 900 DZD / mois', features:["Jusqu'à 3 missions actives","Profils vérifiés","Messagerie intégrée","Support email"] },
+    { tier:'silver', name:'Silver', price:'24 900 DZD / mois', features:["Missions illimitées","Mise en avant standard","Support prioritaire 6j/7","Account manager dédié","Analytics avancés"] },
+    { tier:'gold',   name:'Gold',   price:'49 900 DZD / mois', features:["Tout Silver","Multi-utilisateurs","SSO entreprise","API & intégrations ATS","SLA 24/7","Branding personnalisé"] },
+  ],
+  prestataires: [
+    { tier:'bronze', name:'Bronze', price:'Gratuit', features:["Profil public","3 candidatures / mois","Messagerie limitée"] },
+    { tier:'silver', name:'Silver', price:'2 900 DZD / mois', features:["Candidatures illimitées","Mise en avant profil","Stats de visite","Badge vérifié"] },
+    { tier:'gold',   name:'Gold',   price:'5 900 DZD / mois', features:["Tout Silver","Top du classement","Coaching CV","Accès missions premium","Facturation intégrée"] },
+  ]
+};
+
+let aud = 'entreprises';
+function renderPlans(){
+  document.getElementById('audTitle').textContent = aud==='entreprises'?'Plans Entreprises':'Plans Prestataires';
+  document.getElementById('plansGrid').innerHTML = PLANS[aud].map(p=>`
+    <div class="plan-edit ${p.tier}">
+      <span class="chip ${p.tier}">${p.name.toUpperCase()}</span>
+      <h3 style="margin-top:10px">${p.name}</h3>
+      <div class="price">${p.price}</div>
+      <ul>${p.features.map(f=>`<li><i class="fa-solid fa-check"></i> ${f}</li>`).join('')}</ul>
+      <div style="display:flex;gap:8px">
+        <button class="btn-icon" style="flex:1"><i class="fa-regular fa-pen-to-square"></i> Modifier</button>
+        <button class="btn-icon"><i class="fa-solid fa-eye"></i></button>
+      </div>
+    </div>`).join('');
+}
+document.querySelectorAll('[data-aud]').forEach(t=> t.addEventListener('click',()=>{
+  document.querySelectorAll('[data-aud]').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active'); aud = t.dataset.aud; renderPlans();
+}));
+
+let pTab = 'active';
+function renderPromos(){
+  const labels = { active:'Active', upcoming:'À venir', expired:'Expirée' };
+  const rows = PROMOS.filter(p=>p.status===pTab);
+  document.getElementById('tbPromo').innerHTML = rows.map(p=>`
+    <tr>
+      <td><strong style="font-family:var(--font-mono);color:var(--primary)">${p.code}</strong></td>
+      <td>${p.firm}</td>
+      <td>${p.type}</td>
+      <td>${p.start} → ${p.end}</td>
+      <td><span class="chip ${p.status==='active'?'active':p.status==='upcoming'?'pending':'refused'}">${labels[p.status]}</span></td>
+      <td style="text-align:right">
+        <button class="btn-icon"><i class="fa-regular fa-eye"></i></button>
+        <button class="btn-icon danger"><i class="fa-regular fa-trash-can"></i></button>
+      </td>
+    </tr>`).join('') || '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-muted)">Aucune promotion</td></tr>';
+}
+document.querySelectorAll('[data-pTab]').forEach(t=> t.addEventListener('click',()=>{
+  document.querySelectorAll('[data-pTab]').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active'); pTab = t.dataset.pTab; renderPromos();
+}));
+
+function openPromo(){
+  openModal(`
+    <div class="modal-head"><h3>Nouvelle promotion</h3><button class="btn-icon" data-close><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <div class="field-row">
+        <div><label>Code promo</label><input value="EMP-2026-NEW" /></div>
+        <div><label>Entreprise cible</label><input placeholder="Toutes ou nom entreprise" /></div>
+      </div>
+      <label>Type de remise</label>
+      <select><option>Discount %</option><option>Prolongement abonnement</option><option>Mois offerts</option><option>Upgrade gratuit</option></select>
+      <div class="field-row">
+        <div><label>Date début</label><input type="date" /></div>
+        <div><label>Date fin</label><input type="date" /></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" data-close>Annuler</button>
+      <button class="btn btn-primary" onclick="closeModal();toast('🎉 Promotion créée')">Créer</button>
+    </div>`);
+}
+
+renderPlans(); renderPromos();
+</script>
+<script>
+(function(){
+  const saved = localStorage.getItem('emp.theme');
+  if(saved === 'light') document.body.classList.add('light-mode');
+})();
+function toggleTheme(){
+  document.body.classList.toggle('light-mode');
+  localStorage.setItem('emp.theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+}
+</script>
+</body>
+</html>

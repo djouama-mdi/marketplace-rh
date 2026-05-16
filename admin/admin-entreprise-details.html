@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Détails Entreprise — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+<link rel="stylesheet" href="admin.css" />
+</head>
+<body class="admin">
+<div class="admin-shell">
+  <aside class="admin-side">
+    <div class="brand"><span class="logo-mark">e</span><span>emploitic <small style="display:block;font-size:11px;font-weight:500;opacity:.6">Admin Panel</small></span></div>
+    <div class="side-section">Pilotage</div>
+    <a href="admin-dashboard.html" class="side-link"><span class="side-emoji">📊</span><span>Tableau de bord</span></a>
+    <a href="admin-entreprises.html" class="side-link active"><span class="side-emoji">🏢</span><span>Entreprises</span></a>
+    <a href="admin-signalements.html" class="side-link"><span class="side-emoji">🚩</span><span>Signalements</span></a>
+    <div class="side-section">Commercial</div>
+    <a href="admin-abonnements.html" class="side-link"><span class="side-emoji">👑</span><span>Abonnements</span></a>
+    <div class="side-section">Compte</div>
+    <a href="admin-profil.html" class="side-link"><span class="side-emoji">🛡️</span><span>Mon profil</span></a>
+    <div class="side-foot"><a href="../app.html" class="side-link"><span class="side-emoji">🚪</span><span>Déconnexion</span></a></div>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-top">
+      <a href="admin-entreprises.html" class="icon-btn"><i class="fa-solid fa-arrow-left"></i></a>
+      <h1 id="ttl">Fiche entreprise</h1>
+      <div class="top-actions"><button class="theme-toggle" onclick="toggleTheme()" title="Basculer thème" aria-label="Basculer thème"><i class="fa-solid fa-moon icon-dark"></i><i class="fa-solid fa-sun icon-light"></i></button><div class="admin-avatar">AD</div></div>
+    </div>
+
+    <div class="admin-content">
+      <div class="detail-grid">
+        <!-- Left column -->
+        <div>
+          <div class="detail-card" id="cardLeft"></div>
+          <div class="detail-card" style="margin-top:18px">
+            <h3 style="font-size:15px;font-weight:700;margin-bottom:14px"><i class="fa-solid fa-bolt" style="color:var(--warning)"></i> Actions rapides</h3>
+            <button class="btn btn-outline" style="width:100%;margin-bottom:8px" onclick="openLoyalty()"><i class="fa-solid fa-gift"></i> Offrir une remise fidélité</button>
+            <button class="btn btn-outline" style="width:100%;margin-bottom:8px" onclick="toast('Email envoyé')"><i class="fa-regular fa-envelope"></i> Contacter</button>
+            <button class="btn btn-outline" style="width:100%;color:var(--danger);border-color:var(--danger)" onclick="if(confirm('Suspendre ce compte ?'))toast('Compte suspendu')"><i class="fa-solid fa-ban"></i> Suspendre</button>
+          </div>
+        </div>
+
+        <!-- Right column -->
+        <div>
+          <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr); margin-bottom:20px">
+            <div class="kpi"><div class="ic b1"><i class="fa-solid fa-briefcase"></i></div><h3>Missions publiées</h3><div class="val" id="kMis">0</div></div>
+            <div class="kpi"><div class="ic b2"><i class="fa-solid fa-handshake"></i></div><h3>Recrutements</h3><div class="val">14</div></div>
+            <div class="kpi"><div class="ic b3"><i class="fa-solid fa-star"></i></div><h3>Note moyenne</h3><div class="val">4.7</div></div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head"><h2>Informations générales</h2></div>
+            <div class="info-list" id="infoList"></div>
+          </div>
+
+          <div class="panel" style="margin-top:20px">
+            <div class="panel-head"><h2>Remises fidélité actives</h2><button class="btn-icon success" onclick="openLoyalty()"><i class="fa-solid fa-plus"></i> Ajouter</button></div>
+            <table class="tbl">
+              <thead><tr><th>Code</th><th>Type</th><th>Période</th><th>Statut</th></tr></thead>
+              <tbody id="tbLoyal"></tbody>
+            </table>
+          </div>
+
+          <div class="panel" style="margin-top:20px">
+            <div class="panel-head"><h2>Dernières missions publiées</h2></div>
+            <table class="tbl">
+              <thead><tr><th>Titre</th><th>Date</th><th>Candidatures</th><th>Statut</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Consultant SIRH Senior</strong></td><td>2026-05-08</td><td>23</td><td><span class="chip active">Active</span></td></tr>
+                <tr><td><strong>Chef de projet RH Digital</strong></td><td>2026-05-02</td><td>14</td><td><span class="chip active">Active</span></td></tr>
+                <tr><td><strong>Recruteur IT</strong></td><td>2026-04-22</td><td>41</td><td><span class="chip info">Pourvue</span></td></tr>
+                <tr><td><strong>Formateur Workday</strong></td><td>2026-04-15</td><td>9</td><td><span class="chip info">Clôturée</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="admin.js"></script>
+<script>
+const id = new URLSearchParams(location.search).get('id') || 'c1';
+const c = COMPANIES.find(x=>x.id===id) || COMPANIES[0];
+document.getElementById('ttl').textContent = c.name;
+document.getElementById('kMis').textContent = c.missions;
+
+document.getElementById('cardLeft').innerHTML = `
+  <div class="ava-lg">${initials(c.name)}</div>
+  <h2 style="font-size:20px;font-weight:800;margin-bottom:4px">${c.name}</h2>
+  <p style="color:var(--text-soft);font-size:13px;margin-bottom:14px">${c.sector} · ${c.city}</p>
+  <span class="chip ${c.plan}">Plan ${c.plan.toUpperCase()}</span>
+  <span class="chip ${c.status}" style="margin-left:6px">${c.status==='active'?'Actif':'Suspendu'}</span>
+  <p style="margin-top:14px;font-size:14px;color:var(--text-soft)">Fidélité : <strong style="color:var(--warning)">${c.loyalty}</strong></p>
+`;
+
+document.getElementById('infoList').innerHTML = `
+  <div class="row"><span>Email</span><span>${c.email}</span></div>
+  <div class="row"><span>Téléphone</span><span>+213 21 XX XX XX</span></div>
+  <div class="row"><span>Adresse</span><span>${c.city}, Algérie</span></div>
+  <div class="row"><span>Secteur</span><span>${c.sector}</span></div>
+  <div class="row"><span>Inscription</span><span>${c.since}</span></div>
+  <div class="row"><span>Plan actuel</span><span>${c.plan.toUpperCase()}</span></div>
+  <div class="row"><span>Missions actives</span><span>${c.missions}</span></div>
+`;
+
+const LOYAL = [
+  { code:'GOLD-'+initials(c.name)+'-25', type:'Discount 25%', start:'2026-05-01', end:'2026-07-31', status:'active' },
+  { code:'EXT-'+initials(c.name)+'-3M', type:'Prolongement +3 mois', start:'2026-04-15', end:'2026-07-15', status:'active' },
+];
+function renderLoyal(){
+  document.getElementById('tbLoyal').innerHTML = LOYAL.map(p=>`
+    <tr><td><strong>${p.code}</strong></td><td>${p.type}</td><td>${p.start} → ${p.end}</td><td><span class="chip active">Active</span></td></tr>
+  `).join('') || '<tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:24px">Aucune remise active</td></tr>';
+}
+renderLoyal();
+
+function openLoyalty(){
+  openModal(`
+    <div class="modal-head"><h3>Nouvelle remise fidélité — ${c.name}</h3><button class="btn-icon" data-close><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <label>Type de remise</label>
+      <select id="lType">
+        <option>Discount %</option>
+        <option>Prolongement d'abonnement</option>
+        <option>Mois offerts</option>
+        <option>Upgrade gratuit (Silver → Gold)</option>
+      </select>
+      <div class="field-row">
+        <div><label>Valeur</label><input id="lVal" placeholder="Ex: 25% ou 3 mois" value="25%" /></div>
+        <div><label>Code promo</label><input id="lCode" value="GOLD-${initials(c.name)}-25" /></div>
+      </div>
+      <div class="field-row">
+        <div><label>Début</label><input type="date" value="2026-05-13" /></div>
+        <div><label>Fin</label><input type="date" value="2026-08-13" /></div>
+      </div>
+      <label>Message à l'entreprise</label>
+      <textarea>Bonjour ${c.name},
+
+En reconnaissance de votre fidélité, nous vous offrons une remise exclusive sur votre abonnement Emploitic.
+
+Cordialement,
+L'équipe Emploitic</textarea>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" data-close>Annuler</button>
+      <button class="btn btn-primary" onclick="closeModal();toast('🎁 Remise fidélité activée pour ${c.name}')"><i class="fa-solid fa-check"></i> Appliquer</button>
+    </div>`);
+}
+</script>
+<script>
+(function(){
+  const saved = localStorage.getItem('emp.theme');
+  if(saved === 'light') document.body.classList.add('light-mode');
+})();
+function toggleTheme(){
+  document.body.classList.toggle('light-mode');
+  localStorage.setItem('emp.theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+}
+</script>
+</body>
+</html>

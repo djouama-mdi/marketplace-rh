@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>Choix du Dashboard</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+
+    body{
+      min-height:100vh;
+      background:
+        radial-gradient(circle at top right, rgba(37,99,235,.12), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(6,182,212,.12), transparent 35%),
+        var(--bg);
+    }
+
+    .dashboard-page{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:40px 24px;
+    }
+
+    .dashboard-wrapper{
+      width:100%;
+      max-width:1300px;
+    }
+
+    .page-head{
+      text-align:center;
+      margin-bottom:48px;
+    }
+
+    .page-head .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 18px;
+      border-radius:999px;
+      background:var(--primary-50);
+      color:var(--primary);
+      font-size:.82rem;
+      font-weight:700;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      border:1px solid #c7dafd;
+      margin-bottom:18px;
+    }
+
+    .page-head h1{
+      font-size:clamp(2.2rem,4vw,3.6rem);
+      font-weight:800;
+      letter-spacing:-.03em;
+      color:var(--text);
+      margin-bottom:14px;
+    }
+
+    .page-head p{
+      max-width:760px;
+      margin:auto;
+      color:var(--text-soft);
+      font-size:1.05rem;
+      line-height:1.7;
+    }
+
+    .dashboard-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:26px;
+    }
+
+    .dashboard-card{
+      position:relative;
+      overflow:hidden;
+      border-radius:28px;
+      padding:38px 30px;
+      min-height:340px;
+      color:white;
+      text-decoration:none;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      transition:var(--transition);
+      box-shadow:var(--shadow-lg);
+      isolation:isolate;
+    }
+
+    .dashboard-card::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:rgba(255,255,255,.08);
+      opacity:0;
+      transition:var(--transition);
+      z-index:-1;
+    }
+
+    .dashboard-card:hover{
+      transform:translateY(-10px) scale(1.02);
+    }
+
+    .dashboard-card:hover::before{
+      opacity:1;
+    }
+
+    .dashboard-card .top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      margin-bottom:30px;
+    }
+
+    .dashboard-icon{
+      width:72px;
+      height:72px;
+      border-radius:22px;
+      background:rgba(255,255,255,.15);
+      backdrop-filter:blur(10px);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:34px;
+      font-weight:800;
+      box-shadow:0 10px 30px rgba(0,0,0,.15);
+    }
+
+    .dashboard-label{
+      padding:8px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,.14);
+      font-size:.78rem;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    .dashboard-card h2{
+      font-size:2rem;
+      line-height:1.15;
+      margin-bottom:16px;
+      font-weight:800;
+      letter-spacing:-.02em;
+    }
+
+    .dashboard-card p{
+      font-size:.98rem;
+      line-height:1.7;
+      opacity:.92;
+      max-width:320px;
+    }
+
+    .dashboard-footer{
+      margin-top:32px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+    }
+
+    .dashboard-btn{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:14px 20px;
+      border-radius:14px;
+      background:rgba(255,255,255,.16);
+      border:1px solid rgba(255,255,255,.18);
+      backdrop-filter:blur(8px);
+      font-weight:700;
+      transition:var(--transition);
+    }
+
+    .dashboard-card:hover .dashboard-btn{
+      background:rgba(255,255,255,.24);
+      transform:translateX(4px);
+    }
+
+    .dashboard-number{
+      font-size:3.2rem;
+      font-weight:800;
+      opacity:.12;
+      line-height:1;
+    }
+
+    /* FREELANCE */
+    .freelance{
+      background:
+        radial-gradient(circle at top right, rgba(255,255,255,.22), transparent 35%),
+        linear-gradient(135deg, #2563eb 0%, #1e40af 55%, #06b6d4 100%);
+    }
+
+    /* ENTREPRISE */
+    .entreprise{
+      background:
+        radial-gradient(circle at top right, rgba(255,255,255,.18), transparent 35%),
+        linear-gradient(135deg, #0f172a 0%, #1e293b 55%, #334155 100%);
+    }
+
+    /* ADMIN */
+    .admin{
+      background:
+        radial-gradient(circle at top right, rgba(255,255,255,.2), transparent 35%),
+        linear-gradient(135deg, #7c3aed 0%, #5b21b6 55%, #2563eb 100%);
+    }
+
+    @media(max-width:1024px){
+
+      .dashboard-grid{
+        grid-template-columns:1fr;
+      }
+
+      .dashboard-card{
+        min-height:280px;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <main class="dashboard-page">
+
+    <div class="dashboard-wrapper">
+
+      <div class="page-head">
+
+        <div class="badge">
+          Marketplace RH
+        </div>
+
+        <h1>
+          Accès aux Dashboards
+        </h1>
+
+        <p>
+          Sélectionnez l’espace correspondant à votre profil afin d’accéder
+          aux fonctionnalités dédiées de la plateforme Marketplace RH.
+        </p>
+
+      </div>
+
+      <div class="dashboard-grid">
+
+        <!-- FREELANCE -->
+        <a href="#" class="dashboard-card freelance">
+
+          <div class="top">
+            <div class="dashboard-icon">F</div>
+            <div class="dashboard-label">Freelance</div>
+          </div>
+
+          <div>
+            <h2>Dashboard Freelance</h2>
+
+            <p>
+              Gérez vos candidatures, missions, messages et opportunités
+              professionnelles depuis votre espace personnel.
+            </p>
+          </div>
+
+          <div class="dashboard-footer">
+
+            <div class="dashboard-btn">
+              Accéder →
+            </div>
+
+            <div class="dashboard-number">
+              01
+            </div>
+
+          </div>
+
+        </a>
+
+        <!-- ENTREPRISE -->
+        <a href="#" class="dashboard-card entreprise">
+
+          <div class="top">
+            <div class="dashboard-icon">E</div>
+            <div class="dashboard-label">Entreprise</div>
+          </div>
+
+          <div>
+            <h2>Dashboard Entreprise</h2>
+
+            <p>
+              Publiez des missions, gérez vos recrutements et échangez
+              avec les meilleurs profils du marché.
+            </p>
+          </div>
+
+          <div class="dashboard-footer">
+
+            <div class="dashboard-btn">
+              Accéder →
+            </div>
+
+            <div class="dashboard-number">
+              02
+            </div>
+
+          </div>
+
+        </a>
+
+        <!-- ADMIN -->
+        <a href="admin/admin-dashboard.html" class="dashboard-card admin">
+
+          <div class="top">
+            <div class="dashboard-icon">A</div>
+            <div class="dashboard-label">Administration</div>
+          </div>
+
+          <div>
+            <h2>Dashboard Admin</h2>
+
+            <p>
+              Supervisez l’ensemble de la plateforme, les utilisateurs,
+              les statistiques et les contenus administratifs.
+            </p>
+          </div>
+
+          <div class="dashboard-footer">
+
+            <div class="dashboard-btn">
+              Accéder →
+            </div>
+
+            <div class="dashboard-number">
+              03
+            </div>
+
+          </div>
+
+        </a>
+
+      </div>
+
+    </div>
+
+  </main>
+
+</body>
+</html>

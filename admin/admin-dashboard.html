@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Dashboard Admin — Emploitic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&amp;family=DM+Mono:wght@400;500&amp;family=Playfair+Display:wght@700;800&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+<link rel="stylesheet" href="admin.css" />
+</head>
+<body class="admin">
+
+<div class="admin-shell">
+
+  <!-- ===== Sidebar ===== -->
+  <aside class="admin-side">
+    <div class="brand">
+      <span class="logo-mark">e</span>
+      <span>emploitic <small style="display:block;font-size:11px;font-weight:500;opacity:.6">Admin Panel</small></span>
+    </div>
+
+    <div class="side-section">Pilotage</div>
+    <a href="admin-dashboard.html" class="side-link active"><span class="side-emoji">📊</span><span>Tableau de bord</span></a>
+    <a href="admin-entreprises.html" class="side-link"><span class="side-emoji">🏢</span><span>Entreprises</span></a>
+    <a href="admin-signalements.html" class="side-link"><span class="side-emoji">🚩</span><span>Signalements</span></a>
+
+    <div class="side-section">Commercial</div>
+    <a href="admin-abonnements.html" class="side-link"><span class="side-emoji">👑</span><span>Abonnements</span></a>
+
+    <div class="side-section">Compte</div>
+    <a href="admin-profil.html" class="side-link"><span class="side-emoji">🛡️</span><span>Mon profil</span></a>
+    <div class="side-foot">
+      <a href="../app.html" class="side-link"><span class="side-emoji">🚪</span><span>Déconnexion</span></a>
+    </div>
+  </aside>
+
+  <!-- ===== Main ===== -->
+  <main class="admin-main">
+    <div class="admin-top">
+      <h1>Tableau de bord</h1>
+      <div class="search">
+        <i class="fa-solid fa-magnifying-glass" style="color:var(--text-muted)"></i>
+        <input placeholder="Rechercher entreprise, offre, utilisateur…" />
+      </div>
+      <div class="top-actions"><button class="theme-toggle" onclick="toggleTheme()" title="Basculer thème" aria-label="Basculer thème"><i class="fa-solid fa-moon icon-dark"></i><i class="fa-solid fa-sun icon-light"></i></button>
+        <button class="icon-btn"><i class="fa-regular fa-bell"></i><span class="dot"></span></button>
+        <button class="icon-btn"><i class="fa-regular fa-message"></i></button>
+        <div class="admin-avatar">AD</div>
+      </div>
+    </div>
+
+    <div class="admin-content">
+
+      <div class="welcome-banner">
+  <div class="welcome-text">
+    <div>
+      <h2 style="display: flex; align-items: center; gap: 12px;">
+        Bienvenue, Amine Drici <span class="welcome-emoji">👋</span>
+      </h2>
+      <p>Voici ce qui se passe sur votre marketplace aujourd'hui.</p>
+    </div>
+  </div>
+</div>
+        <div class="welcome-meta">
+          <span class="chip info"><i class="fa-regular fa-calendar"></i> Vendredi 15 mai 2026</span>
+        </div>
+      </div>
+
+      <!-- KPI -->
+      <div class="kpi-grid">
+        <div class="kpi"><div class="ic b1"><i class="fa-solid fa-building"></i></div><h3>Entreprises actives</h3><div class="val">1 248</div><span class="delta up"><i class="fa-solid fa-arrow-up"></i> +12% ce mois</span></div>
+        <div class="kpi"><div class="ic b2"><i class="fa-solid fa-briefcase"></i></div><h3>Missions publiées</h3><div class="val">3 412</div><span class="delta up"><i class="fa-solid fa-arrow-up"></i> +8.4%</span></div>
+        <div class="kpi"><div class="ic b3"><i class="fa-solid fa-user-tie"></i></div><h3>Prestataires</h3><div class="val">5 670</div><span class="delta up"><i class="fa-solid fa-arrow-up"></i> +18%</span></div>
+        <div class="kpi"><div class="ic b4"><i class="fa-solid fa-flag"></i></div><h3>Signalements en cours</h3><div class="val">42</div><span class="delta down"><i class="fa-solid fa-arrow-down"></i> -5%</span></div>
+      </div>
+
+      <!-- Charts row -->
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-head">
+            <div><h2>Évolution des inscriptions</h2><div class="sub">Entreprises & prestataires sur 12 mois</div></div>
+            <span class="chip info">2026</span>
+          </div>
+          <div class="chart-wrap"><canvas id="chartLine"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>Répartition abonnements</h2></div>
+          <div class="chart-wrap"><canvas id="chartDoughnut"></canvas></div>
+        </div>
+      </div>
+
+      <div class="grid-2b">
+        <div class="panel">
+          <div class="panel-head"><h2>Missions par secteur</h2></div>
+          <div class="chart-wrap sm"><canvas id="chartBar"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>Revenus mensuels (DZD)</h2></div>
+          <div class="chart-wrap sm"><canvas id="chartArea"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Demandes de création -->
+      <div class="panel">
+        <div class="panel-head">
+          <div><h2>Demandes de création de compte</h2><div class="sub">Validez ou refusez les inscriptions entreprises</div></div>
+          <span class="chip pending"><i class="fa-solid fa-clock"></i> 5 en attente</span>
+        </div>
+        <table class="tbl">
+          <thead><tr><th>Entreprise</th><th>Secteur</th><th>Ville</th><th>Date</th><th>Taille</th><th style="text-align:right">Actions</th></tr></thead>
+          <tbody id="tblPending"></tbody>
+        </table>
+      </div>
+
+      <!-- Entreprises présentes -->
+      <div class="panel">
+        <div class="panel-head">
+          <div><h2>Entreprises sur la marketplace</h2><div class="sub">Liste complète & accès aux fiches détaillées</div></div>
+          <a href="admin-entreprises.html" class="btn-icon">Voir tout <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <table class="tbl">
+          <thead><tr><th>Entreprise</th><th>Plan</th><th>Missions</th><th>Inscription</th><th>Statut</th><th style="text-align:right">Action</th></tr></thead>
+          <tbody id="tblFirms"></tbody>
+        </table>
+      </div>
+
+      <!-- Signalements récents -->
+      <div class="panel">
+        <div class="panel-head">
+          <div><h2>Signalements récents</h2><div class="sub">Aperçu rapide — gestion complète sur la page dédiée</div></div>
+          <a href="admin-signalements.html" class="btn-icon">Tout gérer <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <table class="tbl">
+          <thead><tr><th>Cible</th><th>Source</th><th>Motif</th><th>Date</th><th>Statut</th></tr></thead>
+          <tbody id="tblReports"></tbody>
+        </table>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="admin.js"></script>
+<script>
+/* ===== Render pending companies ===== */
+function renderPending(){
+  const tb = document.getElementById('tblPending');
+  tb.innerHTML = PENDING_COMPANIES.map(c => `
+    <tr>
+      <td><div class="firm"><div class="ava">${initials(c.name)}</div><div><strong>${c.name}</strong><small>${c.email}</small></div></div></td>
+      <td>${c.sector}</td><td>${c.city}</td><td>${c.date}</td><td>${c.size}</td>
+      <td style="text-align:right">
+        <button class="btn-icon" onclick="viewPending('${c.id}')"><i class="fa-regular fa-eye"></i></button>
+        <button class="btn-icon success" onclick="approvePending('${c.id}')"><i class="fa-solid fa-check"></i> Accepter</button>
+        <button class="btn-icon danger" onclick="refusePending('${c.id}')"><i class="fa-solid fa-xmark"></i> Refuser</button>
+      </td>
+    </tr>`).join('');
+}
+function viewPending(id){
+  const c = PENDING_COMPANIES.find(x=>x.id===id);
+  openModal(`
+    <div class="modal-head"><h3>${c.name}</h3><button class="btn-icon" data-close><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <div class="info-list">
+        <div class="row"><span>Email</span><span>${c.email}</span></div>
+        <div class="row"><span>Secteur</span><span>${c.sector}</span></div>
+        <div class="row"><span>Ville</span><span>${c.city}</span></div>
+        <div class="row"><span>Taille</span><span>${c.size}</span></div>
+        <div class="row"><span>Date demande</span><span>${c.date}</span></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" data-close>Fermer</button>
+      <button class="btn btn-primary" onclick="approvePending('${c.id}')"><i class="fa-solid fa-check"></i> Accepter</button>
+    </div>`);
+}
+function approvePending(id){
+  const c = PENDING_COMPANIES.find(x=>x.id===id);
+  closeModal();
+  toast(`✓ ${c.name} a été acceptée sur la marketplace.`);
+}
+function refusePending(id){
+  const c = PENDING_COMPANIES.find(x=>x.id===id);
+  openModal(`
+    <div class="modal-head"><h3>Refuser : ${c.name}</h3><button class="btn-icon" data-close><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <p style="color:var(--text-soft);font-size:14px;margin-bottom:16px">Indiquez la raison du refus. Une fiche explicative sera envoyée à l'entreprise.</p>
+      <label>Motif du refus</label>
+      <select id="refReason">
+        <option>Adresse à revoir lors de l'inscription</option>
+        <option>Documents juridiques manquants ou invalides</option>
+        <option>Email professionnel non vérifiable</option>
+        <option>Secteur non éligible à la marketplace</option>
+        <option>Doublon avec un compte existant</option>
+        <option>Autre</option>
+      </select>
+      <label>Message détaillé envoyé à l'entreprise</label>
+      <textarea id="refMsg" placeholder="Bonjour, votre demande n'a pas pu être validée car...">Bonjour ${c.name},
+
+Après examen de votre demande, nous ne pouvons malheureusement pas valider votre inscription pour la raison suivante : revoir l'adresse renseignée lors de l'inscription.
+
+Vous pouvez soumettre une nouvelle demande après correction.
+
+Cordialement,
+L'équipe Emploitic</textarea>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" data-close>Annuler</button>
+      <button class="btn btn-primary" style="background:var(--danger)" onclick="confirmRefuse('${c.id}')"><i class="fa-solid fa-paper-plane"></i> Envoyer le refus</button>
+    </div>`);
+}
+function confirmRefuse(id){
+  const c = PENDING_COMPANIES.find(x=>x.id===id);
+  closeModal();
+  toast(`✕ ${c.name} a été refusée. Notification envoyée.`);
+}
+
+/* ===== Firms table ===== */
+function renderFirms(){
+  const tb = document.getElementById('tblFirms');
+  tb.innerHTML = COMPANIES.slice(0,6).map(c => `
+    <tr>
+      <td><div class="firm"><div class="ava">${initials(c.name)}</div><div><strong>${c.name}</strong><small>${c.sector} · ${c.city}</small></div></div></td>
+      <td><span class="chip ${c.plan}">${c.plan.toUpperCase()}</span></td>
+      <td><strong>${c.missions}</strong></td>
+      <td>${c.since}</td>
+      <td><span class="chip ${c.status}">${c.status==='active'?'Actif':'Suspendu'}</span></td>
+      <td style="text-align:right"><a href="admin-entreprise-details.html?id=${c.id}" class="btn-icon"><i class="fa-regular fa-eye"></i> Détails</a></td>
+    </tr>`).join('');
+}
+
+/* ===== Reports table ===== */
+function renderReports(){
+  const tb = document.getElementById('tblReports');
+  const labels = { pending:'En attente', in_progress:'En traitement', resolved:'Résolu', refused:'Refusé' };
+  tb.innerHTML = REPORTS.slice(0,5).map(r => `
+    <tr>
+      <td><strong>${r.target}</strong></td>
+      <td>${r.firm}</td>
+      <td>${r.reason}</td>
+      <td>${r.date}</td>
+      <td><span class="chip ${r.status==='pending'?'pending':r.status==='resolved'?'active':r.status==='refused'?'refused':'info'}">${labels[r.status]}</span></td>
+    </tr>`).join('');
+}
+
+renderPending(); renderFirms(); renderReports();
+
+/* ===== Charts — Dark Theme ===== */
+Chart.defaults.color = '#5a5a7a';
+Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
+
+const orange = '#ff8c42', cyan = '#4cc9f0', gold = '#ffd166', purple = '#a855f7', green = '#06d6a0';
+
+const gridOpts = { color:'rgba(255,255,255,0.05)', drawBorder:false };
+const tickOpts  = { color:'#5a5a7a', font:{ family:"'DM Sans',sans-serif", size:11 } };
+
+new Chart(chartLine, {
+  type:'line',
+  data:{ labels:['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Août','Sep','Oct','Nov','Déc'],
+    datasets:[
+      { label:'Entreprises', data:[42,58,71,85,98,112,134,156,178,201,234,268],
+        borderColor:orange, backgroundColor:'rgba(255,140,66,0.08)', tension:.4, fill:true, pointRadius:3, pointBackgroundColor:orange },
+      { label:'Prestataires', data:[120,180,240,310,402,520,648,790,920,1080,1240,1420],
+        borderColor:cyan, backgroundColor:'rgba(76,201,240,0.07)', tension:.4, fill:true, pointRadius:3, pointBackgroundColor:cyan },
+    ]},
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{ position:'bottom', labels:{ color:'#a8a8c8', usePointStyle:true, pointStyleWidth:10, font:{family:"'DM Sans',sans-serif",size:12} } } },
+    scales:{ x:{ grid:gridOpts, ticks:tickOpts }, y:{ grid:gridOpts, ticks:tickOpts } } }
+});
+
+new Chart(chartDoughnut, {
+  type:'doughnut',
+  data:{ labels:['Bronze','Silver','Gold'], datasets:[{
+    data:[420,580,248],
+    backgroundColor:['rgba(217,119,6,0.85)','rgba(148,163,184,0.7)','rgba(255,209,102,0.9)'],
+    borderWidth:2, borderColor:'#13131f', hoverBorderColor:'#13131f' }]},
+  options:{ responsive:true, maintainAspectRatio:false, cutout:'68%',
+    plugins:{ legend:{ position:'bottom', labels:{ color:'#a8a8c8', usePointStyle:true, pointStyleWidth:10, font:{family:"'DM Sans',sans-serif",size:12} } } } }
+});
+
+new Chart(chartBar, {
+  type:'bar',
+  data:{ labels:['Tech','Banque','Industrie','Énergie','Télécom','Santé','Pharma'],
+    datasets:[{ label:'Missions', data:[820,540,612,478,398,289,201],
+      backgroundColor:'rgba(255,140,66,0.75)', hoverBackgroundColor:orange, borderRadius:8, borderSkipped:false }]},
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{ display:false } },
+    scales:{ x:{ grid:{display:false}, ticks:tickOpts }, y:{ grid:gridOpts, ticks:tickOpts } } }
+});
+
+new Chart(chartArea, {
+  type:'line',
+  data:{ labels:['Jan','Fév','Mar','Avr','Mai','Juin'],
+    datasets:[{ label:'Revenus', data:[2.4,3.1,3.8,4.2,5.1,6.4],
+      borderColor:green, backgroundColor:'rgba(6,214,160,0.1)', fill:true, tension:.4,
+      pointRadius:4, pointBackgroundColor:green }]},
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{ display:false } },
+    scales:{ x:{ grid:{display:false}, ticks:tickOpts }, y:{ grid:gridOpts, ticks:tickOpts, callback:undefined,
+      ticks:{ ...tickOpts, callback:v=>v+'M' } } } }
+});
+</script>
+<script>
+(function(){
+  const saved = localStorage.getItem('emp.theme');
+  if(saved === 'light') document.body.classList.add('light-mode');
+})();
+function toggleTheme(){
+  document.body.classList.toggle('light-mode');
+  localStorage.setItem('emp.theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+}
+</script>
+</body>
+</html>
