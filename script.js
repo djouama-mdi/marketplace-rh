@@ -28,7 +28,7 @@ async function checkPassword() {
     const realPassword = data[0].password;
 
     if (password === realPassword) {
-      window.location.href = "choixDash.html";
+      window.location.href = "app.html";
     } else {
       document.getElementById("error").innerText =
         "Mot de passe incorrect";
