@@ -109,9 +109,7 @@ function toast(msg, type='success'){
 function initThemeToggle() {
   const btn  = document.getElementById('themeToggle');
   const icon = document.getElementById('themeIcon');
-  // Skip if button doesn't exist or already initialised by the page itself
-  if (!btn || btn.dataset.themeReady === '1') return;
-  btn.dataset.themeReady = '1';
+  if (!btn) return;
 
   const root = document.documentElement;
 
@@ -119,18 +117,21 @@ function initThemeToggle() {
     if (theme === 'light') {
       root.setAttribute('data-theme','light');
       if (icon) icon.className = 'fa-solid fa-sun';
-      btn.title = 'Passer en mode sombre';
+      if (btn)  btn.title = 'Passer en mode sombre';
     } else {
       root.removeAttribute('data-theme');
       if (icon) icon.className = 'fa-solid fa-moon';
-      btn.title = 'Passer en mode clair';
+      if (btn)  btn.title = 'Passer en mode clair';
     }
   }
 
-  applyTheme(localStorage.getItem('emploitic-theme') || 'dark');
+  // Restore saved theme
+  const saved = localStorage.getItem('emploitic-theme') || 'dark';
+  applyTheme(saved);
 
   btn.addEventListener('click', () => {
-    const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    const current = root.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+    const next = current === 'dark' ? 'light' : 'dark';
     applyTheme(next);
     localStorage.setItem('emploitic-theme', next);
   });

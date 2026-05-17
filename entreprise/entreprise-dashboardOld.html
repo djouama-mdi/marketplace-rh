@@ -4,9 +4,6 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Tableau de bord — Emploitic Entreprise</title>
-<script>
-(function(){var t=localStorage.getItem('emploitic-theme')||'dark';if(t==='light')document.documentElement.setAttribute('data-theme','light');})();
-</script>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 <link rel="stylesheet" href="company.css" />
@@ -159,6 +156,35 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="company.js"></script>
 <script>
+/* ── Theme Toggle ── */
+const root  = document.documentElement;
+const toggle = document.getElementById('themeToggle');
+const icon   = document.getElementById('themeIcon');
+
+// Restore saved preference
+const saved = localStorage.getItem('emploitic-theme') || 'dark';
+applyTheme(saved);
+
+toggle.addEventListener('click', () => {
+  const current = root.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+  const next = current === 'dark' ? 'light' : 'dark';
+  applyTheme(next);
+  localStorage.setItem('emploitic-theme', next);
+  // Update charts with new color
+  updateChartColors();
+});
+
+function applyTheme(theme) {
+  if (theme === 'light') {
+    root.setAttribute('data-theme', 'light');
+    icon.className = 'fa-solid fa-sun';
+    toggle.title = 'Passer en mode sombre';
+  } else {
+    root.removeAttribute('data-theme');
+    icon.className = 'fa-solid fa-moon';
+    toggle.title = 'Passer en mode clair';
+  }
+}
 
 /* ── Candidatures table ── */
 const statusLabel = { pending:'En attente', in_review:'En revue', accepted:'Acceptée', refused:'Refusée' };
@@ -295,9 +321,6 @@ function updateChartColors() {
   lineChart.update();
   donutChart.update();
 }
-
-// Recolor charts on theme switch
-window._onThemeToggle = updateChartColors;
 </script>
 </body>
 </html>
