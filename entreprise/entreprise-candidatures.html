@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Candidatures — Emploitic Entreprise</title>
+<script>
+(function(){var t=localStorage.getItem('emploitic-theme')||'dark';if(t==='light')document.documentElement.setAttribute('data-theme','light');})();
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="company.css">
+</head>
+<body class="company">
+<div class="app-shell">
+  <aside class="app-side" data-sidebar="candidatures"></aside>
+  <main class="app-main">
+    <div class="app-top">
+      <h1>Candidatures reçues</h1>
+      <div class="top-actions">
+        <button class="theme-toggle" id="themeToggle"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
+        <div class="app-avatar">YT</div>
+      </div>
+    </div>
+    <div class="app-content">
+
+      <div class="kpi-grid">
+        <div class="kpi"><div class="ic b1"><i class="fa-solid fa-paper-plane"></i></div><h3>Total</h3><div class="val">51</div><span class="delta up"><i class="fa-solid fa-arrow-up fa-xs"></i> +24%</span></div>
+        <div class="kpi"><div class="ic b2"><i class="fa-solid fa-clock"></i></div><h3>En attente</h3><div class="val">12</div></div>
+        <div class="kpi"><div class="ic b3"><i class="fa-solid fa-check"></i></div><h3>Acceptées</h3><div class="val">8</div></div>
+        <div class="kpi"><div class="ic b4"><i class="fa-solid fa-xmark"></i></div><h3>Refusées</h3><div class="val">13</div></div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" data-status="all">Toutes</button>
+        <button class="tab" data-status="pending">En attente</button>
+        <button class="tab" data-status="in_review">En revue</button>
+        <button class="tab" data-status="accepted">Acceptées</button>
+        <button class="tab" data-status="refused">Refusées</button>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div><h2>Liste des candidatures</h2></div>
+          <div class="filter-bar">
+            <select id="filterOffer"><option value="">Toutes les offres</option></select>
+            <select id="sort"><option value="date">Plus récentes</option><option value="match">Meilleur match</option></select>
+          </div>
+        </div>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Candidat</th><th>Offre</th><th>Date</th><th>Match</th><th>Statut</th>
+              <th style="text-align:right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="tblCand"></tbody>
+        </table>
+      </div>
+
+    </div>
+  </main>
+</div>
+<script src="company.js"></script>
+<script>
+let stat = 'all';
+const offerParam = new URLSearchParams(location.search).get('offer');
+
+document.getElementById('filterOffer').innerHTML = '<option value="">Toutes les offres</option>' +
+  OFFERS.map(o=>`<option value="${o.id}" ${o.id===offerParam?'selected':''}>${o.title}</option>`).join('');
+
+const labels = { pending:'En attente', in_review:'En revue', accepted:'Acceptée', refused:'Refusée' };
+const chips  = { pending:'pending', in_review:'in_progress', accepted:'active', refused:'refused' };
+
+function render(){
+  const offer = document.getElementById('filterOffer').value;
+  const sort  = document.getElementById('sort').value;
+  let list = CANDIDATURES.filter(c =>
+    (stat==='all' || c.status===stat) && (!offer || c.offerId===offer));
+  list.sort((a,b)=> sort==='match' ? b.match-a.match : b.date.localeCompare(a.date));
+
+  document.getElementById('tblCand').innerHTML = list.map(c=>`
+    <tr>
+      <td>
+        <div class="firm">
+          <div class="ava">${initials(c.candidate)}</div>
+          <div>
+            <strong>${c.candidate}</strong>
+            <small>Freelance · ★ 4.${Math.floor(Math.random()*4+5)}/5</small>
+          </div>
+        </div>
+      </td>
+      <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.offer}</td>
+      <td style="color:var(--text-muted)">${c.date}</td>
+      <td><strong style="color:var(--primary)">${c.match}%</strong></td>
+      <td><span class="chip ${chips[c.status]}">${labels[c.status]}</span></td>
+      <td style="text-align:right;white-space:nowrap">
+        <button class="btn-icon" onclick="viewCand('${c.id}')"><i class="fa-regular fa-eye"></i> Profil</button>
+        <a href="entreprise-messagerie.html" class="btn-icon"><i class="fa-regular fa-message"></i></a>
+        ${c.status!=='accepted'?`<button class="btn-icon success" onclick="accept('${c.id}')"><i class="fa-solid fa-check"></i></button>`:''}
+        ${c.status!=='refused'?`<button class="btn-icon danger"  onclick="refuse('${c.id}')"><i class="fa-solid fa-xmark"></i></button>`:''}
+      </td>
+    </tr>`).join('') ||
+    '<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--text-muted)">Aucune candidature</td></tr>';
+}
+
+function viewCand(id){
+  const c = CANDIDATURES.find(x=>x.id===id);
+  openModal(`
+    <div class="modal-head">
+      <h3>${c.candidate}</h3>
+      <button class="btn-icon" data-close><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex;gap:14px;align-items:center;margin-bottom:16px">
+        <div style="width:64px;height:64px;border-radius:16px;background:var(--grad-primary);color:#fff;display:grid;place-items:center;font-weight:800;font-size:1.3rem;font-family:var(--font-head);box-shadow:0 8px 24px var(--primary-glow)">${initials(c.candidate)}</div>
+        <div>
+          <h2 style="font-size:1rem;font-weight:700;color:var(--text)">Candidature : ${c.offer}</h2>
+          <p style="color:var(--text-soft);font-size:.82rem;margin-top:3px">Reçue le ${c.date} · Match <strong style="color:var(--primary)">${c.match}%</strong></p>
+          <span class="lock-badge" style="margin-top:6px"><i class="fa-solid fa-lock"></i> Coordonnées privées</span>
+        </div>
+      </div>
+      <h3 style="font-weight:700;margin-bottom:8px;font-size:.85rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em">CV & Documents</h3>
+      <div class="info-list">
+        <div class="row"><span><i class="fa-regular fa-file-pdf" style="color:#dc2626"></i> CV.pdf</span><button class="btn-icon"><i class="fa-solid fa-download"></i></button></div>
+        <div class="row"><span><i class="fa-regular fa-file" style="color:#0ea5e9"></i> Lettre de motivation</span><button class="btn-icon"><i class="fa-solid fa-download"></i></button></div>
+        <div class="row"><span><i class="fa-solid fa-graduation-cap" style="color:var(--primary)"></i> Diplôme — Vérifié</span><span class="chip active">Vérifié</span></div>
+        <div class="row"><span><i class="fa-solid fa-certificate" style="color:#f59e0b"></i> Certifications (3)</span><span class="chip active">Vérifiées</span></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" data-close>Fermer</button>
+      <a href="entreprise-messagerie.html" class="btn btn-outline"><i class="fa-regular fa-message"></i> Contacter</a>
+      <button class="btn btn-outline" style="color:var(--danger);border-color:rgba(239,68,68,.3)" onclick="refuse('${c.id}')">Refuser</button>
+      <button class="btn btn-primary" onclick="accept('${c.id}')"><i class="fa-solid fa-check"></i> Accepter</button>
+    </div>`);
+}
+
+function accept(id){ const c=CANDIDATURES.find(x=>x.id===id); c.status='accepted'; closeModal(); render(); toast(`✓ ${c.candidate} acceptée`); }
+function refuse(id){ const c=CANDIDATURES.find(x=>x.id===id); c.status='refused';  closeModal(); render(); toast(`${c.candidate} refusée`); }
+
+document.querySelectorAll('.tab').forEach(t=> t.addEventListener('click', ()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active'); stat = t.dataset.status; render();
+}));
+document.getElementById('filterOffer').addEventListener('change', render);
+document.getElementById('sort').addEventListener('change', render);
+render();
+</script>
+</body>
+</html>

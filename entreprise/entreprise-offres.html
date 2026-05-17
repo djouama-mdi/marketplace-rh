@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mes offres — Emploitic Entreprise</title>
+<script>
+(function(){var t=localStorage.getItem('emploitic-theme')||'dark';if(t==='light')document.documentElement.setAttribute('data-theme','light');})();
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="company.css">
+</head>
+<body class="company">
+<div class="app-shell">
+  <aside class="app-side" data-sidebar="offres"></aside>
+  <main class="app-main">
+    <div class="app-top">
+      <h1>Mes offres publiées</h1>
+      <div class="top-actions">
+        <button class="btn-icon primary" onclick="openCreate()"><i class="fa-solid fa-plus"></i> Créer une offre</button>
+        <button class="theme-toggle" id="themeToggle"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
+        <div class="app-avatar">YT</div>
+      </div>
+    </div>
+    <div class="app-content">
+
+      <div class="kpi-grid">
+        <div class="kpi"><div class="ic b1"><i class="fa-solid fa-briefcase"></i></div><h3>Offres actives</h3><div class="val">3</div><span class="delta up"><i class="fa-solid fa-arrow-up fa-xs"></i> +1 ce mois</span></div>
+        <div class="kpi"><div class="ic b2"><i class="fa-solid fa-eye"></i></div><h3>Vues totales</h3><div class="val">2 350</div><span class="delta up"><i class="fa-solid fa-arrow-up fa-xs"></i> +18%</span></div>
+        <div class="kpi"><div class="ic b3"><i class="fa-solid fa-paper-plane"></i></div><h3>Candidatures</h3><div class="val">96</div><span class="delta up"><i class="fa-solid fa-arrow-up fa-xs"></i> +24%</span></div>
+        <div class="kpi"><div class="ic b4"><i class="fa-solid fa-box-archive"></i></div><h3>Archivées</h3><div class="val">2</div></div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" data-status="all">Toutes</button>
+        <button class="tab" data-status="active">Actives</button>
+        <button class="tab" data-status="archived">Archivées</button>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div><h2>Liste des offres</h2></div>
+          <div class="filter-bar">
+            <input placeholder="Rechercher…" id="search">
+            <select id="filterService">
+              <option value="">Tous services</option>
+              <option>Développement</option><option>Design</option><option>Marketing</option><option>Data</option>
+            </select>
+          </div>
+        </div>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Offre</th><th>Service</th><th>Type</th><th>Vues</th><th>Cand.</th><th>Statut</th>
+              <th style="text-align:right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="tblOffers"></tbody>
+        </table>
+      </div>
+
+    </div>
+  </main>
+</div>
+<script src="company.js"></script>
+<script>
+let filterStatus = 'all';
+
+function renderOffers(){
+  const q   = document.getElementById('search').value.toLowerCase();
+  const svc = document.getElementById('filterService').value;
+  const list = OFFERS.filter(o =>
+    (filterStatus==='all' || o.status===filterStatus) &&
+    (!q   || o.title.toLowerCase().includes(q)) &&
+    (!svc || o.service===svc));
+  document.getElementById('tblOffers').innerHTML = list.map(o=>`
+    <tr>
+      <td>
+        <strong>${o.title}</strong>
+        <small>${o.city} · publiée ${o.date}</small>
+      </td>
+      <td><span class="chip info">${o.service}</span></td>
+      <td style="color:var(--text-soft)">${o.type}</td>
+      <td style="color:var(--text-soft)">${o.views}</td>
+      <td><strong style="color:var(--primary)">${o.applications}</strong></td>
+      <td><span class="chip ${o.status==='active'?'active':'lock'}">${o.status==='active'?'Active':'Archivée'}</span></td>
+      <td style="text-align:right;white-space:nowrap">
+        <a href="entreprise-candidatures.html?offer=${o.id}" class="btn-icon"><i class="fa-solid fa-users"></i> Candidatures</a>
+        <button class="btn-icon" onclick="editOffer('${o.id}')"><i class="fa-solid fa-pen"></i></button>
+        <button class="btn-icon" onclick="archiveOffer('${o.id}')"><i class="fa-solid fa-box-archive"></i></button>
+        <button class="btn-icon danger" onclick="deleteOffer('${o.id}')"><i class="fa-solid fa-trash"></i></button>
+      </td>
+    </tr>`).join('') ||
+    '<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--text-muted)">Aucune offre correspondante</td></tr>';
+}
+
+document.getElementById('search').addEventListener('input', renderOffers);
+document.getElementById('filterService').addEventListener('change', renderOffers);
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', ()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active'); filterStatus = t.dataset.status; renderOffers();
+}));
+
+function openCreate(){
+  openModal(`
+    <div class="modal-head"><h3><i class="fa-solid fa-plus" style="color:var(--primary)"></i> Créer une nouvelle offre</h3><button class="btn-icon" data-close><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <label>Titre du poste</label><input placeholder="Ex : Développeur Full-Stack">
+      <div class="field-row">
+        <div><label>Service</label><select><option>Développement</option><option>Design</option><option>Marketing</option><option>Data</option></select></div>
+        <div><label>Type de contrat</label><select><option>CDI</option><option>CDD</option><option>Freelance</option><option>Stage</option><option>Mission</option></select></div>
+      </div>
+      <div class="field-row">
+        <div><label>Localisation</label><input placeholder="Alger / Remote / Hybride"></div>
+        <div><label>Salaire / TJM</label><input placeholder="Ex : 80 000 DA / 8 000 DA/j"></div>
+      </div>
+      <label>Description</label>
+      <textarea placeholder="Décrivez la mission, les compétences requises, l'environnement tech…"></textarea>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" data-close>Annuler</button>
+      <button class="btn btn-primary" onclick="closeModal();toast('✓ Offre publiée avec succès')"><i class="fa-solid fa-paper-plane"></i> Publier</button>
+    </div>`);
+}
+
+function editOffer(id){
+  const o = OFFERS.find(x=>x.id===id);
+  openModal(`
+    <div class="modal-head"><h3>Modifier : ${o.title}</h3><button class="btn-icon" data-close><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <label>Titre</label><input value="${o.title}">
+      <div class="field-row">
+        <div><label>Ville</label><input value="${o.city}"></div>
+        <div><label>Type</label><input value="${o.type}"></div>
+      </div>
+      <label>Description</label>
+      <textarea>Mission de ${o.type} pour notre service ${o.service}, basée à ${o.city}.</textarea>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" data-close>Annuler</button>
+      <button class="btn btn-primary" onclick="closeModal();toast('✓ Offre modifiée')">Enregistrer</button>
+    </div>`);
+}
+
+function archiveOffer(id){
+  const o = OFFERS.find(x=>x.id===id);
+  o.status = o.status==='active' ? 'archived' : 'active';
+  renderOffers();
+  toast(o.status==='active' ? '✓ Offre réactivée' : 'Offre archivée');
+}
+
+function deleteOffer(id){
+  openModal(`
+    <div class="modal-head"><h3>Supprimer cette offre ?</h3><button class="btn-icon" data-close><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body"><p style="color:var(--text-soft)">Cette action est irréversible. Toutes les candidatures associées seront archivées.</p></div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" data-close>Annuler</button>
+      <button class="btn btn-primary" style="background:var(--danger);box-shadow:none" onclick="confirmDelete('${id}')"><i class="fa-solid fa-trash"></i> Supprimer</button>
+    </div>`);
+}
+
+function confirmDelete(id){
+  const i = OFFERS.findIndex(x=>x.id===id);
+  OFFERS.splice(i,1);
+  closeModal(); renderOffers(); toast('Offre supprimée');
+}
+
+renderOffers();
+</script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Profil entreprise — Emploitic</title>
+<script>
+(function(){var t=localStorage.getItem('emploitic-theme')||'dark';if(t==='light')document.documentElement.setAttribute('data-theme','light');})();
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="company.css">
+</head>
+<body class="company">
+<div class="app-shell">
+  <aside class="app-side" data-sidebar="profil"></aside>
+  <main class="app-main">
+    <div class="app-top">
+      <h1>Profil entreprise</h1>
+      <div class="top-actions">
+        <button class="theme-toggle" id="themeToggle" title="Changer le thème"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
+        <div class="app-avatar">YT</div>
+      </div>
+    </div>
+    <div class="app-content">
+
+      <div class="profile-hero">
+        <div class="ava" style="width:52px;height:52px;border-radius:14px;font-size:.82rem">YT</div>
+        <div style="flex:1">
+          <h2>Yassir Tech</h2>
+          <p>Tech · Alger · 200-500 collaborateurs · Membre depuis décembre 2023</p>
+          <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+            <span class="chip active"><i class="fa-solid fa-shield-halved" style="font-size:.65rem"></i> Compte vérifié</span>
+            <span class="chip info"><i class="fa-solid fa-crown" style="font-size:.65rem"></i> Plan Gold</span>
+            <span class="chip" style="background:rgba(251,191,36,.12);color:#fbbf24">★ 4.9 / 5</span>
+          </div>
+        </div>
+        <button class="btn btn-outline"><i class="fa-regular fa-pen-to-square"></i> Modifier</button>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" data-tab="info">Informations</button>
+        <button class="tab" data-tab="services">Services</button>
+        <button class="tab" data-tab="focal">Points focaux</button>
+        <button class="tab" data-tab="docs">Documents</button>
+      </div>
+
+      <!-- INFO -->
+      <div data-pane="info">
+        <div class="grid-2b">
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Informations administratives</h2>
+              <span class="lock-badge"><i class="fa-solid fa-lock"></i> Privé</span>
+            </div>
+            <div class="info-list" style="padding:0 20px">
+              <div class="row"><span>Raison sociale</span><span>Yassir Tech SARL</span></div>
+              <div class="row"><span>RC</span><span>16/00-1234567B23</span></div>
+              <div class="row"><span>NIF</span><span>000216012345678</span></div>
+              <div class="row"><span>Forme juridique</span><span>SARL</span></div>
+              <div class="row"><span>Capital social</span><span>50 000 000 DA</span></div>
+              <div class="row"><span>Adresse siège</span><span>Hydra, Alger</span></div>
+              <div class="row"><span>Email administratif</span><span>admin@yassir.dz</span></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h2>Présentation publique</h2></div>
+            <div style="padding:16px 20px">
+              <p style="font-size:.84rem;color:var(--text-soft);line-height:1.7;margin-bottom:14px">Yassir Tech est la division technologique du groupe Yassir, leader algérien des super-apps. Nous concevons des solutions mobiles et web utilisées par des millions d'utilisateurs en Afrique du Nord.</p>
+              <div style="display:flex;flex-wrap:wrap;gap:7px">
+                <span class="chip info">Tech</span>
+                <span class="chip info">Mobile</span>
+                <span class="chip info">Fintech</span>
+                <span class="chip info">Logistique</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel" style="margin-top:14px">
+          <div class="panel-head"><h2>Logo & médias</h2></div>
+          <div style="padding:16px 20px;display:flex;gap:18px;align-items:center;flex-wrap:wrap">
+            <div style="width:100px;height:100px;border-radius:18px;background:var(--grad-primary);color:#fff;display:grid;place-items:center;font-size:36px;font-weight:800;box-shadow:0 12px 36px var(--primary-glow);font-family:'Syne',sans-serif">YT</div>
+            <div style="flex:1;min-width:180px;display:flex;flex-direction:column;gap:8px">
+              <button class="btn-icon"><i class="fa-solid fa-upload"></i> Changer le logo</button>
+              <button class="btn-icon"><i class="fa-solid fa-image"></i> Photo de couverture</button>
+              <p style="font-size:.72rem;color:var(--text-muted)">PNG / JPG · 2 Mo max · 512×512 recommandé</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SERVICES -->
+      <div data-pane="services" hidden>
+        <div class="panel">
+          <div class="panel-head">
+            <div><h2>Services gérés</h2><div class="sub">Un point focal par service</div></div>
+            <button class="btn-icon primary"><i class="fa-solid fa-plus"></i> Ajouter un service</button>
+          </div>
+          <div class="grid-3" style="padding:14px">
+            <div class="kpi"><div class="ic b1"><i class="fa-solid fa-code"></i></div><h3>Développement</h3><div class="val" style="font-size:.9rem;font-weight:500;color:var(--text-soft)">Lina Bouzid · 2 offres</div></div>
+            <div class="kpi"><div class="ic b2"><i class="fa-solid fa-bullhorn"></i></div><h3>Marketing</h3><div class="val" style="font-size:.9rem;font-weight:500;color:var(--text-soft)">Samir Hadj · 1 offre</div></div>
+            <div class="kpi"><div class="ic b3"><i class="fa-solid fa-palette"></i></div><h3>Design</h3><div class="val" style="font-size:.9rem;font-weight:500;color:var(--text-soft)">Nora Bensalem · 0 offre</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOCAL -->
+      <div data-pane="focal" hidden>
+        <div class="panel">
+          <div class="panel-head">
+            <div><h2>Points focaux</h2><div class="sub">Plan Gold — illimité</div></div>
+            <button class="btn-icon primary" onclick="openAddFocal()"><i class="fa-solid fa-user-plus"></i> Ajouter</button>
+          </div>
+          <table class="tbl">
+            <thead><tr><th>Personne</th><th>Service</th><th>Email</th><th>Statut</th><th style="text-align:right">Actions</th></tr></thead>
+            <tbody id="tblFocal"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- DOCS -->
+      <div data-pane="docs" hidden>
+        <div class="panel">
+          <div class="panel-head">
+            <div><h2>Documents officiels</h2></div>
+            <button class="btn-icon primary"><i class="fa-solid fa-upload"></i> Téléverser</button>
+          </div>
+          <table class="tbl">
+            <thead><tr><th>Document</th><th>Type</th><th>Date</th><th>Statut</th><th style="text-align:right">Action</th></tr></thead>
+            <tbody>
+              <tr><td><i class="fa-regular fa-file-pdf" style="color:#f87171;margin-right:6px"></i>Registre commerce.pdf</td><td>RC</td><td>10/01/2024</td><td><span class="chip active">Validé</span></td><td style="text-align:right"><button class="btn-icon"><i class="fa-solid fa-download"></i></button></td></tr>
+              <tr><td><i class="fa-regular fa-file-pdf" style="color:#f87171;margin-right:6px"></i>NIF.pdf</td><td>Fiscal</td><td>10/01/2024</td><td><span class="chip active">Validé</span></td><td style="text-align:right"><button class="btn-icon"><i class="fa-solid fa-download"></i></button></td></tr>
+              <tr><td><i class="fa-regular fa-file-pdf" style="color:#f87171;margin-right:6px"></i>Statuts SARL.pdf</td><td>Juridique</td><td>15/01/2024</td><td><span class="chip active">Validé</span></td><td style="text-align:right"><button class="btn-icon"><i class="fa-solid fa-download"></i></button></td></tr>
+              <tr><td><i class="fa-regular fa-file-image" style="color:#38bdf8;margin-right:6px"></i>CNAS.jpg</td><td>Social</td><td>02/03/2025</td><td><span class="chip pending">En revue</span></td><td style="text-align:right"><button class="btn-icon"><i class="fa-solid fa-download"></i></button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+<script src="company.js"></script>
+<script>
+function renderFocal(){
+  document.getElementById('tblFocal').innerHTML = FOCAL_POINTS.map(f=>`
+    <tr>
+      <td><div class="firm"><div class="ava">${initials(f.name)}</div><div><strong>${f.name}</strong><small>${f.role}</small></div></div></td>
+      <td><span class="chip info">${f.service}</span></td>
+      <td style="color:var(--text-muted)">${f.email}</td>
+      <td><span class="chip ${f.status==='active'?'active':'refused'}">${f.status==='active'?'Actif':'Désactivé'}</span></td>
+      <td style="text-align:right">
+        <button class="btn-icon"><i class="fa-solid fa-pen"></i></button>
+        <button class="btn-icon ${f.status==='active'?'danger':'success'}" onclick="toggleFocal('${f.id}')">${f.status==='active'?'Désactiver':'Réactiver'}</button>
+      </td>
+    </tr>`).join('');
+}
+
+function toggleFocal(id){
+  const f = FOCAL_POINTS.find(x=>x.id===id);
+  f.status = f.status==='active'?'inactive':'active';
+  renderFocal();
+  toast(`${f.name} : ${f.status==='active'?'réactivé':'désactivé'}`);
+}
+
+function openAddFocal(){
+  openModal(`
+    <div class="modal-head"><h3>Ajouter un point focal</h3><button class="btn-icon" data-close><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <div class="field-row">
+        <div><label>Prénom</label><input placeholder="Prénom"></div>
+        <div><label>Nom</label><input placeholder="Nom"></div>
+      </div>
+      <label>Email professionnel</label>
+      <input type="email" placeholder="prenom@yassir.dz">
+      <label>Service attribué</label>
+      <select><option>Développement</option><option>Marketing</option><option>Design</option><option>Data</option></select>
+      <label>Niveau d'accès</label>
+      <select>
+        <option>Standard (gestion offres du service)</option>
+        <option>Étendu (+ messagerie freelances)</option>
+        <option>Admin (tous accès)</option>
+      </select>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" data-close>Annuler</button>
+      <button class="btn btn-primary" onclick="closeModal();toast('✓ Point focal ajouté · invitation envoyée')"><i class="fa-solid fa-paper-plane"></i> Envoyer l'invitation</button>
+    </div>`);
+}
+
+document.querySelectorAll('.tab').forEach(t=> t.addEventListener('click', ()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');
+  document.querySelectorAll('[data-pane]').forEach(p=> p.hidden = p.dataset.pane !== t.dataset.tab);
+}));
+
+renderFocal();
+</script>
+</body>
+</html>

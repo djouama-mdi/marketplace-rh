@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Recherche freelances — Emploitic Entreprise</title>
+<script>
+(function(){var t=localStorage.getItem('emploitic-theme')||'dark';if(t==='light')document.documentElement.setAttribute('data-theme','light');})();
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="company.css">
+</head>
+<body class="company">
+<div class="app-shell">
+  <aside class="app-side" data-sidebar="freelances"></aside>
+  <main class="app-main">
+    <div class="app-top">
+      <h1>Recherche freelances</h1>
+      <div class="top-actions">
+        <button class="theme-toggle" id="themeToggle"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
+        <div class="app-avatar">YT</div>
+      </div>
+    </div>
+    <div class="app-content">
+
+      <div class="panel">
+        <div class="panel-head">
+          <div><h2>Filtres</h2><div class="sub" id="resultCount"></div></div>
+        </div>
+        <div style="padding:14px 18px">
+          <div class="filter-bar">
+            <input id="qSearch" placeholder="Mot-clé (compétence, métier…)" style="min-width:220px">
+            <select id="qCity">
+              <option value="">Toutes villes</option>
+              <option>Alger</option><option>Oran</option><option>Constantine</option><option>Annaba</option><option>Remote</option>
+            </select>
+            <select id="qAvail">
+              <option value="">Disponibilité</option>
+              <option>Disponible</option><option>Bientôt</option><option>Indisponible</option>
+            </select>
+            <select id="qSort">
+              <option value="rating">Trier par note</option>
+              <option value="jobs">Trier par missions</option>
+            </select>
+            <button class="btn-icon" onclick="resetFilters()"><i class="fa-solid fa-rotate-left"></i> Réinitialiser</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="fl-grid" id="flGrid"></div>
+
+    </div>
+  </main>
+</div>
+<script src="company.js"></script>
+<script>
+function render(){
+  const q     = qSearch.value.toLowerCase();
+  const city  = qCity.value;
+  const avail = qAvail.value;
+  const sort  = qSort.value;
+
+  let list = FREELANCES.filter(f =>
+    (!q     || f.name.toLowerCase().includes(q) || f.role.toLowerCase().includes(q) || f.skills.some(s=>s.toLowerCase().includes(q))) &&
+    (!city  || f.city===city) &&
+    (!avail || f.avail===avail));
+  list.sort((a,b)=> sort==='rating' ? b.rating-a.rating : b.jobs-a.jobs);
+
+  document.getElementById('resultCount').textContent = `${list.length} freelance(s) trouvé(s)`;
+  document.getElementById('flGrid').innerHTML = list.map(f=>`
+    <article class="fl-card">
+      <div class="head">
+        <div class="ava">${initials(f.name)}</div>
+        <div>
+          <h4>${f.name}</h4>
+          <div class="role">${f.role} · ${f.city}</div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span class="stars">★ ${f.rating} <span style="color:var(--text-muted);font-weight:400">(${f.jobs} missions)</span></span>
+        <span class="chip ${f.avail==='Disponible'?'active':f.avail==='Bientôt'?'pending':'refused'}">${f.avail}</span>
+      </div>
+      <div class="skills">${f.skills.map(s=>`<span>${s}</span>`).join('')}</div>
+      <div style="font-size:.83rem;color:var(--text-soft)"><i class="fa-solid fa-coins" style="color:var(--primary);margin-right:4px"></i>${f.rate}</div>
+      <div class="actions">
+        <button class="btn-icon primary" onclick="viewProfile('${f.id}')"><i class="fa-regular fa-eye"></i> Profil</button>
+        <a href="entreprise-messagerie.html" class="btn-icon"><i class="fa-regular fa-message"></i> Contacter</a>
+        <button class="btn-icon" onclick="toast('✓ Profil enregistré')"><i class="fa-regular fa-bookmark"></i></button>
+      </div>
+    </article>`).join('') ||
+    '<p style="grid-column:1/-1;text-align:center;color:var(--text-muted);padding:40px">Aucun freelance ne correspond à vos critères.</p>';
+}
+
+function viewProfile(id){
+  const f = FREELANCES.find(x=>x.id===id);
+  openModal(`
+    <div class="modal-head">
+      <h3>${f.name}</h3>
+      <button class="btn-icon" data-close><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex;gap:16px;align-items:center;margin-bottom:16px">
+        <div style="width:72px;height:72px;border-radius:18px;background:var(--grad-primary);color:#fff;display:grid;place-items:center;font-weight:800;font-size:1.4rem;font-family:var(--font-head);box-shadow:0 8px 24px var(--primary-glow)">${initials(f.name)}</div>
+        <div>
+          <h2 style="font-size:1.05rem;font-weight:700;color:var(--text)">${f.role}</h2>
+          <p style="color:var(--text-soft);font-size:.82rem">${f.city} · ${f.rate}</p>
+          <p style="color:#fbbf24;font-size:.82rem;font-weight:600;margin-top:3px">★ ${f.rating} <span style="color:var(--text-muted);font-weight:400">(${f.jobs} missions)</span></p>
+          <span class="lock-badge" style="margin-top:6px"><i class="fa-solid fa-lock"></i> Coordonnées privées</span>
+        </div>
+      </div>
+      <h3 style="font-weight:600;margin-bottom:8px;font-size:.8rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em">Compétences</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px">${f.skills.map(s=>`<span class="chip info">${s}</span>`).join('')}</div>
+      <h3 style="font-weight:600;margin-bottom:8px;font-size:.8rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em">CV & Documents</h3>
+      <div class="info-list">
+        <div class="row"><span><i class="fa-regular fa-file-pdf" style="color:#dc2626"></i> CV ${f.name.split(' ')[0]}.pdf</span><button class="btn-icon"><i class="fa-solid fa-download"></i></button></div>
+        <div class="row"><span><i class="fa-regular fa-file" style="color:#0ea5e9"></i> Portfolio</span><button class="btn-icon"><i class="fa-solid fa-arrow-up-right-from-square"></i></button></div>
+        <div class="row"><span><i class="fa-solid fa-graduation-cap" style="color:var(--primary)"></i> Diplôme Master Informatique — USTHB</span><span class="chip active">Vérifié</span></div>
+        <div class="row"><span><i class="fa-solid fa-certificate" style="color:#f59e0b"></i> Certification AWS Solutions Architect</span><span class="chip active">Vérifié</span></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" data-close>Fermer</button>
+      <button class="btn-icon" onclick="toast('✓ Profil enregistré')"><i class="fa-regular fa-bookmark"></i> Enregistrer</button>
+      <a href="entreprise-messagerie.html" class="btn btn-primary"><i class="fa-regular fa-message"></i> Contacter</a>
+    </div>`);
+}
+
+function resetFilters(){ qSearch.value=''; qCity.value=''; qAvail.value=''; qSort.value='rating'; render(); }
+[qSearch,qCity,qAvail,qSort].forEach(el => el.addEventListener('input', render));
+render();
+</script>
+</body>
+</html>

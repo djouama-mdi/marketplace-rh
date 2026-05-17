@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Missions — Emploitic Entreprise</title>
+<script>
+(function(){var t=localStorage.getItem('emploitic-theme')||'dark';if(t==='light')document.documentElement.setAttribute('data-theme','light');})();
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="company.css">
+</head>
+<body class="company">
+<div class="app-shell">
+  <aside class="app-side" data-sidebar="missions"></aside>
+  <main class="app-main">
+    <div class="app-top">
+      <h1>Missions</h1>
+      <div class="top-actions">
+        <button class="theme-toggle" id="themeToggle" title="Changer le thème"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
+        <div class="app-avatar">YT</div>
+      </div>
+    </div>
+    <div class="app-content">
+
+      <div class="kpi-grid">
+        <div class="kpi"><div class="ic b1"><i class="fa-solid fa-spinner"></i></div><h3>En cours</h3><div class="val">2</div></div>
+        <div class="kpi"><div class="ic b2"><i class="fa-solid fa-eye"></i></div><h3>À valider</h3><div class="val">1</div></div>
+        <div class="kpi"><div class="ic b3"><i class="fa-solid fa-check"></i></div><h3>Terminées</h3><div class="val">1</div></div>
+        <div class="kpi"><div class="ic b4"><i class="fa-solid fa-coins"></i></div><h3>Total engagé</h3><div class="val">1.94M DA</div></div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" data-tab="all">Toutes</button>
+        <button class="tab" data-tab="in_progress">En cours</button>
+        <button class="tab" data-tab="review">À valider</button>
+        <button class="tab" data-tab="done">Terminées</button>
+      </div>
+
+      <div id="missionList" style="display:flex;flex-direction:column;gap:14px"></div>
+
+    </div>
+  </main>
+</div>
+<script src="company.js"></script>
+<script>
+let tab = 'all';
+const labels = { in_progress:'En cours', review:'À valider', done:'Terminée' };
+const chipClass = { in_progress:'in_progress', review:'pending', done:'active' };
+
+function render(){
+  const list = MISSIONS.filter(m=> tab==='all' || m.status===tab);
+  document.getElementById('missionList').innerHTML = list.map(m=>`
+    <article class="mission">
+      <div class="head">
+        <div>
+          <h3>${m.title}</h3>
+          <div class="meta">
+            <span><i class="fa-regular fa-user"></i> ${m.freelance}</span>
+            <span><i class="fa-regular fa-calendar"></i> ${m.start} → ${m.end}</span>
+            <span><i class="fa-solid fa-coins" style="color:var(--primary)"></i> ${m.amount}</span>
+          </div>
+        </div>
+        <span class="chip ${chipClass[m.status]}">${labels[m.status]}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="progress" style="flex:1"><span style="width:${m.progress}%"></span></div>
+        <span style="font-size:.76rem;color:var(--primary);font-weight:600;white-space:nowrap">${m.progress}%</span>
+      </div>
+      <div class="actions">
+        <button class="btn-icon" onclick="viewMission('${m.id}')"><i class="fa-regular fa-eye"></i> Détail</button>
+        <a href="entreprise-messagerie.html" class="btn-icon"><i class="fa-regular fa-message"></i> Messagerie</a>
+        <button class="btn-icon"><i class="fa-regular fa-file-lines"></i> Contrat</button>
+        ${m.status==='review' ? `<button class="btn-icon success" onclick="validate('${m.id}')"><i class="fa-solid fa-check"></i> Valider la livraison</button>` : ''}
+        ${m.status==='done'   ? `<button class="btn-icon primary" onclick="rate('${m.id}')"><i class="fa-solid fa-star"></i> Évaluer</button>` : ''}
+      </div>
+    </article>`).join('') || '<p style="text-align:center;color:var(--text-muted);padding:40px">Aucune mission</p>';
+}
+
+document.querySelectorAll('.tab').forEach(t=> t.addEventListener('click', ()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active'); tab = t.dataset.tab; render();
+}));
+
+function viewMission(id){
+  const m = MISSIONS.find(x=>x.id===id);
+  openModal(`
+    <div class="modal-head"><h3>${m.title}</h3><button class="btn-icon" data-close><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <div class="info-list">
+        <div class="row"><span>Prestataire</span><span>${m.freelance}</span></div>
+        <div class="row"><span>Période</span><span>${m.start} → ${m.end}</span></div>
+        <div class="row"><span>Montant</span><span style="color:var(--primary);font-weight:600">${m.amount}</span></div>
+        <div class="row"><span>Avancement</span><span>${m.progress}%</span></div>
+        <div class="row"><span>Statut</span><span><span class="chip ${chipClass[m.status]}">${labels[m.status]}</span></span></div>
+      </div>
+      <h3 style="font-weight:700;margin:16px 0 8px;font-family:'Syne',sans-serif">Livrables</h3>
+      <div class="info-list">
+        <div class="row"><span><i class="fa-regular fa-circle-check" style="color:var(--success)"></i> Phase 1 — Cadrage</span><span class="chip active">Validé</span></div>
+        <div class="row"><span><i class="fa-regular fa-circle-check" style="color:var(--success)"></i> Phase 2 — Maquettes</span><span class="chip active">Validé</span></div>
+        <div class="row"><span><i class="fa-solid fa-spinner" style="color:#0ea5e9"></i> Phase 3 — Développement</span><span class="chip in_progress">En cours</span></div>
+        <div class="row"><span><i class="fa-regular fa-circle" style="color:var(--text-muted)"></i> Phase 4 — Recette</span><span class="chip lock">À venir</span></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" data-close>Fermer</button>
+      <a href="entreprise-messagerie.html" class="btn btn-primary"><i class="fa-regular fa-message"></i> Messagerie</a>
+    </div>`);
+}
+
+function validate(id){
+  openModal(`
+    <div class="modal-head"><h3>Valider la livraison</h3><button class="btn-icon" data-close><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <p style="color:var(--text-soft);font-size:.84rem;margin-bottom:10px">Confirmez-vous la validation finale ? Le paiement sera libéré au prestataire.</p>
+      <label>Commentaire (optionnel)</label>
+      <textarea placeholder="Précisions sur la livraison…"></textarea>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" data-close>Annuler</button>
+      <button class="btn btn-primary" onclick="confirmValidate('${id}')"><i class="fa-solid fa-check"></i> Valider</button>
+    </div>`);
+}
+
+function confirmValidate(id){
+  const m = MISSIONS.find(x=>x.id===id);
+  m.status='done'; m.progress=100;
+  closeModal(); render();
+  toast('✓ Mission validée — paiement libéré');
+}
+
+function rate(id){
+  openModal(`
+    <div class="modal-head"><h3>Évaluer le prestataire</h3><button class="btn-icon" data-close><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <label>Note globale</label>
+      <div style="font-size:2rem;color:#fbbf24;margin-bottom:10px;cursor:pointer" id="stars">★★★★★</div>
+      <label>Qualité du travail</label>
+      <select><option>Excellent</option><option>Très bien</option><option>Bien</option><option>Moyen</option></select>
+      <label>Respect des délais</label>
+      <select><option>Excellent</option><option>Très bien</option><option>Bien</option><option>Moyen</option></select>
+      <label>Commentaire public</label>
+      <textarea placeholder="Décrivez votre expérience…"></textarea>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" data-close>Plus tard</button>
+      <button class="btn btn-primary" onclick="closeModal();toast('✓ Évaluation publiée — merci !')"><i class="fa-solid fa-paper-plane"></i> Publier</button>
+    </div>`);
+}
+
+render();
+</script>
+</body>
+</html>

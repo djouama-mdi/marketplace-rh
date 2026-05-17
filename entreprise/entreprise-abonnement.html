@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Abonnement — Emploitic Entreprise</title>
+<script>
+(function(){var t=localStorage.getItem('emploitic-theme')||'dark';if(t==='light')document.documentElement.setAttribute('data-theme','light');})();
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="company.css">
+</head>
+<body class="company">
+<div class="app-shell">
+  <aside class="app-side" data-sidebar="abonnement"></aside>
+  <main class="app-main">
+    <div class="app-top">
+      <h1>Mon abonnement</h1>
+      <div class="top-actions">
+        <button class="theme-toggle" id="themeToggle" title="Changer le thème"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
+        <div class="app-avatar">YT</div>
+      </div>
+    </div>
+    <div class="app-content">
+
+      <div class="profile-hero">
+        <div class="ava" style="font-size:1.1rem">👑</div>
+        <div style="flex:1">
+          <h2>Plan Gold — actif</h2>
+          <p>Accès complet · Points focaux illimités · Visibilité maximale</p>
+          <p style="margin-top:5px;font-size:.78rem;color:var(--text-muted)"><i class="fa-regular fa-calendar"></i> Renouvellement automatique le 15 juin 2026</p>
+        </div>
+        <button class="btn btn-outline" onclick="openPromo()"><i class="fa-solid fa-tag"></i> Code promo</button>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi"><div class="ic b1"><i class="fa-solid fa-eye"></i></div><h3>Visibilité ce mois</h3><div class="val">12 480</div><span class="delta up">vues offres</span></div>
+        <div class="kpi"><div class="ic b2"><i class="fa-solid fa-users"></i></div><h3>Points focaux</h3><div class="val">3 / ∞</div><span class="delta up">illimité</span></div>
+        <div class="kpi"><div class="ic b3"><i class="fa-solid fa-briefcase"></i></div><h3>Offres actives</h3><div class="val">3 / ∞</div><span class="delta up">illimité</span></div>
+        <div class="kpi"><div class="ic b4"><i class="fa-solid fa-coins"></i></div><h3>Économisé</h3><div class="val">25%</div><span class="delta up">code promo actif</span></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h2>Formules disponibles</h2></div>
+        <div class="plans-grid">
+          <div class="plan-card gratuit">
+            <h3>Bronze</h3>
+            <div class="plan-note">Fonctionnalités de base incluses</div>
+            <ul>
+              <li><i class="fa-solid fa-check"></i> Accès limité à la marketplace</li>
+              <li><i class="fa-solid fa-check"></i> 1 offre publiée maximum</li>
+              <li><i class="fa-solid fa-check"></i> 1 point focal</li>
+              <li class="ko"><i class="fa-solid fa-xmark"></i> Pas de visibilité étendue</li>
+              <li class="ko"><i class="fa-solid fa-xmark"></i> Pas d'accès freelances Premium</li>
+            </ul>
+            <button class="btn-icon" onclick="changePlan('Bronze')">Choisir</button>
+          </div>
+          <div class="plan-card medium">
+            <h3>Silver</h3>
+            <div class="plan-note">Visibilité et gestion renforcées</div>
+            <ul>
+              <li><i class="fa-solid fa-check"></i> Visibilité étendue (top recherche)</li>
+              <li><i class="fa-solid fa-check"></i> 5 offres publiées</li>
+              <li><i class="fa-solid fa-check"></i> 3 points focaux</li>
+              <li><i class="fa-solid fa-check"></i> Accès messagerie complète</li>
+              <li class="ko"><i class="fa-solid fa-xmark"></i> Support standard</li>
+            </ul>
+            <button class="btn-icon" onclick="changePlan('Silver')">Choisir</button>
+          </div>
+          <div class="plan-card premium current">
+            <h3>Gold</h3>
+            <div class="plan-note">Toutes les fonctionnalités premium incluses</div>
+            <ul>
+              <li><i class="fa-solid fa-check"></i> Accès complet à toutes les fonctionnalités</li>
+              <li><i class="fa-solid fa-check"></i> Offres & points focaux illimités</li>
+              <li><i class="fa-solid fa-check"></i> Visibilité maximale + badge Premium</li>
+              <li><i class="fa-solid fa-check"></i> Accès freelances vérifiés Top</li>
+              <li><i class="fa-solid fa-check"></i> Support prioritaire 24/7</li>
+            </ul>
+            <button class="btn-icon primary" disabled>Plan actuel</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2b">
+        <div class="panel">
+          <div class="panel-head"><h2>Historique des paiements</h2></div>
+          <table class="tbl">
+            <thead><tr><th>Date</th><th>Plan</th><th>Montant</th><th>Statut</th></tr></thead>
+            <tbody>
+              <tr><td>15/05/2026</td><td>Gold</td><td>14 900 DA</td><td><span class="chip active">Payé</span></td></tr>
+              <tr><td>15/04/2026</td><td>Gold</td><td>14 900 DA</td><td><span class="chip active">Payé</span></td></tr>
+              <tr><td>15/03/2026</td><td>Gold</td><td>14 900 DA</td><td><span class="chip active">Payé</span></td></tr>
+              <tr><td>15/02/2026</td><td>Silver</td><td>8 900 DA</td><td><span class="chip active">Payé</span></td></tr>
+              <tr><td>15/01/2026</td><td>Silver</td><td>8 900 DA</td><td><span class="chip active">Payé</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>Moyen de paiement</h2></div>
+          <div style="padding:0 0 14px">
+            <div style="background:var(--grad-primary);color:#fff;padding:22px;border-radius:14px;margin-bottom:14px;position:relative;overflow:hidden">
+              <div style="position:absolute;right:-20px;top:-20px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.1)"></div>
+              <div style="font-size:.72rem;opacity:.75;margin-bottom:10px">Carte CIB</div>
+              <div style="font-size:1.2rem;font-weight:700;letter-spacing:2px;margin-bottom:14px;font-family:'Syne',sans-serif">•••• •••• •••• 4892</div>
+              <div style="display:flex;justify-content:space-between;font-size:.78rem;opacity:.85">
+                <span>Yassir Tech SARL</span><span>12/28</span>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn-icon" style="flex:1"><i class="fa-solid fa-pen"></i> Modifier</button>
+              <button class="btn-icon" style="flex:1"><i class="fa-solid fa-plus"></i> Ajouter</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h2>Code promo actif</h2></div>
+        <div style="padding:16px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+          <div style="font-size:1.2rem;font-weight:800;color:var(--primary);background:var(--primary-50);padding:10px 20px;border-radius:10px;letter-spacing:1px;font-family:'Syne',sans-serif;border:1px solid rgba(16,185,129,.2)">YT-PREMIUM-25</div>
+          <div style="flex:1;min-width:200px;font-size:.83rem;color:var(--text-soft)"><strong style="color:var(--text)">-25%</strong> sur l'abonnement Gold · valide jusqu'au 31/07/2026</div>
+          <button class="btn-icon danger">Retirer</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+<script src="company.js"></script>
+<script>
+function openPromo(){
+  openModal(`
+    <div class="modal-head"><h3>Appliquer un code promo</h3><button class="btn-icon" data-close><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <label>Code promo</label>
+      <input placeholder="EX: PROMO-2026" style="text-transform:uppercase;letter-spacing:1px">
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" data-close>Annuler</button>
+      <button class="btn btn-primary" onclick="closeModal();toast('✓ Code promo appliqué !')">Appliquer</button>
+    </div>`);
+}
+function changePlan(name){
+  openModal(`
+    <div class="modal-head"><h3>Changer pour le plan ${name}</h3><button class="btn-icon" data-close><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <p style="color:var(--text-soft);margin-bottom:12px;font-size:.84rem">Le changement sera effectif au prochain cycle de facturation.</p>
+      <div class="info-list">
+        <div class="row"><span>Plan actuel</span><span>Gold</span></div>
+        <div class="row"><span>Nouveau plan</span><span><strong style="color:var(--primary)">${name}</strong></span></div>
+        <div class="row"><span>Effectif le</span><span>15/06/2026</span></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" data-close>Annuler</button>
+      <button class="btn btn-primary" onclick="closeModal();toast('✓ Changement de plan confirmé')">Confirmer</button>
+    </div>`);
+}
+</script>
+</body>
+</html>

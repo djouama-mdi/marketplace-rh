@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Tableau de bord — Emploitic Entreprise</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+<link rel="stylesheet" href="company.css" />
+</head>
+<body class="company">
+<div class="app-shell">
+  <aside class="app-side" data-sidebar="dashboard"></aside>
+
+  <main class="app-main">
+    <!-- Topbar -->
+    <div class="app-top">
+      <h1>Tableau de bord</h1>
+      <div class="search">
+        <i class="fa-solid fa-magnifying-glass" style="color:var(--text-muted);font-size:.85rem"></i>
+        <input placeholder="Rechercher freelance, mission, candidat…"/>
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn"><i class="fa-regular fa-bell"></i><span class="dot"></span></button>
+        <a href="entreprise-messagerie.html" class="icon-btn"><i class="fa-regular fa-message"></i></a>
+        <!-- THEME TOGGLE -->
+        <button class="theme-toggle" id="themeToggle" title="Changer le thème">
+          <i class="fa-solid fa-moon" id="themeIcon"></i>
+        </button>
+        <div class="app-avatar">YT</div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="app-content">
+
+      <!-- Welcome banner -->
+      <div class="welcome-banner">
+        <div class="welcome-text">
+          <h2>Bienvenue, Yassir Tech <span class="welcome-wave">👋</span></h2>
+          <p>Voici l'activité de votre marketplace aujourd'hui.</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span class="chip active"><i class="fa-solid fa-crown" style="font-size:.65rem"></i> Premium</span>
+          <span class="chip info"><i class="fa-regular fa-calendar" style="font-size:.65rem"></i> Vendredi 15 mai 2026</span>
+        </div>
+      </div>
+
+      <!-- KPIs -->
+      <div class="kpi-grid">
+        <div class="kpi">
+          <div class="ic b1"><i class="fa-solid fa-briefcase"></i></div>
+          <h3>Offres actives</h3>
+          <div class="val">3</div>
+          <span class="delta up"><i class="fa-solid fa-arrow-up fa-xs"></i> +1 ce mois</span>
+        </div>
+        <div class="kpi">
+          <div class="ic b2"><i class="fa-solid fa-paper-plane"></i></div>
+          <h3>Candidatures</h3>
+          <div class="val">51</div>
+          <span class="delta up"><i class="fa-solid fa-arrow-up fa-xs"></i> +24%</span>
+        </div>
+        <div class="kpi">
+          <div class="ic b3"><i class="fa-solid fa-rocket"></i></div>
+          <h3>Missions en cours</h3>
+          <div class="val">2</div>
+          <span class="delta up"><i class="fa-solid fa-arrow-up fa-xs"></i> +1</span>
+        </div>
+        <div class="kpi">
+          <div class="ic b4"><i class="fa-solid fa-star"></i></div>
+          <h3>Note moyenne</h3>
+          <div class="val">4.9</div>
+          <span class="delta up"><i class="fa-solid fa-arrow-up fa-xs"></i> +0.2</span>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Activité de recrutement</h2>
+              <div class="sub">Candidatures & vues sur 6 mois</div>
+            </div>
+            <span class="chip info">2026</span>
+          </div>
+          <div class="chart-wrap"><canvas id="chartLine"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>Statut des candidatures</h2></div>
+          <div class="chart-wrap"><canvas id="chartDonut"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Tables + Missions -->
+      <div class="grid-2b">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Candidatures récentes</h2>
+              <div class="sub">À traiter rapidement</div>
+            </div>
+            <a href="entreprise-candidatures.html" class="btn-icon">Voir tout <i class="fa-solid fa-arrow-right fa-xs"></i></a>
+          </div>
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Candidat</th>
+                <th>Offre</th>
+                <th>Match</th>
+                <th>Statut</th>
+              </tr>
+            </thead>
+            <tbody id="tblCand"></tbody>
+          </table>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Missions actives</h2>
+              <div class="sub">Avancement temps réel</div>
+            </div>
+            <a href="entreprise-missions.html" class="btn-icon">Tout voir <i class="fa-solid fa-arrow-right fa-xs"></i></a>
+          </div>
+          <div id="missionList" style="padding:14px 18px;display:flex;flex-direction:column;gap:16px"></div>
+        </div>
+      </div>
+
+      <!-- Quick access -->
+      <div class="panel">
+        <div class="panel-head"><h2>Accès rapides</h2></div>
+        <div class="grid-3" style="padding:14px">
+          <a href="entreprise-offres.html" class="kpi" style="text-decoration:none;cursor:pointer">
+            <div class="ic b1"><i class="fa-solid fa-plus"></i></div>
+            <h3>Créer une offre</h3>
+            <div class="val" style="font-size:.88rem;font-weight:500;color:var(--text-soft)">Publier une mission</div>
+          </a>
+          <a href="entreprise-freelances.html" class="kpi" style="text-decoration:none;cursor:pointer">
+            <div class="ic b2"><i class="fa-solid fa-magnifying-glass"></i></div>
+            <h3>Trouver un freelance</h3>
+            <div class="val" style="font-size:.88rem;font-weight:500;color:var(--text-soft)">5 670+ profils</div>
+          </a>
+          <a href="entreprise-abonnement.html" class="kpi" style="text-decoration:none;cursor:pointer">
+            <div class="ic b4"><i class="fa-solid fa-crown"></i></div>
+            <h3>Mon abonnement</h3>
+            <div class="val" style="font-size:.88rem;font-weight:500;color:var(--text-soft)">Plan Premium · actif</div>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="company.js"></script>
+<script>
+/* ── Theme Toggle ── */
+const root  = document.documentElement;
+const toggle = document.getElementById('themeToggle');
+const icon   = document.getElementById('themeIcon');
+
+// Restore saved preference
+const saved = localStorage.getItem('emploitic-theme') || 'dark';
+applyTheme(saved);
+
+toggle.addEventListener('click', () => {
+  const current = root.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+  const next = current === 'dark' ? 'light' : 'dark';
+  applyTheme(next);
+  localStorage.setItem('emploitic-theme', next);
+  // Update charts with new color
+  updateChartColors();
+});
+
+function applyTheme(theme) {
+  if (theme === 'light') {
+    root.setAttribute('data-theme', 'light');
+    icon.className = 'fa-solid fa-sun';
+    toggle.title = 'Passer en mode sombre';
+  } else {
+    root.removeAttribute('data-theme');
+    icon.className = 'fa-solid fa-moon';
+    toggle.title = 'Passer en mode clair';
+  }
+}
+
+/* ── Candidatures table ── */
+const statusLabel = { pending:'En attente', in_review:'En revue', accepted:'Acceptée', refused:'Refusée' };
+const statusClass = { pending:'pending', in_review:'in_progress', accepted:'active', refused:'refused' };
+
+document.getElementById('tblCand').innerHTML = CANDIDATURES.slice(0, 5).map(c => `
+  <tr>
+    <td>
+      <div class="firm">
+        <div class="ava">${initials(c.candidate)}</div>
+        <div>
+          <strong>${c.candidate}</strong>
+          <small>match ${c.match}% · il y a ${Math.floor(Math.random()*5)+1}j</small>
+        </div>
+      </div>
+    </td>
+    <td style="max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.offer}</td>
+    <td><strong style="color:var(--primary)">${c.match}%</strong></td>
+    <td><span class="chip ${statusClass[c.status]}">${statusLabel[c.status]}</span></td>
+  </tr>`).join('');
+
+/* ── Missions list ── */
+document.getElementById('missionList').innerHTML = MISSIONS.filter(m => m.status !== 'done').slice(0, 3).map(m => `
+  <div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <strong style="font-size:.85rem;color:var(--text)">${m.title}</strong>
+      <span style="font-size:.75rem;color:var(--primary);font-weight:600">${m.progress}%</span>
+    </div>
+    <div class="progress"><span style="width:${m.progress}%"></span></div>
+    <div style="font-size:.74rem;color:var(--text-muted);margin-top:5px;display:flex;justify-content:space-between">
+      <span><i class="fa-regular fa-user" style="margin-right:4px"></i>${m.freelance}</span>
+      <span style="color:var(--primary-l);font-weight:500">${m.amount}</span>
+    </div>
+  </div>`).join('');
+
+/* ── Charts ── */
+function getChartColors() {
+  const isLight = root.getAttribute('data-theme') === 'light';
+  return {
+    grid: isLight ? 'rgba(0,0,0,.06)' : 'rgba(255,255,255,.06)',
+    tick: isLight ? 'rgba(11,30,20,.45)' : 'rgba(237,250,243,.4)',
+  };
+}
+
+const lineChart = new Chart(document.getElementById('chartLine'), {
+  type: 'line',
+  data: {
+    labels: ['Déc','Jan','Fév','Mar','Avr','Mai'],
+    datasets: [
+      {
+        label: 'Candidatures',
+        data: [12,18,24,38,45,51],
+        borderColor: '#10b981',
+        backgroundColor: 'rgba(16,185,129,.1)',
+        tension: .4,
+        fill: true,
+        pointBackgroundColor: '#10b981',
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        borderWidth: 2,
+      },
+      {
+        label: 'Vues offres',
+        data: [180,240,310,420,520,640],
+        borderColor: '#0ea5e9',
+        backgroundColor: 'rgba(14,165,233,.07)',
+        tension: .4,
+        fill: true,
+        pointBackgroundColor: '#0ea5e9',
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        borderWidth: 2,
+      },
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { position: 'bottom', labels: { color: getChartColors().tick, font: { family: 'DM Sans', size: 11 }, boxWidth: 10, padding: 16 } },
+      tooltip: { backgroundColor: '#111a15', borderColor: 'rgba(255,255,255,.1)', borderWidth: 1, titleFont: { family: 'Syne' }, bodyFont: { family: 'DM Sans' } }
+    },
+    scales: {
+      x: { grid: { color: getChartColors().grid }, ticks: { color: getChartColors().tick, font: { family: 'DM Sans', size: 10 } } },
+      y: { grid: { color: getChartColors().grid }, ticks: { color: getChartColors().tick, font: { family: 'DM Sans', size: 10 } } }
+    }
+  }
+});
+
+const donutChart = new Chart(document.getElementById('chartDonut'), {
+  type: 'doughnut',
+  data: {
+    labels: ['En attente','En revue','Acceptées','Refusées'],
+    datasets: [{
+      data: [12,18,8,13],
+      backgroundColor: ['#f59e0b','#0ea5e9','#10b981','#ef4444'],
+      borderWidth: 0,
+      hoverOffset: 6,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: '68%',
+    plugins: {
+      legend: { position: 'bottom', labels: { color: getChartColors().tick, font: { family: 'DM Sans', size: 11 }, boxWidth: 10, padding: 14 } },
+      tooltip: { backgroundColor: '#111a15', borderColor: 'rgba(255,255,255,.1)', borderWidth: 1, bodyFont: { family: 'DM Sans' } }
+    }
+  }
+});
+
+function updateChartColors() {
+  const c = getChartColors();
+  const isLight = root.getAttribute('data-theme') === 'light';
+  const tooltipBg = isLight ? '#ffffff' : '#111a15';
+  const tooltipBorder = isLight ? 'rgba(0,0,0,.12)' : 'rgba(255,255,255,.1)';
+
+  [lineChart, donutChart].forEach(chart => {
+    if (chart.options.plugins.legend) chart.options.plugins.legend.labels.color = c.tick;
+    if (chart.options.plugins.tooltip) {
+      chart.options.plugins.tooltip.backgroundColor = tooltipBg;
+      chart.options.plugins.tooltip.borderColor = tooltipBorder;
+    }
+  });
+
+  if (lineChart.options.scales) {
+    ['x','y'].forEach(ax => {
+      lineChart.options.scales[ax].grid.color = c.grid;
+      lineChart.options.scales[ax].ticks.color = c.tick;
+    });
+  }
+
+  lineChart.update();
+  donutChart.update();
+}
+</script>
+</body>
+</html>

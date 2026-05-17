@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Messagerie — Emploitic Entreprise</title>
+<script>
+(function(){var t=localStorage.getItem('emploitic-theme')||'dark';if(t==='light')document.documentElement.setAttribute('data-theme','light');})();
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="company.css">
+</head>
+<body class="company">
+<div class="app-shell">
+  <aside class="app-side" data-sidebar="messagerie"></aside>
+  <main class="app-main">
+    <div class="app-top">
+      <h1>Messagerie</h1>
+      <div class="top-actions">
+        <span class="lock-badge"><i class="fa-solid fa-lock"></i> Coordonnées privées</span>
+        <button class="theme-toggle" id="themeToggle" title="Changer le thème"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
+        <div class="app-avatar">YT</div>
+      </div>
+    </div>
+    <div class="app-content">
+      <div class="chat-shell-app">
+        <aside class="chat-aside">
+          <header>
+            <h3>Conversations</h3>
+            <input placeholder="Rechercher…">
+          </header>
+          <div class="chat-conv" id="convList"></div>
+        </aside>
+        <section class="chat-main-app">
+          <div class="chat-head" id="chatHead"></div>
+          <div class="chat-body" id="chatBody"></div>
+          <form class="chat-foot" id="chatForm">
+            <button type="button" class="icon-btn" title="Pièce jointe"><i class="fa-solid fa-paperclip"></i></button>
+            <button type="button" class="icon-btn" title="Négocier conditions" onclick="openNegotiate()"><i class="fa-solid fa-handshake"></i></button>
+            <input id="chatInput" placeholder="Écrire un message…" autocomplete="off">
+            <button type="submit" class="send" title="Envoyer"><i class="fa-solid fa-paper-plane"></i></button>
+          </form>
+        </section>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="company.js"></script>
+<script>
+let activeId = CONVERSATIONS[0].id;
+
+function renderConv(){
+  document.getElementById('convList').innerHTML = CONVERSATIONS.map(c=>`
+    <div class="item ${c.id===activeId?'active':''}" onclick="selectConv('${c.id}')">
+      <div class="ava">${c.initials}</div>
+      <div class="meta">
+        <div class="row1"><strong>${c.name}</strong><span class="time">${c.time}</span></div>
+        <p>${c.last}</p>
+      </div>
+      ${c.unread?`<span class="chip" style="background:var(--primary);color:#fff;align-self:center;min-width:20px;justify-content:center">${c.unread}</span>`:''}
+    </div>`).join('');
+}
+
+function renderChat(){
+  const c = CONVERSATIONS.find(x=>x.id===activeId);
+  document.getElementById('chatHead').innerHTML = `
+    <div class="ava">${c.initials}</div>
+    <div>
+      <div class="name">${c.name}</div>
+      <div class="role">${c.role} · <span style="color:var(--primary)">● en ligne</span></div>
+    </div>
+    <div class="actions">
+      <button class="icon-btn" title="Voir profil"><i class="fa-regular fa-user"></i></button>
+      <button class="icon-btn" title="Plus"><i class="fa-solid fa-ellipsis"></i></button>
+    </div>`;
+  document.getElementById('chatBody').innerHTML = c.messages.map(m=>{
+    if(m.from==='system') return `<div class="bubble system">${m.text}</div>`;
+    return `<div class="bubble ${m.from}">${m.text}${m.time?`<span class="t">${m.time}</span>`:''}</div>`;
+  }).join('');
+  const body = document.getElementById('chatBody');
+  body.scrollTop = body.scrollHeight;
+}
+
+function selectConv(id){
+  activeId = id;
+  const c = CONVERSATIONS.find(x=>x.id===id);
+  c.unread = 0;
+  renderConv(); renderChat();
+}
+
+document.getElementById('chatForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  const inp = document.getElementById('chatInput');
+  if(!inp.value.trim()) return;
+  const c = CONVERSATIONS.find(x=>x.id===activeId);
+  c.messages.push({from:'me', text:inp.value, time:'maintenant'});
+  c.last = inp.value;
+  inp.value = '';
+  renderChat(); renderConv();
+});
+
+function openNegotiate(){
+  openModal(`
+    <div class="modal-head"><h3><i class="fa-solid fa-handshake" style="color:var(--primary)"></i> Négocier les conditions</h3><button class="btn-icon" data-close><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <div class="field-row">
+        <div><label>Tarif proposé (DA/jour)</label><input type="number" value="7500"></div>
+        <div><label>Durée (jours)</label><input type="number" value="20"></div>
+      </div>
+      <div class="field-row">
+        <div><label>Date début</label><input type="date" value="2026-06-01"></div>
+        <div><label>Date fin</label><input type="date" value="2026-06-30"></div>
+      </div>
+      <label>Conditions complémentaires</label>
+      <textarea>- Livrables hebdomadaires
+- Paiement à 30j fin de mois
+- Présence à Alger 2 jours/semaine</textarea>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" data-close>Annuler</button>
+      <button class="btn btn-primary" onclick="sendNegotiation()"><i class="fa-solid fa-paper-plane"></i> Envoyer la proposition</button>
+    </div>`);
+}
+
+function sendNegotiation(){
+  const c = CONVERSATIONS.find(x=>x.id===activeId);
+  c.messages.push({from:'system', text:'📄 Proposition envoyée — 7 500 DA/j sur 20 jours'});
+  c.messages.push({from:'me', text:'Je vous envoie une proposition formelle, dites-moi ce que vous en pensez.', time:'maintenant'});
+  closeModal(); renderChat(); toast('✓ Proposition envoyée');
+}
+
+renderConv(); renderChat();
+</script>
+</body>
+</html>
