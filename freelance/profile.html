@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mon profil — emploitic Freelance</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="app" id="layout-root"></div>
+<script src="app.js"></script>
+<script>
+renderLayout('profile.html');
+
+function render() {
+  const u = state.user;
+  const canPublishMissions = u.plan === 'gold';
+  const canPublishServices = u.plan === 'medium' || u.plan === 'gold';
+  document.getElementById('page-content').innerHTML = `
+    <main class="page">
+      <div class="page-header"><h1 class="page-title">Mon profil</h1></div>
+
+      <div class="profile-hero">
+        <div class="avatar">${u.initials}</div>
+        <div style="flex:1">
+          <h2 style="font-size:22px">${u.name}</h2>
+          <div class="text-muted text-sm">${u.bio}</div>
+          <div class="flex gap-8 mt-12 center" style="flex-wrap:wrap">
+            <span class="specialty-pill">🎯 ${u.specialty}</span>
+            <span class="badge ${u.plan==='gold'?'badge-gold':u.plan==='medium'?'badge-primary':'badge-muted'}">Plan ${planLabel(u.plan)}</span>
+            <span class="badge badge-success badge-dot">${u.availability}</span>
+          </div>
+        </div>
+        <div class="flex gap-8">
+          <button class="btn btn-outline" onclick="editProfile()">Modifier</button>
+          <button class="btn btn-danger btn-sm" onclick="openReportModal('un abus sur mon compte')">Signaler un abus</button>
+        </div>
+      </div>
+
+      <div class="lock-info mt-18">🔒 La spécialité est unique et verrouillée. Pour la modifier, contactez le support emploitic.</div>
+
+      <div class="card-row grid-2 mt-24">
+        <div class="card">
+          <div class="section-title">📞 Coordonnées (privées)</div>
+          <div class="lock-info" style="background:var(--primary-soft);color:var(--primary-dark);margin-bottom:14px">🔐 Ces informations ne sont visibles que par vous <strong>Mr Boudjemaa</strong> : ${u.vous}.</div>
+          <div class="text-muted text-sm">Email</div>
+          <div style="font-weight:600">${u.contact.email}</div>
+          <div class="text-muted text-sm mt-12">Téléphone</div>
+          <div style="font-weight:600">${u.contact.phone}</div>
+        
+          <p class="text-sm text-muted mt-18">Aucun client ni freelance ne peut voir ces données. Tous les échanges passent par la messagerie interne.</p>
+        </div>
+
+        <div class="card">
+          <div class="section-title">🏆 Mon abonnement débloque</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;font-size:13.5px">
+            <li class="flex gap-8 center"><span class="badge ${canPublishServices?'badge-success':'badge-muted'}">${canPublishServices?'✓':'×'}</span> Publier des <strong>services</strong> (forfaits proposés)</li>
+            <li class="flex gap-8 center"><span class="badge ${canPublishMissions?'badge-success':'badge-muted'}">${canPublishMissions?'✓':'×'}</span> Publier des <strong>missions</strong> (sous-traiter à d'autres freelances)</li>
+            <li class="flex gap-8 center"><span class="badge ${u.plan==='gold'?'badge-success':'badge-muted'}">${u.plan==='gold'?'✓':'×'}</span> <strong>Assistant IA Gold</strong> intégré</li>
+            <li class="flex gap-8 center"><span class="badge ${u.plan!=='free'?'badge-success':'badge-muted'}">${u.plan!=='free'?'✓':'×'}</span> Top des recherches & contacts illimités</li>
+          </ul>
+          <a class="btn btn-gold mt-18" href="subscription.html">Gérer mon abonnement</a>
+        </div>
+      </div>
+
+      ${canPublishServices ? `
+      <div class="card mt-24">
+        <div class="section-title">🛠️ Mes services publiés <button class="btn btn-primary btn-sm" onclick="addService()">+ Publier un service</button></div>
+        ${state.myServices.length ? state.myServices.map(s => `
+          <div class="flex between center" style="padding:14px;border:1px solid var(--border-soft);border-radius:10px;margin-bottom:8px">
+            <div><div style="font-weight:600">${s.title}</div><div class="text-muted text-sm">${s.desc}</div></div>
+            <button class="btn btn-ghost btn-sm" onclick="removeService('${s.id}')">Retirer</button>
+          </div>
+        `).join('') : '<p class="text-muted text-sm">Aucun service publié.</p>'}
+      </div>` : `
+      <div class="card mt-24" style="background:var(--bg-soft)">
+        <div class="flex between center"><div><h3 style="font-size:15px">Publier des services</h3><p class="text-muted text-sm">Disponible à partir du plan Medium.</p></div><a class="btn btn-outline" href="subscription.html">Améliorer</a></div>
+      </div>`}
+
+      ${canPublishMissions ? `
+      <div class="card mt-18">
+        <div class="section-title">📢 Missions que je publie <span class="badge badge-gold">Gold</span><button class="btn btn-primary btn-sm" onclick="addMission()">+ Publier une mission</button></div>
+        ${state.myPostedMissions.length ? state.myPostedMissions.map(s => `
+          <div class="flex between center" style="padding:14px;border:1px solid var(--border-soft);border-radius:10px;margin-bottom:8px">
+            <div><div style="font-weight:600">${s.title}</div><div class="text-muted text-sm">${s.desc}</div></div>
+            <button class="btn btn-ghost btn-sm" onclick="removePosted('${s.id}')">Retirer</button>
+          </div>
+        `).join('') : '<p class="text-muted text-sm">Aucune mission publiée.</p>'}
+      </div>` : `
+      <div class="card mt-18" style="background:var(--bg-soft)">
+        <div class="flex between center"><div><h3 style="font-size:15px">Publier des missions (sous-traitance)</h3><p class="text-muted text-sm">Réservé au plan Gold.</p></div><a class="btn btn-gold" href="subscription.html">Passer Gold</a></div>
+      </div>`}
+    </main>
+  `;
+}
+
+window.editProfile = () => openModal(`
+  <h3>Modifier le profil</h3>
+  <div class="field"><label>Nom</label><input id="ed-name" value="${state.user.name}"/></div>
+  <div class="field"><label>Bio</label><textarea id="ed-bio">${state.user.bio}</textarea></div>
+  <div class="field"><label>Disponibilité</label><input id="ed-av" value="${state.user.availability}"/></div>
+  <div class="field"><label>Spécialité (verrouillée)</label><input value="${state.user.specialty}" disabled/></div>
+  <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal()">Annuler</button><button class="btn btn-primary" onclick="saveProfile()">Enregistrer</button></div>
+`);
+window.saveProfile = () => {
+  state.user.name = document.getElementById('ed-name').value;
+  state.user.bio = document.getElementById('ed-bio').value;
+  state.user.availability = document.getElementById('ed-av').value;
+  state.user.initials = state.user.name.split(' ').map(p=>p[0]).slice(0,2).join('').toUpperCase();
+  saveState(); closeModal(); toast('Profil mis à jour'); renderLayout('profile.html'); render();
+};
+window.addService = () => openModal(`<h3>Publier un service</h3><div class="field"><label>Titre</label><input id="sv-t" placeholder="Ex: Audit React + recommandations"/></div><div class="field"><label>Description</label><textarea id="sv-d" placeholder="Que proposez-vous ?"></textarea></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal()">Annuler</button><button class="btn btn-primary" onclick="confirmService()">Publier</button></div>`);
+window.confirmService = () => { state.myServices.push({ id: 's'+Date.now(), title: document.getElementById('sv-t').value, desc: document.getElementById('sv-d').value }); saveState(); closeModal(); toast('Service publié'); render(); };
+window.removeService = (id) => { state.myServices = state.myServices.filter(s=>s.id!==id); saveState(); render(); };
+window.addMission = () => openModal(`<h3>Publier une mission</h3><div class="field"><label>Titre</label><input id="pm-t"/></div><div class="field"><label>Description</label><textarea id="pm-d"></textarea></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal()">Annuler</button><button class="btn btn-primary" onclick="confirmPosted()">Publier</button></div>`);
+window.confirmPosted = () => { state.myPostedMissions.push({ id:'pm'+Date.now(), title: document.getElementById('pm-t').value, desc: document.getElementById('pm-d').value }); saveState(); closeModal(); toast('Mission publiée'); render(); };
+window.removePosted = (id) => { state.myPostedMissions = state.myPostedMissions.filter(s=>s.id!==id); saveState(); render(); };
+render();
+</script>
+</body>
+</html>

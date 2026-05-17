@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Détail offre — emploitic Freelance</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="app" id="layout-root"></div>
+<script src="app.js"></script>
+<script>
+renderLayout('offers.html');
+const id = getQuery('id') || state.offers[0].id;
+const o = state.offers.find(x=>x.id===id);
+function render() {
+  if (!o) { document.getElementById('page-content').innerHTML = `<main class="page"><h1>Offre introuvable</h1><a class="btn btn-outline mt-12" href="offers.html">← Retour</a></main>`; return; }
+  document.getElementById('page-content').innerHTML = `
+    <main class="page">
+      <a href="offers.html" class="text-sm" style="color:var(--primary)">← Toutes les offres</a>
+      <div class="card mt-12">
+        <div class="flex between center gap-16" style="flex-wrap:wrap">
+          <div>
+            <span class="text-muted text-sm">${o.company}</span>
+            <h1 class="page-title" style="font-size:24px;margin-top:4px">${o.title}</h1>
+            <div class="flex gap-8 mt-12">
+              <span class="badge badge-primary">${o.type}</span>
+              <span class="badge badge-muted">📂 ${o.domain}</span>
+              <span class="badge badge-muted">⏱ ${o.duration}</span>
+              <span class="badge badge-muted">📍 ${o.mode}</span>
+            </div>
+          </div>
+          <div class="flex gap-8">
+            <button class="btn btn-outline" onclick="toast('Offre enregistrée')">★ Enregistrer</button>
+            <button class="btn btn-primary" onclick="apply()">📨 Postuler</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-row grid-2 mt-24">
+        <div class="card">
+          <div class="section-title">Description</div>
+          <p>${o.desc}</p>
+          <div class="section-title mt-24">Compétences attendues</div>
+          <div class="flex gap-8" style="flex-wrap:wrap">
+            <span class="badge badge-primary">React</span>
+            <span class="badge badge-primary">Node.js</span>
+            <span class="badge badge-primary">PostgreSQL</span>
+            <span class="badge badge-primary">DevOps de base</span>
+          </div>
+          <div class="section-title mt-24">Modalités</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:8px">
+            <li>📅 Démarrage souhaité : sous 2 semaines</li>
+            <li>⏱ Durée estimée : ${o.duration}</li>
+            <li>📍 Mode : ${o.mode}</li>
+            <li>👥 Équipe : 3 personnes côté client</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="section-title">À propos de ${o.company}</div>
+          <div class="flex gap-12 center"><div class="avatar" style="width:48px;height:48px">${o.company.split(' ').map(w=>w[0]).slice(0,2).join('')}</div><div><div style="font-weight:700">${o.company}</div><div class="text-muted text-sm">Entreprise vérifiée 🛡️ · Alger</div></div></div>
+          <p class="text-sm text-muted mt-12">Acteur reconnu de son secteur, ${o.company} publie régulièrement des missions sur emploitic.</p>
+          <div class="lock-info mt-18">🔒 Le contact direct est masqué. Pour échanger, postulez ou utilisez la messagerie interne.</div>
+          <button class="btn btn-outline mt-18" onclick="toast('Profil entreprise')">Voir profil entreprise</button>
+        </div>
+      </div>
+    </main>
+  `;
+}
+window.apply = () => openModal(`<h3>Postuler à cette offre</h3><p>Votre profil et votre disponibilité seront partagés avec ${o.company}.</p><div class="field"><label>Message de motivation</label><textarea placeholder="Présentez votre expérience pertinente…"></textarea></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal()">Annuler</button><button class="btn btn-primary" onclick="closeModal();toast('Candidature envoyée')">Envoyer</button></div>`);
+render();
+</script>
+</body>
+</html>

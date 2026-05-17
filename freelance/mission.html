@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Détail mission — emploitic Freelance</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="app" id="layout-root"></div>
+<script src="app.js"></script>
+<script>
+renderLayout('missions.html');
+const id = getQuery('id') || state.missions[0].id;
+const m = findMission(id);
+const conv = state.conversations.find(c => c.missionId === id);
+
+function render() {
+  if (!m) { document.getElementById('page-content').innerHTML = `<main class="page"><h1>Mission introuvable</h1><a class="btn btn-outline mt-12" href="missions.html">← Retour</a></main>`; return; }
+  const steps = [
+    { label: 'Mission acceptée', done: m.progress > 0 },
+    { label: 'Cadrage & brief', done: m.progress >= 25 },
+    { label: 'Production en cours', done: m.progress >= 50, active: m.progress >= 25 && m.progress < 75 },
+    { label: 'Livraison', done: m.progress >= 90, active: m.progress >= 75 && m.progress < 100 },
+    { label: 'Validation client', done: m.status === 'Validée' },
+  ];
+  // Shared docs (between freelance + entreprise)
+  const sharedDocs = [
+    { name: 'Brief-Sprint4.pdf', size: '320 Ko', from: m.company, date: '12 mai' },
+    { name: 'Maquettes-v2.fig', size: '4,1 Mo', from: state.user.name, date: '14 mai' },
+    { name: 'Contrat-mission.pdf', size: '180 Ko', from: m.company, date: '12 mars' },
+  ];
+
+  document.getElementById('page-content').innerHTML = `
+    <main class="page">
+      <a href="missions.html" class="text-sm" style="color:var(--primary)">← Toutes mes missions</a>
+      <div class="card mt-12">
+        <div class="flex between center gap-16" style="flex-wrap:wrap">
+          <div>
+            <div class="text-muted text-sm">${m.company}</div>
+            <h1 class="page-title" style="font-size:22px;margin-top:4px">${m.title}</h1>
+            <div class="flex gap-8 mt-12">
+              ${statusBadge(m.status)}
+              <span class="badge ${m.active?'badge-success':'badge-muted'} badge-dot">${m.active?'Active':'Désactivée'}</span>
+              <span class="badge badge-muted">📂 ${m.domain}</span>
+            </div>
+          </div>
+          <div class="flex gap-8">
+            <div class="flex center gap-8">
+              <span class="text-sm text-muted">Disponibilité</span>
+              <div class="switch ${m.active?'on':''}" onclick="toggleActive()"></div>
+            </div>
+            <button class="btn btn-danger btn-sm" onclick="openReportModal('cette mission')">⚠️ Signaler</button>
+          </div>
+        </div>
+        <div class="mt-18">
+          <div class="flex between text-sm text-muted"><span>Avancement global</span><span>${m.progress}%</span></div>
+          <div class="progress mt-12"><span style="width:${m.progress}%"></span></div>
+        </div>
+      </div>
+
+      <div class="card-row grid-2 mt-24">
+        <div class="card">
+          <div class="section-title">Description</div>
+          <p class="text-sm">${m.desc}</p>
+          <div class="section-title mt-24">Livrables</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:8px">
+            ${m.deliverables.map((d,i) => `<li class="flex gap-8 center"><span class="badge ${i < Math.floor(m.deliverables.length*m.progress/100) ? 'badge-success':'badge-muted'}">${i < Math.floor(m.deliverables.length*m.progress/100) ? '✓':'·'}</span> ${d}</li>`).join('')}
+          </ul>
+        </div>
+        <div class="card">
+          <div class="section-title">Étapes de la mission</div>
+          <div class="steps">
+            ${steps.map((s,i)=>`<div class="step ${s.done?'done':''} ${s.active?'active':''}"><div class="step-num">${s.done?'✓':i+1}</div><div class="step-label">${s.label}</div></div>`).join('')}
+          </div>
+        </div>
+      </div>
+
+      <div class="card-row grid-2 mt-24">
+        <div class="card">
+          <div class="section-title">📎 Documents partagés <span class="text-sm text-muted">entre vous et ${m.company}</span></div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            ${sharedDocs.map(d=>`
+              <div class="flex between center" style="padding:12px;border:1px solid var(--border-soft);border-radius:10px">
+                <div class="flex gap-12 center">
+                  <div style="width:38px;height:38px;border-radius:8px;background:var(--primary-soft);display:grid;place-items:center;color:var(--primary-dark);font-weight:700">📄</div>
+                  <div>
+                    <div style="font-weight:600;font-size:13.5px">${d.name}</div>
+                    <div class="text-muted text-sm">${d.size} · partagé par ${d.from} · ${d.date}</div>
+                  </div>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="toast('Téléchargement de ${d.name}…')">Télécharger</button>
+              </div>
+            `).join('')}
+          </div>
+          <button class="btn btn-outline mt-18" onclick="addDoc()">+ Partager un document</button>
+        </div>
+        <div class="card">
+          <div class="section-title">Actions</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <a class="btn btn-primary" href="messages.html?conv=${conv?conv.id:''}">💬 Ouvrir la messagerie</a>
+            <button class="btn btn-outline" onclick="openModal('<h3>Livrer la mission</h3><p>Téléversez votre livrable final pour validation par ${m.company}.</p><div class=\\'field\\'><label>Fichier</label><input type=\\'file\\'/></div><div class=\\'field\\'><label>Note de livraison</label><textarea placeholder=\\'Précisions sur le livrable…\\'></textarea></div><div class=\\'modal-actions\\'><button class=\\'btn btn-ghost\\' onclick=\\'closeModal()\\'>Annuler</button><button class=\\'btn btn-primary\\' onclick=\\'closeModal();toast(&quot;Livrable envoyé pour validation&quot;)\\'>Envoyer</button></div>')">📤 Livrer la mission</button>
+            <button class="btn btn-outline" onclick="toast('Contrat ouvert')">📄 Voir le contrat</button>
+            <button class="btn btn-outline" onclick="toast('Planning à venir')">📅 Planning</button>
+          </div>
+          <div class="mt-18" style="padding:14px;background:var(--bg-soft);border-radius:10px">
+            <div class="text-muted text-sm">Démarrée le</div>
+            <div style="font-weight:600">${m.startedAt}</div>
+            <div class="text-muted text-sm mt-12">Échéance</div>
+            <div style="font-weight:600">${m.deadline}</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  `;
+}
+
+window.toggleActive = () => { m.active = !m.active; saveState(); toast(m.active?'Mission activée':'Mission désactivée'); render(); };
+window.addDoc = () => openModal(`<h3>Partager un document</h3><p>Visible par vous et ${m.company}.</p><div class="field"><label>Fichier</label><input type="file"/></div><div class="field"><label>Description</label><textarea placeholder="À quoi sert ce document ?"></textarea></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal()">Annuler</button><button class="btn btn-primary" onclick="closeModal();toast('Document partagé')">Partager</button></div>`);
+render();
+</script>
+</body>
+</html>

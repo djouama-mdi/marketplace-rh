@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tableau de bord — emploitic Freelance</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app" id="layout-root"></div>
+    <script src="app.js"></script>
+    <script>
+        // Simulation de données
+        renderLayout('dashboard.html');
+        const ms = state.missions.filter(m => m.active && m.status === 'En cours');
+        const unread = state.conversations.reduce((a,c)=>a+c.unread,0);
+
+        // 1. INJECTION DU HTML
+        document.getElementById('page-content').innerHTML = `
+          <main class="page">
+            <div class="page-header">
+              <div>
+                <h1 class="page-title">Bienvenue, ${state.user.name.split(' ')[0]} 👋</h1>
+                <div class="page-sub">Voici un aperçu de vos performances et de votre activité freelance.</div>
+              </div>
+              <a class="btn btn-primary btn-aesthetic" href="offers.html">Parcourir les offres →</a>
+            </div>
+
+            <div class="card-row grid-4 mt-24">
+              <div class="card kpi-card"><div class="kpi-label">Missions en cours</div><div class="kpi-value">${ms.length}</div><div class="kpi-trend">↑ +1 ce mois</div></div>
+              <div class="card kpi-card"><div class="kpi-label">Messages non lus</div><div class="kpi-value">${unread}</div><div class="kpi-trend text-muted">${unread>0?'À traiter':'À jour ✓'}</div></div>
+              <div class="card kpi-card"><div class="kpi-label">Vues du profil</div><div class="kpi-value">482</div><div class="kpi-trend">↑ +12% cette semaine</div></div>
+              <div class="card kpi-card card-accent"><div class="kpi-label">Score de réactivité</div><div class="kpi-value" style="font-size:28px">98%</div><div class="kpi-trend">Excellent ✦</div></div>
+            </div>
+
+            <div class="card-row grid-2 mt-24">
+              <div class="card">
+                <div class="section-title">Trafic & Visibilité du profil</div>
+                <div style="position: relative; height: 260px; width: 100%;">
+                  <canvas id="trafficChart"></canvas>
+                </div>
+              </div>
+              
+              <div class="card">
+                <div class="section-title">Taux de conversion (Candidatures)</div>
+                <div style="position: relative; height: 260px; width: 100%; display: flex; justify-content: center;">
+                  <canvas id="conversionChart"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-row grid-2 mt-24">
+              <div class="card">
+                <div class="section-title">Tâches validées (7 derniers jours)</div>
+                <div style="position: relative; height: 260px; width: 100%;">
+                  <canvas id="activityChart"></canvas>
+                </div>
+              </div>
+              
+              <div class="card">
+                <div class="section-title">Demande par compétences</div>
+                <div style="position: relative; height: 260px; width: 100%; display: flex; justify-content: center;">
+                  <canvas id="skillsChart"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-row grid-2 mt-24">
+              <div class="card">
+                <div class="section-title">Missions actives <a href="missions.html" class="text-sm" style="color:var(--primary)">Tout voir →</a></div>
+                ${ms.slice(0,3).map(m => `
+                  <a href="mission.html?id=${m.id}" class="mission-card" style="margin-bottom:10px;display:block">
+                    <div class="mission-row">
+                      <div>
+                        <div class="text-muted text-sm">${m.company}</div>
+                        <div class="mission-title" style="font-weight:600">${m.title}</div>
+                      </div>
+                      ${statusBadge(m.status)}
+                    </div>
+                    <div class="mission-meta" style="font-size:0.8rem; color:var(--text-soft); margin-top:8px;"><span>📅 ${m.deadline}</span> <span>• ${m.progress}% complété</span></div>
+                  </a>
+                `).join('')}
+              </div>
+              
+              <div class="card">
+                <div class="section-title">Messagerie récente <a href="messages.html" class="text-sm" style="color:var(--primary)">Ouvrir →</a></div>
+                ${state.conversations.slice(0,4).map(c => `
+                  <a href="messages.html?conv=${c.id}" class="conv-item firm-wrap" style="padding:10px 0; border-bottom:1px solid #f1f5f9;">
+                    <div class="firm-logo" style="border-radius:50%">${c.initials}</div>
+                    <div class="conv-text" style="flex:1">
+                      <div class="conv-name" style="font-weight:600; display:flex; justify-content:space-between;">${c.name} <span style="font-size:0.75rem; color:#94a3b8; font-weight:400">${c.updatedAt}</span></div>
+                      <div class="conv-snippet" style="font-size:0.85rem; color:#64748b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:200px;">${c.last}</div>
+                    </div>
+                    ${c.unread ? `<div style="background:#f97316; color:white; font-size:0.7rem; padding:2px 6px; border-radius:10px; font-weight:bold;">${c.unread}</div>` : ''}
+                  </a>
+                `).join('')}
+              </div>
+            </div>
+          </main>
+        `;
+
+        // 2. CONFIGURATION GLOBALE CHART.JS (Aesthetic)
+        Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
+        Chart.defaults.color = '#94a3b8';
+        Chart.defaults.scale.grid.color = '#f1f5f9';
+
+        // Variables de couleurs
+        const colorPrimary = '#f97316';
+        const colorAccent = '#fbbf24';
+        const colorSuccess = '#10b981';
+        const colorDark = '#1e293b';
+
+        // Graphe 1 : Visibilité (Line Chart avec 2 courbes)
+        const ctxTraffic = document.getElementById('trafficChart').getContext('2d');
+        const gradPrimary = ctxTraffic.createLinearGradient(0, 0, 0, 300);
+        gradPrimary.addColorStop(0, 'rgba(249, 115, 22, 0.2)');
+        gradPrimary.addColorStop(1, 'rgba(249, 115, 22, 0)');
+
+        new Chart(ctxTraffic, {
+            type: 'line',
+            data: {
+                labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
+                datasets: [
+                    {
+                        label: 'Vues du profil',
+                        data: [45, 52, 38, 74, 90, 40, 55],
+                        borderColor: colorPrimary,
+                        backgroundColor: gradPrimary,
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 0, // Cache les points pour un look fluide
+                        pointHoverRadius: 6
+                    },
+                    {
+                        label: 'Apparitions recherches',
+                        data: [120, 150, 110, 200, 240, 130, 160],
+                        borderColor: '#cbd5e1',
+                        borderWidth: 2,
+                        borderDash: [5, 5], // Ligne pointillée
+                        tension: 0.4,
+                        fill: false,
+                        pointRadius: 0
+                    }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'top', align: 'end', labels: { boxWidth: 12, usePointStyle: true } } },
+                scales: {
+                    y: { beginAtZero: true, border: { display: false } },
+                    x: { grid: { display: false }, border: { display: false } }
+                }
+            }
+        });
+
+        // Graphe 2 : Conversions (Doughnut)
+        const ctxConv = document.getElementById('conversionChart').getContext('2d');
+        new Chart(ctxConv, {
+            type: 'doughnut',
+            data: {
+                labels: ['Propositions Acceptées', 'En discussion', 'Refusées'],
+                datasets: [{
+                    data: [12, 5, 2],
+                    backgroundColor: [colorSuccess, colorAccent, '#e2e8f0'],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false, cutout: '80%',
+                plugins: {
+                    legend: { position: 'bottom', labels: { usePointStyle: true, padding: 15 } }
+                }
+            }
+        });
+
+        // Graphe 3 : Activité (Bar Chart)
+        const ctxAct = document.getElementById('activityChart').getContext('2d');
+        new Chart(ctxAct, {
+            type: 'bar',
+            data: {
+                labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
+                datasets: [{
+                    label: 'Tâches validées',
+                    data: [3, 5, 2, 8, 4, 1, 0],
+                    backgroundColor: colorDark,
+                    borderRadius: 6, // Bords arrondis sur les barres
+                    barThickness: 16 // Barres fines et élégantes
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, border: { display: false }, ticks: { stepSize: 2 } },
+                    x: { grid: { display: false }, border: { display: false } }
+                }
+            }
+        });
+
+        // Graphe 4 : Compétences (Radar Chart)
+        const ctxSkills = document.getElementById('skillsChart').getContext('2d');
+        new Chart(ctxSkills, {
+            type: 'radar',
+            data: {
+                labels: ['UI/UX', 'Intégration', 'Copywriting', 'SEO', 'Back-end', 'Gestion'],
+                datasets: [{
+                    label: 'Demandes par compétence',
+                    data: [90, 85, 40, 60, 30, 70],
+                    backgroundColor: 'rgba(251, 191, 36, 0.2)', // Accent jaune transparent
+                    borderColor: colorAccent,
+                    borderWidth: 2,
+                    pointBackgroundColor: colorAccent,
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: colorAccent
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    r: {
+                        angleLines: { color: '#f1f5f9' },
+                        grid: { color: '#f1f5f9' },
+                        pointLabels: { font: { family: "'Plus Jakarta Sans'", size: 11, weight: '600' }, color: '#64748b' },
+                        ticks: { display: false } // Cache les numéros sur la toile d'araignée
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

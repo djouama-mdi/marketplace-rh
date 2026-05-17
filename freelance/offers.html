@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Offres — emploitic Freelance</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="app" id="layout-root"></div>
+<script src="app.js"></script>
+<script>
+renderLayout('offers.html');
+function render() {
+  document.getElementById('page-content').innerHTML = `
+    <main class="page">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Offres marketplace</h1>
+          <div class="page-sub">${state.offers.length} offres correspondant à votre spécialité — emploitic est une mise en relation : aucun prix n'est affiché.</div>
+        </div>
+      </div>
+
+      <div class="filters">
+        <button class="chip active">Toutes</button>
+        <button class="chip">Web</button>
+        <button class="chip">Remote</button>
+        <button class="chip">Hybride</button>
+        <button class="chip">Court terme</button>
+      </div>
+
+      <div class="card-row grid-2">
+        ${state.offers.map(o => `
+          <div class="card">
+            <div class="flex between center" style="margin-bottom:6px">
+              <span class="text-muted text-sm">${o.company}</span>
+              <span class="badge badge-primary">${o.type}</span>
+            </div>
+            <h3 style="font-size:17px">${o.title}</h3>
+            <p class="text-sm text-muted mt-12">${o.desc}</p>
+            <div class="flex gap-8 mt-12" style="flex-wrap:wrap">
+              <span class="badge badge-muted">📂 ${o.domain}</span>
+              <span class="badge badge-muted">⏱ ${o.duration}</span>
+              <span class="badge badge-muted">📍 ${o.mode}</span>
+            </div>
+            <div class="flex gap-8 mt-18">
+              <a class="btn btn-primary btn-sm" href="offer.html?id=${o.id}">Voir le détail</a>
+              <button class="btn btn-outline btn-sm" onclick="toast('Offre enregistrée')">Enregistrer</button>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </main>
+  `;
+}
+render();
+</script>
+</body>
+</html>
+

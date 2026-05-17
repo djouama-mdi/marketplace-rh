@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mes missions — emploitic Freelance</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="app" id="layout-root"></div>
+<script src="app.js"></script>
+<script>
+renderLayout('missions.html');
+let filter = 'Toutes';
+
+function render() {
+  const filters = ['Toutes', 'En cours', 'Livrée', 'En attente'];
+  const list = state.missions.filter(m => filter === 'Toutes' ? true : m.status === filter);
+  document.getElementById('page-content').innerHTML = `
+    <main class="page">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Mes missions</h1>
+          <div class="page-sub">${state.missions.length} missions au total — activez/désactivez la disponibilité par mission.</div>
+        </div>
+      </div>
+      <div class="filters">
+        ${filters.map(f => `<button class="chip ${f===filter?'active':''}" onclick="setFilter('${f}')">${f}</button>`).join('')}
+      </div>
+
+      <div class="card-row" style="grid-template-columns:1fr">
+        ${list.map(m => `
+          <div class="mission-card">
+            <div class="mission-row">
+              <div style="min-width:0;flex:1">
+                <div class="flex gap-8 center" style="margin-bottom:4px">
+                  <span class="text-muted text-sm">${m.company}</span>
+                  ${statusBadge(m.status)}
+                  <span class="badge ${m.active?'badge-success':'badge-muted'} badge-dot">${m.active?'Active':'Désactivée'}</span>
+                </div>
+                <a href="mission.html?id=${m.id}" class="mission-title" style="font-size:16px;display:block">${m.title}</a>
+                <div class="mission-meta" style="margin-top:6px">
+                  <span>📅 Démarrée ${m.startedAt}</span>
+                  <span>⏰ Échéance ${m.deadline}</span>
+                  <span>📂 ${m.domain}</span>
+                </div>
+              </div>
+              <div class="flex center gap-12" style="flex-shrink:0">
+                <div style="text-align:right">
+                  <div class="text-muted text-sm">Disponible pour cette mission</div>
+                  <div class="flex center gap-8" style="margin-top:6px;justify-content:flex-end">
+                    <span class="text-sm text-muted">${m.active?'Oui':'Non'}</span>
+                    <div class="switch ${m.active?'on':''}" onclick="toggleMission('${m.id}')"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="progress"><span style="width:${m.progress}%"></span></div>
+            <div class="flex between center mt-12">
+              <span class="text-sm text-muted">Avancement ${m.progress}%</span>
+              <div class="flex gap-8">
+                <a class="btn btn-outline btn-sm" href="messages.html?conv=${(state.conversations.find(c=>c.missionId===m.id)||{}).id||''}">💬 Messagerie</a>
+                <a class="btn btn-primary btn-sm" href="mission.html?id=${m.id}">Voir détails</a>
+              </div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </main>
+  `;
+}
+
+window.setFilter = (f) => { filter = f; render(); };
+window.toggleMission = (id) => {
+  const m = findMission(id); m.active = !m.active; saveState();
+  toast(m.active ? 'Mission activée' : 'Mission désactivée'); render();
+};
+render();
+</script>
+</body>
+</html>

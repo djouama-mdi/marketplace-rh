@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Abonnement — emploitic Freelance</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="app" id="layout-root"></div>
+<script src="app.js"></script>
+<script>
+renderLayout('subscription.html');
+
+const PLANS = [
+  { id:'free', name:'Gratuit', price:'0 DA', period:'', desc:'Démarrez en douceur', feats:['Profil public basique','3 candidatures / mois','Messagerie limitée'] },
+  { id:'medium', name:'Medium', price:'2 900 DA', period:'/mois', desc:'Visibilité moyenne', feats:['Contacts illimités','Profil mis en avant','Publier des services','Statistiques de profil'] },
+  { id:'gold', name:'Gold', price:'5 900 DA', period:'/mois', desc:'Accès complet', feats:['Tout Medium +','Publier des missions (sous-traitance)','Assistant IA intégré 🤖','Badge Gold doré','Top des recherches','Account manager dédié'] },
+];
+
+function render() {
+  document.getElementById('page-content').innerHTML = `
+    <main class="page">
+      <div class="page-header"><div><h1 class="page-title">Abonnement</h1><div class="page-sub">Choisissez la formule qui correspond à votre activité freelance.</div></div></div>
+
+      <div class="card-row grid-3">
+        ${PLANS.map(p => `
+          <div class="plan ${p.id==='gold'?'gold':''} ${state.user.plan===p.id?'current':''}">
+            <h3>${p.name}</h3>
+            <div class="text-muted text-sm">${p.desc}</div>
+            <div class="price">${p.price}<span style="font-size:13px;color:var(--text-muted);font-weight:500">${p.period}</span></div>
+            <ul>${p.feats.map(f=>`<li>${f}</li>`).join('')}</ul>
+            <button class="btn ${p.id==='gold'?'btn-gold':'btn-primary'} mt-12" ${state.user.plan===p.id?'disabled style="opacity:.5"':''} onclick="switchPlan('${p.id}')">${state.user.plan===p.id?'Plan actuel':p.id==='free'?'Rétrograder':'Passer en '+p.name}</button>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="card-row grid-2 mt-24">
+        <div class="card">
+          <div class="section-title">🎟️ Code promo</div>
+          <p class="text-muted text-sm">Vous avez un code partenaire ? Saisissez-le pour obtenir une réduction.</p>
+          <div class="flex gap-8 mt-12"><input id="promo" placeholder="EMPLOITIC2026" style="flex:1;padding:9px 12px;border:1px solid var(--border);border-radius:10px;outline:none"/><button class="btn btn-outline" onclick="applyPromo()">Appliquer</button></div>
+        </div>
+        <div class="card">
+          <div class="section-title">💳 Moyen de paiement</div>
+          <p class="text-muted text-sm">CIB, EDAHABIA et virement bancaire acceptés.</p>
+          <button class="btn btn-outline mt-12" onclick="toast('Ajout d\\'une carte (démo)')">+ Ajouter un moyen de paiement</button>
+        </div>
+      </div>
+
+      <div class="card mt-18">
+        <div class="section-title">Historique récent <a href="transactions.html" class="text-sm" style="color:var(--primary)">Tout voir →</a></div>
+        <table class="table">
+          <thead><tr><th>Date</th><th>Description</th><th>Montant</th><th>Statut</th></tr></thead>
+          <tbody>
+            ${state.transactions.slice(0,4).map(t=>`<tr><td>${t.date}</td><td>${t.label}</td><td><strong>${t.amount}</strong></td><td><span class="badge ${t.status==='Réglé'?'badge-success':t.status==='Crédit'?'badge-primary':'badge-muted'}">${t.status}</span></td></tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </main>
+  `;
+}
+
+window.switchPlan = (id) => {
+  state.user.plan = id;
+  if (id !== 'free') {
+    const p = PLANS.find(x=>x.id===id);
+    state.transactions.unshift({ id:'t'+Date.now(), date:new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}), label:`Abonnement ${p.name} — mensuel`, amount:p.price, method:'CIB Carte', status:'Réglé' });
+  }
+  saveState(); toast('Abonnement mis à jour'); renderLayout('subscription.html'); render();
+};
+window.applyPromo = () => {
+  const v = document.getElementById('promo').value.trim();
+  if (!v) return;
+  state.transactions.unshift({ id:'t'+Date.now(), date:new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}), label:`Code promo ${v} appliqué`, amount:'-590 DA', method:'—', status:'Crédit' });
+  saveState(); toast(`Code « ${v} » appliqué`); render();
+};
+render();
+</script>
+</body>
+</html>

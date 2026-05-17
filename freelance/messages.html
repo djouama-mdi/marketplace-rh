@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Messagerie — emploitic Freelance</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="app" id="layout-root"></div>
+<script src="app.js"></script>
+<script>
+renderLayout('messages.html');
+let activeId = getQuery('conv') || state.conversations[0].id;
+
+function render() {
+  const conv = findConv(activeId) || state.conversations[0];
+  activeId = conv.id;
+  const msgs = state.messages[conv.id] || [];
+  const mission = state.missions.find(m => m.id === conv.missionId);
+
+  document.getElementById('page-content').innerHTML = `
+    <main class="page" style="max-width:1200px">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Messagerie</h1>
+          <div class="page-sub">🔒 Coordonnées privées — contact uniquement via messagerie interne. Le numéro et l'email ne sont visibles que par votre garant.</div>
+        </div>
+      </div>
+
+      <div class="messenger">
+        <aside class="conv-list">
+          <div class="conv-search"><input placeholder="Rechercher…" oninput="searchConv(this.value)"/></div>
+          <div class="conv-items" id="conv-items">
+            ${state.conversations.map(c => `
+              <div class="conv-item ${c.id===activeId?'active':''}" onclick="selectConv('${c.id}')">
+                <div class="avatar">${c.initials}</div>
+                <div class="conv-text">
+                  <div class="conv-name">${c.name}<span>${c.updatedAt}</span></div>
+                  <div class="conv-snippet">${c.last}</div>
+                </div>
+                ${c.unread?`<div class="conv-unread">${c.unread}</div>`:''}
+              </div>
+            `).join('')}
+          </div>
+        </aside>
+
+        <section class="chat">
+          <div class="chat-header">
+            <div class="avatar">${conv.initials}</div>
+            <div style="flex:1">
+              <div style="font-weight:700;font-family:Sora">${conv.name}</div>
+              <div class="text-sm" style="color:${conv.online?'var(--success)':'var(--text-muted)'}">${conv.online?'● En ligne':'Hors ligne'}${mission?` · Mission « ${mission.title} »`:''}</div>
+            </div>
+            ${mission?`<a class="btn btn-outline btn-sm" href="mission.html?id=${mission.id}">Voir mission</a>`:''}
+            <button class="btn btn-danger btn-sm" onclick="openReportModal('cette conversation')">⚠️</button>
+          </div>
+          <div class="chat-body" id="chat-body">
+            ${msgs.map(b => `
+              <div class="bubble ${b.from==='me'?'me':'them'}">
+                ${escapeHtml(b.text)}
+                ${b.doc?`<div class="shared-doc">📄 ${b.doc} <span style="margin-left:auto;font-size:11px">Télécharger</span></div>`:''}
+                <small>${b.time}</small>
+              </div>
+            `).join('')}
+          </div>
+          <div class="chat-input">
+            <button class="icon-btn" title="Joindre" onclick="attachFile()">📎</button>
+            <input id="msg-input" placeholder="Écrivez votre message…" onkeydown="if(event.key==='Enter')sendMsg()"/>
+            <button class="send" onclick="sendMsg()">→</button>
+          </div>
+        </section>
+      </div>
+    </main>
+  `;
+  const body = document.getElementById('chat-body'); body.scrollTop = body.scrollHeight;
+}
+
+window.selectConv = (id) => {
+  activeId = id;
+  const c = findConv(id); if (c) c.unread = 0;
+  saveState(); render();
+};
+window.searchConv = (q) => {
+  const items = document.querySelectorAll('#conv-items .conv-item');
+  items.forEach((el,i) => {
+    const c = state.conversations[i];
+    el.style.display = c.name.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
+  });
+};
+window.sendMsg = () => {
+  const input = document.getElementById('msg-input');
+  const v = input.value.trim(); if (!v) return;
+  const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  state.messages[activeId] = state.messages[activeId] || [];
+  state.messages[activeId].push({ from: 'me', text: v, time });
+  const c = findConv(activeId); c.last = v; c.updatedAt = 'à l\'instant';
+  saveState();
+  // Simulated reply
+  setTimeout(() => {
+    state.messages[activeId].push({ from: 'them', text: 'Bien reçu, je reviens vers vous rapidement.', time: new Date().toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' }) });
+    c.last = 'Bien reçu, je reviens vers vous rapidement.';
+    saveState(); render();
+  }, 900);
+  input.value = ''; render();
+};
+window.attachFile = () => openModal(`<h3>Joindre un fichier</h3><p>Le fichier sera partagé dans la conversation et lié à la mission.</p><div class="field"><input type="file"/></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal()">Annuler</button><button class="btn btn-primary" onclick="closeModal();toast('Fichier envoyé')">Envoyer</button></div>`);
+render();
+</script>
+</body>
+</html>
