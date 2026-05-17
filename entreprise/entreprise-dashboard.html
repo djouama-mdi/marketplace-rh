@@ -160,6 +160,9 @@
 <script src="company.js"></script>
 <script>
 
+/* ── Root reference (needed for chart color helpers) ── */
+const root = document.documentElement;
+
 /* ── Candidatures table ── */
 const statusLabel = { pending:'En attente', in_review:'En revue', accepted:'Acceptée', refused:'Refusée' };
 const statusClass = { pending:'pending', in_review:'in_progress', accepted:'active', refused:'refused' };

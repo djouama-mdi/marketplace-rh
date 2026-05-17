@@ -133,6 +133,7 @@ function initThemeToggle() {
     const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
     applyTheme(next);
     localStorage.setItem('emploitic-theme', next);
+    if (typeof window._onThemeToggle === 'function') window._onThemeToggle();
   });
 }
 
