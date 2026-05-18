@@ -112,6 +112,7 @@ function renderLayout(activeKey) {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
             <span class="dot"></span>
           </button>
+          <button class="theme-toggle" id="themeToggle" title="Changer le thème">🌙</button>
           <div class="avatar" style="width:38px;height:38px">${state.user.initials}</div>
         </div>
       </header>
@@ -123,7 +124,32 @@ function renderLayout(activeKey) {
   `;
   if (state.user.plan === 'gold') wireAiChat();
   wireModal();
+  initTheme();
 }
+// ==== Theme Toggle ====
+function initTheme() {
+  const saved = localStorage.getItem('emploitic-fl-theme') || 'light';
+  applyTheme(saved);
+  const btn = document.getElementById('themeToggle');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    localStorage.setItem('emploitic-fl-theme', next);
+  });
+}
+function applyTheme(theme) {
+  const root = document.documentElement;
+  const btn = document.getElementById('themeToggle');
+  if (theme === 'dark') {
+    root.setAttribute('data-theme', 'dark');
+    if (btn) btn.textContent = '☀️';
+  } else {
+    root.removeAttribute('data-theme');
+    if (btn) btn.textContent = '🌙';
+  }
+}
+
 function planLabel(p) { return p === 'gold' ? 'Gold' : p === 'medium' ? 'Medium' : 'Gratuit'; }
 
 // ==== AI chat (gold only) ====
