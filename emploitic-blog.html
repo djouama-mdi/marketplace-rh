@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Blog Emploitic — Actualités RH, carrière et marketplace</title>
+<meta name="description" content="Toute l'actualité du recrutement, de la marque employeur et des services RH en Algérie." />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="marketing.css" />
+</head>
+<body>
+<div id="site-nav"></div>
+
+<section class="page-hero">
+  <div class="container page-hero-grid">
+    <div class="fade-in">
+      <span class="eyebrow">📰 Blog Emploitic</span>
+      <h1>L'actu RH, marketplace & marque employeur.</h1>
+      <p class="sub">Analyses, retours d'expérience, tendances et coulisses de la marketplace B2B RH n°1 en Algérie.</p>
+      <form class="search-bar" onsubmit="event.preventDefault(); filter();">
+        <div class="field">🔍 <input id="bq" placeholder="Rechercher un article…" /></div>
+        <button class="btn btn-primary">Rechercher</button>
+      </form>
+    </div>
+    <div class="hero-img fade-in delay-2">
+      <img src="https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?auto=format&fit=crop&w=1200&q=80" alt="" />
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="chip-row reveal" id="cats" style="justify-content:center;margin-bottom:32px;gap:8px;"></div>
+    <div class="grid grid-3" id="arts"></div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="marketing.js"></script>
+<script>
+const POSTS = [
+  { cat:'Marketplace', t:"Comment Emploitic est devenue la marketplace B2B RH n°1 d'Algérie",        r:'6 min',  img:'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=800&q=80' },
+  { cat:'Recrutement', t:"5 tendances recrutement à suivre absolument en 2026",                       r:'7 min',  img:'https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=800&q=80' },
+  { cat:'Marque employeur', t:"Construire une marque employeur forte en 90 jours",                    r:'9 min',  img:'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=80' },
+  { cat:'Sourcing',    t:"Sourcing actif : 8 techniques pour débusquer les pépites",                  r:'8 min',  img:'https://images.unsplash.com/photo-1573164574572-cb89e39749b4?auto=format&fit=crop&w=800&q=80' },
+  { cat:'Onboarding',  t:"Onboarding : le mois 1 qui change tout",                                    r:'5 min',  img:'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80' },
+  { cat:'Freelance',   t:"Devenir freelance RH en Algérie : guide opérationnel",                      r:'12 min', img:'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=800&q=80' },
+  { cat:'Entretien',   t:"Entretien structuré : la méthode qui élimine les biais",                    r:'7 min',  img:'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=800&q=80' },
+  { cat:'Tendances',   t:"IA & recrutement : où placer le curseur en 2026",                           r:'10 min', img:'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80' },
+  { cat:'Marketplace', t:"Coulisses : comment nous vérifions les profils en 24h",                     r:'4 min',  img:'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=800&q=80' },
+  { cat:'Soft Skills', t:"Les 7 soft skills les plus demandées par les recruteurs",                   r:'5 min',  img:'https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=800&q=80' },
+  { cat:'Reconversion',t:"Changer de métier après 30 ans : par où commencer ?",                       r:'10 min', img:'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80' },
+  { cat:'Diversité',   t:"D&I : 6 leviers concrets pour des équipes plus inclusives",                 r:'8 min',  img:'https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=800&q=80' },
+];
+const CATS = ['Tous','Marketplace','Recrutement','Marque employeur','Sourcing','Onboarding','Freelance','Entretien','Tendances','Soft Skills','Reconversion','Diversité'];
+let cat='Tous', q='';
+
+function filter(){ q=document.getElementById('bq').value; renderArts(); }
+function renderCats(){
+  document.getElementById('cats').innerHTML = CATS.map(c=>`<button class="chip ${c===cat?'active':''}" data-c="${c}">${c}</button>`).join('');
+  document.querySelectorAll('#cats .chip').forEach(b=>b.addEventListener('click',()=>{cat=b.dataset.c;renderCats();renderArts();}));
+}
+function renderArts(){
+  const list = POSTS.filter(a => (cat==='Tous'||a.cat===cat) && (!q || a.t.toLowerCase().includes(q.toLowerCase())));
+  const wrap = document.getElementById('arts');
+  wrap.innerHTML = list.length ? list.map((a,i)=>`
+    <article class="art-card reveal delay-${(i%4)+1}" onclick="alert('Article : ${a.t.replace(/'/g,"\\'")}')">
+      <div class="img"><img src="${a.img}" alt=""></div>
+      <div class="body">
+        <div class="cat">${a.cat}</div>
+        <h3>${a.t}</h3>
+        <div class="foot"><span>🕒 ${a.r} de lecture</span><strong>Lire →</strong></div>
+      </div>
+    </article>`).join('') : `<div style="grid-column:1/-1;padding:48px;text-align:center;background:#fff;border:1px dashed var(--border);border-radius:18px;color:var(--muted);">Aucun article trouvé.</div>`;
+  if (window.IntersectionObserver) {
+    const io = new IntersectionObserver(en=>en.forEach(e=>e.isIntersecting&&(e.target.classList.add('in'),io.unobserve(e.target))),{threshold:.12});
+    wrap.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  }
+}
+renderCats(); renderArts();
+</script>
+</body>
+</html>

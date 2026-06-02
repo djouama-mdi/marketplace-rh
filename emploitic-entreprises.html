@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Annuaire des entreprises — Emploitic</title>
+<meta name="description" content="3 200+ entreprises qui recrutent en Algérie. Pages premium, offres en cours, témoignages." />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="marketing.css" />
+</head>
+<body>
+<div id="site-nav"></div>
+
+<section class="page-hero">
+  <div class="container page-hero-grid">
+    <div class="fade-in">
+      <span class="eyebrow">Marketplace · Entreprises</span>
+      <h1>3 200+ entreprises qui recrutent.</h1>
+      <p class="sub">Explorez l'annuaire, découvrez leur culture et postulez directement à leurs offres.</p>
+      <div class="row">
+        <a href="emploitic-register.html" class="btn btn-lg btn-primary">Inscrire mon entreprise</a>
+        <a href="#annuaire" class="btn btn-lg btn-outline">Parcourir</a>
+      </div>
+    </div>
+    <div class="hero-img fade-in delay-2">
+      <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80" alt="" />
+    </div>
+  </div>
+</section>
+
+<section id="annuaire" class="section">
+  <div class="container">
+    <div class="filter-box" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:28px;">
+      <input id="cq" placeholder="Rechercher une entreprise…" style="flex:1;min-width:220px;height:44px;background:var(--bg);" />
+      <select id="csector" style="height:44px;background:#fff;width:auto;padding:0 14px;border-radius:12px;border:1px solid var(--border);font-family:inherit;font-size:14px;">
+        <option>Tous</option><option>IT & Conseil</option><option>Télécommunications</option><option>Banque</option><option>Énergie</option><option>Pétrole & Gaz</option><option>Automobile</option><option>Agroalimentaire</option><option>Tech & Mobilité</option>
+      </select>
+    </div>
+    <div class="grid grid-3" id="cosList"></div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+
+<script src="marketing.js"></script>
+<script>
+const COS = [
+  { n:"Sopra HR Software",         s:"IT & Conseil",        size:"500–1000", j:28, city:"Alger",          r:4.6 },
+  { n:"Orange Algérie",            s:"Télécommunications",  size:"1000+",    j:42, city:"Alger",          r:4.4 },
+  { n:"BNP Paribas El Djazaïr",    s:"Banque",              size:"1000+",    j:17, city:"Alger",          r:4.5 },
+  { n:"Schlumberger",              s:"Énergie",             size:"1000+",    j:24, city:"Hassi Messaoud", r:4.7 },
+  { n:"Sonatrach",                 s:"Pétrole & Gaz",       size:"10 000+",  j:56, city:"Alger",          r:4.3 },
+  { n:"Hyundai Motor Algérie",     s:"Automobile",          size:"200–500",  j:11, city:"Oran",           r:4.2 },
+  { n:"Cevital",                   s:"Agroalimentaire",     size:"10 000+",  j:34, city:"Béjaïa",         r:4.4 },
+  { n:"Djezzy",                    s:"Télécommunications",  size:"1000+",    j:22, city:"Alger",          r:4.1 },
+  { n:"Yassir",                    s:"Tech & Mobilité",     size:"500–1000", j:31, city:"Alger",          r:4.8 },
+];
+const state = { q:'', s:'Tous' };
+
+function render(){
+  const list = COS.filter(c =>
+    (!state.q || `${c.n} ${c.city}`.toLowerCase().includes(state.q.toLowerCase())) &&
+    (state.s === 'Tous' || c.s === state.s));
+  document.getElementById('cosList').innerHTML = list.map((c,i)=>`
+    <div class="co-card fade-in delay-${(i%6)+1}">
+      <div class="co-cover"></div>
+      <div class="co-body">
+        <div class="co-logo">${c.n[0]}</div>
+        <div style="margin-top:12px;display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
+          <div style="min-width:0;">
+            <div style="font-weight:700;">${c.n}</div>
+            <div style="font-size:12px;color:var(--muted);">${c.s}</div>
+          </div>
+          <span class="tag tag-amber">★ ${c.r}</span>
+        </div>
+        <div class="co-mini">
+          <div><div class="lbl">👥 Taille</div><div class="val">${c.size}</div></div>
+          <div><div class="lbl">📍 Ville</div><div class="val">${c.city}</div></div>
+        </div>
+        <div style="margin-top:14px;display:flex;align-items:center;justify-content:space-between;">
+          <div style="font-size:14px;"><strong style="color:var(--blue);">${c.j}</strong> <span style="color:var(--muted);font-size:12px;">offres ouvertes</span></div>
+          <a href="emploitic-offres-emploi.html" class="tag tag-blue" style="font-weight:700;">Voir les offres →</a>
+        </div>
+      </div>
+    </div>`).join('');
+}
+document.getElementById('cq').addEventListener('input', e=>{state.q=e.target.value;render();});
+document.getElementById('csector').addEventListener('change', e=>{state.s=e.target.value;render();});
+render();
+</script>
+</body>
+</html>

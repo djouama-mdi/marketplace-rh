@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Guides RH — Emploitic</title>
+<meta name="description" content="Guides pratiques et téléchargeables pour structurer vos process RH." />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="marketing.css" />
+</head>
+<body>
+<div id="site-nav"></div>
+<section class="page-hero"><div class="container page-hero-grid">
+  <div class="fade-in"><span class="eyebrow">📚 Guides RH</span>
+    <h1>Boîte à outils RH, 100% pratique.</h1>
+    <p class="sub">Méthodes, modèles et checklists pour structurer votre recrutement, votre onboarding et votre marque employeur.</p>
+  </div>
+  <div class="hero-img fade-in delay-2"><img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80" alt=""/></div>
+</div></section>
+<section class="section"><div class="container"><div class="grid grid-3" id="guides"></div></div></section>
+<div id="site-footer"></div>
+<script src="marketing.js"></script>
+<script>
+const G = [
+  ['📋','Le guide complet du recrutement structuré','38 pages · PDF','Méthode étape par étape pour des entretiens efficaces et équitables.'],
+  ['🎯','Définir une fiche de poste qui attire','22 pages · PDF','Modèle réutilisable + 12 exemples de fiches.'],
+  ['🚀','Onboarding : les 30 premiers jours','28 pages · PDF','Checklist J-7 → J+30 + emails types.'],
+  ['💡','Construire sa marque employeur','46 pages · PDF','Audit, positionnement, plan d\'action 90 jours.'],
+  ['🤝','Sourcing : 8 canaux qui marchent','24 pages · PDF','Tactiques concrètes par canal + KPIs.'],
+  ['📊','KPIs RH : ceux qui comptent vraiment','18 pages · PDF','15 indicateurs à suivre + tableau de bord modèle.'],
+];
+document.getElementById('guides').innerHTML = G.map(([i,t,m,d],idx)=>`
+  <article class="svc-card reveal delay-${(idx%4)+1}">
+    <div class="ic">${i}</div>
+    <h3>${t}</h3>
+    <p>${d}</p>
+    <div class="foot"><span class="price">${m}</span><a href="emploitic-register.html" class="btn btn-outline">Télécharger</a></div>
+  </article>`).join('');
+</script>
+</body>
+</html>

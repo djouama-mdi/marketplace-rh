@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Services RH externalisés — Emploitic</title>
+<meta name="description" content="Sourcing premium, évaluations, marque employeur, paie & conformité. Une suite RH complète." />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="marketing.css" />
+</head>
+<body>
+<div id="site-nav"></div>
+
+<section class="page-hero">
+  <div class="container page-hero-grid">
+    <div class="fade-in">
+      <span class="eyebrow">Services RH</span>
+      <h1>Une équipe RH externalisée à votre service.</h1>
+      <p class="sub">Du sourcing à l'onboarding, libérez du temps et concentrez-vous sur la croissance.</p>
+      <div class="row">
+        <a href="#services" class="btn btn-lg btn-primary">Découvrir nos services</a>
+        <a href="emploitic-tarifs.html" class="btn btn-lg btn-outline">Voir les tarifs</a>
+      </div>
+    </div>
+    <div class="hero-img fade-in delay-2">
+      <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1200&q=80" alt="" />
+    </div>
+  </div>
+</section>
+
+<section id="services" class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Marketplace · RH</span>
+      <h2>Catalogue de services</h2>
+      <p>Choisissez à la carte ou combinez plusieurs prestations.</p>
+    </div>
+    <div class="grid grid-3" id="svcGrid"></div>
+  </div>
+</section>
+
+<section class="section section-blue">
+  <div class="container">
+    <div class="section-head"><span class="eyebrow">Méthodologie</span><h2>Comment on travaille</h2></div>
+    <div class="grid grid-4">
+      <div class="step fade-in"><div class="num">01</div><h3>Brief stratégique</h3><p>Nous comprenons vos enjeux, votre culture et vos contraintes.</p></div>
+      <div class="step fade-in delay-1"><div class="num">02</div><h3>Plan d'action</h3><p>Une proposition claire avec livrables, délais et KPIs.</p></div>
+      <div class="step fade-in delay-2"><div class="num">03</div><h3>Exécution</h3><p>Une équipe dédiée prend en charge l'opérationnel.</p></div>
+      <div class="step fade-in delay-3"><div class="num">04</div><h3>Reporting</h3><p>Suivi mensuel, ajustements et optimisation continue.</p></div>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+
+<script src="marketing.js"></script>
+<script>
+const SVC = [
+  { em:'🎯', t:'Sourcing Premium',     d:"Notre équipe identifie, contacte et qualifie les meilleurs profils pour vos postes critiques.",  p:'Sur demande', b:['Chasse de têtes','Shortlist en 7 jours','Garantie remplacement'] },
+  { em:'📊', t:'Tests & Évaluations',  d:"Plateforme de tests techniques, soft-skills, langues et entretiens vidéo asynchrones.",          p:'Sur demande', b:['+200 tests prêts','Vidéo asynchrone','Rapports détaillés'] },
+  { em:'🧠', t:'Marque Employeur',     d:"Page entreprise premium, vidéos, témoignages et campagnes de notoriété ciblées.",                p:'Sur demande', b:['Page premium','Vidéo de marque','Campagnes social'] },
+  { em:'🛡️', t:'Conformité RH',        d:"Externalisez vos déclarations et la conformité du droit du travail algérien.",                   p:'Sur demande', b:['Conformité','Déclarations','Veille juridique'] },
+  { em:'🚀', t:'Onboarding Digital',   d:"Parcours d'intégration personnalisé pour vos nouvelles recrues — engagement maximal.",           p:'Sur demande', b:['Parcours sur-mesure','Suivi 90 jours','Tableau de bord'] },
+  { em:'📈', t:'Conseil RH',           d:"Audit organisationnel, plan de formation et gestion des talents.",                                p:'Sur demande', b:['Audit complet','Plan d\'action','Accompagnement'] },
+];
+document.getElementById('svcGrid').innerHTML = SVC.map((s,i)=>`
+  <div class="svc-card reveal delay-${(i%4)+1}">
+    <div class="ic">${s.em}</div>
+    <h3>${s.t}</h3>
+    <p>${s.d}</p>
+    <ul>${s.b.map(x=>`<li>${x}</li>`).join('')}</ul>
+    <div class="foot">
+      <div class="price">${s.p}</div>
+      <a href="emploitic-contact.html" class="btn btn-primary" style="height:36px;padding:0 14px;font-size:12px;">Demander un devis</a>
+    </div>
+  </div>`).join('');
+</script>
+</body>
+</html>

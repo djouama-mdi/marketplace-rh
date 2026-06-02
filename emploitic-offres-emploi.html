@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Offres d'emploi & missions — Emploitic</title>
+<meta name="description" content="15 000+ offres et missions en Algérie. Filtrez par ville, secteur, type et télétravail. Postulez en un clic." />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="marketing.css" />
+</head>
+<body>
+<div id="site-nav"></div>
+
+<section class="page-hero">
+  <div class="container page-hero-grid">
+    <div class="fade-in">
+      <span class="eyebrow">🛒 Marketplace · Emplois & Missions</span>
+      <h1>15 000+ opportunités qui n'attendent que vous.</h1>
+      <p class="sub">Postes CDI, CDD, freelance, stages et missions RH ponctuelles — filtrez et postulez en un clic.</p>
+      <form class="search-bar" onsubmit="event.preventDefault();document.getElementById('liste').scrollIntoView({behavior:'smooth'});">
+        <div class="field">🔍 <input id="hq" placeholder="Métier, mot-clé, entreprise…" /></div>
+        <div class="sep"></div>
+        <div class="field">📍 <input id="hcity" placeholder="Ville, région" /></div>
+        <button class="btn btn-primary">Rechercher</button>
+      </form>
+      <div class="trends">
+        <strong>Tendances :</strong>
+        <a href="#" data-trend="React">React</a>
+        <a href="#" data-trend="Data">Data</a>
+        <a href="#" data-trend="DevOps">DevOps</a>
+        <a href="#" data-trend="RH">RH</a>
+        <a href="#" data-trend="Marketing">Marketing</a>
+      </div>
+    </div>
+    <div class="hero-img fade-in delay-2">
+      <img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=1200&q=80" alt="" />
+    </div>
+  </div>
+</section>
+
+<section id="liste" class="section">
+  <div class="container market-grid">
+    <aside>
+      <div class="filter-box">
+        <div class="lbl">Recherche</div>
+        <input id="fq" placeholder="Métier, mot-clé…" />
+        <input id="fcity" placeholder="Ville" />
+      </div>
+      <div class="filter-box">
+        <div class="lbl">Type</div>
+        <div class="chip-row" id="fType"></div>
+      </div>
+      <div class="filter-box">
+        <div class="lbl">Secteur</div>
+        <div class="opt-row" id="fSector"></div>
+      </div>
+      <div class="filter-box">
+        <div class="lbl">Niveau d'expérience</div>
+        <div class="chip-row" id="fExp"></div>
+      </div>
+      <label class="filter-box switch-row">
+        <div><div class="lbl-main">Télétravail</div><div class="lbl-sub">Uniquement remote</div></div>
+        <input type="checkbox" id="fRemote" />
+      </label>
+      <label class="filter-box switch-row">
+        <div><div class="lbl-main">Urgentes</div><div class="lbl-sub">Publiées < 48h</div></div>
+        <input type="checkbox" id="fUrg" />
+      </label>
+      <button id="reset" class="btn btn-outline" style="width:100%;margin-top:6px">Réinitialiser</button>
+    </aside>
+
+    <div class="list-col">
+      <div class="results-head">
+        <div class="results-count"><strong id="count">0</strong> opportunités trouvées</div>
+        <select id="sort" class="filter-box" style="margin:0;height:40px;padding:0 12px;background:#fff;">
+          <option value="recent">Plus récentes</option>
+          <option value="alpha">A → Z</option>
+          <option value="comp">Entreprise</option>
+        </select>
+      </div>
+      <div class="col" id="results"></div>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="marketing.js"></script>
+<script>
+const ALL = [
+  { id:1,  t:"Développeur Full-Stack React/Node",     c:"Sopra HR",     city:"Alger",          ty:"CDI",       sec:"IT",        exp:"Confirmé",  d:2, tags:["React","Node","TS"],          remote:true  },
+  { id:2,  t:"Chef de Projet Marketing Digital",      c:"TechCorp",     city:"Oran",           ty:"CDI",       sec:"Marketing", exp:"Senior",    d:4, tags:["SEO","Ads","B2B"],            remote:false },
+  { id:3,  t:"Ingénieur Pétrolier Senior",            c:"Groupe Alpha", city:"Hassi Messaoud", ty:"CDD",       sec:"Énergie",   exp:"Senior",    d:1, tags:["Drilling","HSE"],             remote:false },
+  { id:4,  t:"Responsable Comptable",                 c:"BankAlg",      city:"Alger",          ty:"CDI",       sec:"Finance",   exp:"Senior",    d:5, tags:["IFRS","Conso"],               remote:false },
+  { id:5,  t:"UX/UI Designer",                        c:"PixelNord",    city:"Constantine",    ty:"Freelance", sec:"Design",    exp:"Confirmé",  d:1, tags:["Figma","DS"],                 remote:true  },
+  { id:6,  t:"Data Analyst",                          c:"Orange",       city:"Alger",          ty:"CDI",       sec:"IT",        exp:"Junior",    d:3, tags:["SQL","Power BI"],             remote:true  },
+  { id:7,  t:"Commercial B2B Terrain",                c:"Cevital",      city:"Béjaïa",         ty:"CDI",       sec:"Commerce",  exp:"Confirmé",  d:6, tags:["FMCG","Terrain"],             remote:false },
+  { id:8,  t:"Responsable RH",                        c:"Schlumberger", city:"Hassi Messaoud", ty:"CDI",       sec:"RH",        exp:"Senior",    d:2, tags:["Recrut.","Paie"],             remote:false },
+  { id:9,  t:"Architecte Cloud AWS",                  c:"Atos",         city:"Alger",          ty:"CDI",       sec:"IT",        exp:"Senior",    d:1, tags:["AWS","Terraform"],            remote:true  },
+  { id:10, t:"Ingénieur DevOps",                      c:"Ooredoo",      city:"Alger",          ty:"CDI",       sec:"IT",        exp:"Confirmé",  d:3, tags:["K8s","CI/CD"],                remote:true  },
+  { id:11, t:"Mission · Refonte SIRH",                c:"Saidal",       city:"Alger",          ty:"Mission",   sec:"RH",        exp:"Senior",    d:1, tags:["SIRH","Conseil"],             remote:false },
+  { id:12, t:"Chargé de Sourcing IT",                 c:"Capgemini",    city:"Alger",          ty:"CDI",       sec:"RH",        exp:"Junior",    d:2, tags:["Sourcing","LinkedIn"],        remote:true  },
+  { id:13, t:"Product Manager SaaS",                  c:"Yassir",       city:"Alger",          ty:"CDI",       sec:"IT",        exp:"Senior",    d:2, tags:["Product","Analytics"],        remote:true  },
+  { id:14, t:"Mission · Audit Marque Employeur",      c:"Djezzy",       city:"Alger",          ty:"Mission",   sec:"RH",        exp:"Senior",    d:4, tags:["EVP","Audit"],                remote:true  },
+  { id:15, t:"Ingénieur QA Automatisation",           c:"Mobilis",      city:"Alger",          ty:"CDI",       sec:"IT",        exp:"Confirmé",  d:5, tags:["Cypress","Playwright"],       remote:true  },
+  { id:16, t:"Acheteur Industriel",                   c:"Cevital",      city:"Alger",          ty:"CDI",       sec:"Industrie", exp:"Confirmé",  d:7, tags:["Achat","Négociation"],        remote:false },
+  { id:17, t:"Brand Manager",                         c:"Hamoud",       city:"Alger",          ty:"CDI",       sec:"Marketing", exp:"Senior",    d:6, tags:["Brand","Studio"],             remote:false },
+  { id:18, t:"Mission · Plan de formation 2026",      c:"Banque BNA",   city:"Alger",          ty:"Mission",   sec:"RH",        exp:"Senior",    d:1, tags:["Formation","Plan"],           remote:false },
+  { id:19, t:"Ingénieur Génie Civil",                 c:"Cosider",      city:"Annaba",         ty:"CDI",       sec:"BTP",       exp:"Confirmé",  d:8, tags:["Chantier","Planning"],        remote:false },
+  { id:20, t:"Chef de Produit Pharma",                c:"Saidal",       city:"Alger",          ty:"CDI",       sec:"Pharma",    exp:"Confirmé",  d:4, tags:["Pharma","Marketing"],         remote:false },
+  { id:21, t:"Mobile Engineer Flutter",               c:"InTouch",      city:"Tunis/Remote",   ty:"Freelance", sec:"IT",        exp:"Confirmé",  d:2, tags:["Flutter","Mobile"],           remote:true  },
+  { id:22, t:"Stage · Assistant RH",                  c:"Schneider",    city:"Alger",          ty:"Stage",     sec:"RH",        exp:"Stage",     d:1, tags:["Admin","Recrut."],            remote:false },
+  { id:23, t:"SEO Manager",                           c:"Jumia",        city:"Alger",          ty:"CDI",       sec:"Marketing", exp:"Confirmé",  d:3, tags:["SEO","Tech"],                 remote:true  },
+  { id:24, t:"Mission · Coaching Codir",              c:"Hyundai DZ",   city:"Alger",          ty:"Mission",   sec:"RH",        exp:"Senior",    d:5, tags:["Coaching","Codir"],           remote:false },
+  { id:25, t:"Responsable Logistique",                c:"Cevital",      city:"Béjaïa",         ty:"CDI",       sec:"Industrie", exp:"Senior",    d:7, tags:["Supply","WMS"],               remote:false },
+  { id:26, t:"Customer Success Manager",              c:"Easy Relay",   city:"Alger",          ty:"CDI",       sec:"Commerce",  exp:"Confirmé",  d:1, tags:["CS","SaaS"],                  remote:true  },
+  { id:27, t:"Data Scientist NLP",                    c:"INELEC",       city:"Boumerdès",      ty:"CDI",       sec:"IT",        exp:"Senior",    d:2, tags:["Python","NLP"],               remote:true  },
+  { id:28, t:"Stage · UX Researcher",                 c:"Yassir",       city:"Alger",          ty:"Stage",     sec:"Design",    exp:"Stage",     d:2, tags:["Research","UX"],              remote:true  },
+  { id:29, t:"Responsable QHSE",                      c:"Sonatrach",    city:"Hassi Messaoud", ty:"CDI",       sec:"Énergie",   exp:"Senior",    d:9, tags:["HSE","Qualité"],              remote:false },
+  { id:30, t:"Mission · Refonte SIRH PME",            c:"Algeria Telecom", city:"Alger",       ty:"Mission",   sec:"RH",        exp:"Senior",    d:1, tags:["SIRH","PME"],                 remote:true  },
+  { id:31, t:"Frontend Engineer Vue.js",              c:"Temtem One",   city:"Alger",          ty:"CDI",       sec:"IT",        exp:"Confirmé",  d:3, tags:["Vue","Nuxt"],                 remote:true  },
+  { id:32, t:"Community Manager",                     c:"Djezzy",       city:"Alger",          ty:"CDI",       sec:"Marketing", exp:"Junior",    d:5, tags:["Social","Content"],           remote:true  },
+];
+const TYPES   = ["Tous","CDI","CDD","Freelance","Mission","Stage"];
+const SECTORS = ["Tous","IT","Marketing","Finance","Énergie","Design","Commerce","RH","Industrie","BTP","Pharma"];
+const EXPS    = ["Tous","Stage","Junior","Confirmé","Senior"];
+const state = { q:'', city:'', ty:'Tous', sec:'Tous', exp:'Tous', remote:false, urg:false, sort:'recent', saved: JSON.parse(localStorage.getItem('saved')||'[]') };
+
+const $ = id => document.getElementById(id);
+$('fType').innerHTML   = TYPES.map(t=>`<button class="chip ${state.ty===t?'active':''}" data-v="${t}">${t}</button>`).join('');
+$('fSector').innerHTML = SECTORS.map(s=>`<button class="${state.sec===s?'active':''}" data-v="${s}">${s}</button>`).join('');
+$('fExp').innerHTML    = EXPS.map(e=>`<button class="chip ${state.exp===e?'active':''}" data-v="${e}">${e}</button>`).join('');
+
+function bindChips(id, key) {
+  $(id).addEventListener('click', e=>{
+    const b = e.target.closest('button'); if(!b) return;
+    state[key] = b.dataset.v;
+    $(id).querySelectorAll('button').forEach(x=>x.classList.toggle('active', x.dataset.v===state[key]));
+    render();
+  });
+}
+bindChips('fType','ty'); bindChips('fSector','sec'); bindChips('fExp','exp');
+$('fq').addEventListener('input', e=>{ state.q=e.target.value; render(); });
+$('fcity').addEventListener('input', e=>{ state.city=e.target.value; render(); });
+$('fRemote').addEventListener('change', e=>{ state.remote=e.target.checked; render(); });
+$('fUrg').addEventListener('change', e=>{ state.urg=e.target.checked; render(); });
+$('sort').addEventListener('change', e=>{ state.sort=e.target.value; render(); });
+$('reset').addEventListener('click', ()=>{
+  Object.assign(state, { q:'',city:'',ty:'Tous',sec:'Tous',exp:'Tous',remote:false,urg:false });
+  $('fq').value=''; $('fcity').value=''; $('fRemote').checked=false; $('fUrg').checked=false;
+  ['fType','fSector','fExp'].forEach(id => $(id).querySelectorAll('button').forEach(b => b.classList.toggle('active', b.dataset.v==='Tous')));
+  render();
+});
+
+// Trends from hero
+document.querySelectorAll('[data-trend]').forEach(a => a.addEventListener('click', e=>{
+  e.preventDefault();
+  state.q = a.dataset.trend; $('fq').value = state.q;
+  document.getElementById('liste').scrollIntoView({behavior:'smooth'});
+  render();
+}));
+const hq = $('hq'), hcity = $('hcity');
+hq && hq.addEventListener('input', e=>{ state.q=e.target.value; $('fq').value=state.q; render(); });
+hcity && hcity.addEventListener('input', e=>{ state.city=e.target.value; $('fcity').value=state.city; render(); });
+
+function render() {
+  let list = ALL.filter(j => {
+    if (state.q && !`${j.t} ${j.c} ${j.tags.join(' ')}`.toLowerCase().includes(state.q.toLowerCase())) return false;
+    if (state.city && !j.city.toLowerCase().includes(state.city.toLowerCase())) return false;
+    if (state.ty  !== 'Tous' && j.ty  !== state.ty)  return false;
+    if (state.sec !== 'Tous' && j.sec !== state.sec) return false;
+    if (state.exp !== 'Tous' && j.exp !== state.exp) return false;
+    if (state.remote && !j.remote) return false;
+    if (state.urg && j.d > 2) return false;
+    return true;
+  });
+  if (state.sort === 'alpha') list.sort((a,b)=>a.t.localeCompare(b.t));
+  else if (state.sort === 'comp') list.sort((a,b)=>a.c.localeCompare(b.c));
+  else list.sort((a,b)=>a.d-b.d);
+
+  $('count').textContent = list.length;
+  $('results').innerHTML = list.length ? list.map((j,i)=>`
+    <article class="job-row reveal in">
+      <div class="top">
+        <div class="logo">${j.c[0]}</div>
+        <div class="body">
+          <div class="head">
+            <h3>${j.t}</h3>
+            ${j.remote ? '<span class="tag tag-green">Remote</span>' : ''}
+            ${j.d<=2 ? '<span class="tag tag-amber">⚡ Urgent</span>' : ''}
+            <span class="tag tag-blue">${j.ty}</span>
+          </div>
+          <div class="comp">${j.c}</div>
+          <div class="meta">
+            <span>📍 ${j.city}</span><span>🏷️ ${j.sec}</span><span>🎯 ${j.exp}</span><span>🕒 il y a ${j.d}j</span>
+          </div>
+          <div class="tags">${j.tags.map(t=>`<span class="tag tag-soft">${t}</span>`).join('')}</div>
+        </div>
+        <div class="actions">
+          <a href="emploitic-register.html" class="btn btn-primary">Postuler</a>
+          <button class="btn btn-outline" data-save="${j.id}">${state.saved.includes(j.id)?'★ Sauvée':'☆ Sauver'}</button>
+        </div>
+      </div>
+    </article>`).join('') : `<div style="padding:48px;text-align:center;background:#fff;border:1px dashed var(--border);border-radius:18px;color:var(--muted);">Aucune opportunité ne correspond. Essayez d'élargir vos critères.</div>`;
+
+  document.querySelectorAll('[data-save]').forEach(btn => btn.addEventListener('click', () => {
+    const id = +btn.dataset.save;
+    state.saved = state.saved.includes(id) ? state.saved.filter(x=>x!==id) : [...state.saved, id];
+    localStorage.setItem('saved', JSON.stringify(state.saved));
+    render();
+  }));
+}
+render();
+</script>
+</body>
+</html>

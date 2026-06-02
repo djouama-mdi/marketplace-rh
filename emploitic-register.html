@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Inscription — Emploitic</title>
+<meta name="description" content="Créez votre compte Emploitic en 2 minutes. Entreprise ou freelance, rejoignez la marketplace B2B RH n°1 en Algérie." />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="marketing.css" />
+</head>
+<body>
+<div class="auth">
+  <aside class="auth-aside">
+    <a href="emploitic-accueil.html" class="logo">
+      <span class="logo-mark">e</span>
+      <span class="logo-text">emploitic<span>.</span></span>
+    </a>
+    <div>
+      <h2>Rejoignez la première marketplace B2B RH d'Algérie.</h2>
+      <p class="lead">Créez votre compte gratuit et accédez à un écosystème complet : recrutement, missions, messagerie et analytics.</p>
+      <ul>
+        <li><span class="ck">✓</span> Inscription gratuite en 2 minutes</li>
+        <li><span class="ck">✓</span> Profil vérifié sous 24h</li>
+        <li><span class="ck">✓</span> Accès illimité au catalogue</li>
+        <li><span class="ck">✓</span> Aucun engagement</li>
+      </ul>
+    </div>
+    <div class="quote">
+      <p>« J'ai trouvé 4 missions sur Emploitic en 3 mois. La plateforme la plus pro pour les RH en Algérie. »</p>
+      <div class="who"><div class="av">YB</div><div><b>Yacine Belkacem</b><div style="opacity:.85">Consultant Senior RH</div></div></div>
+    </div>
+  </aside>
+
+  <div class="auth-form-wrap">
+    <form class="auth-form fade-in" id="regForm" novalidate>
+      <h1>Créer un compte</h1>
+      <p class="sub">Choisissez votre type de compte pour commencer.</p>
+
+      <div class="group">
+        <label>Type de compte</label>
+        <div class="account-pick">
+          <label>
+            <input type="radio" name="role" value="entreprise" checked>
+            <span class="opt"><span class="ic">🏢</span><span><b>Entreprise</b><small>Recrutement & marque employeur</small></span></span>
+          </label>
+          <label>
+            <input type="radio" name="role" value="freelance">
+            <span class="opt"><span class="ic">💼</span><span><b>Freelance</b><small>Prestataire RH & talent</small></span></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="group"><label>Prénom</label><input name="first" required placeholder="Amina" /></div>
+        <div class="group"><label>Nom</label><input name="last" required placeholder="Cherif" /></div>
+      </div>
+
+      <div class="group">
+        <label data-l-entreprise="Raison sociale" data-l-freelance="Nom professionnel" id="orgLabel">Raison sociale</label>
+        <input name="org" required placeholder="Ex. Cevital Industries" />
+      </div>
+
+      <div class="group">
+        <label>Email professionnel</label>
+        <input type="email" name="email" required placeholder="vous@entreprise.dz" />
+      </div>
+
+      <div class="row2">
+        <div class="group"><label>Mot de passe</label><input type="password" name="password" required minlength="6" placeholder="6+ caractères" /></div>
+        <div class="group"><label>Confirmation</label><input type="password" name="confirm" required minlength="6" placeholder="Répéter" /></div>
+      </div>
+
+      <label style="display:flex;gap:10px;font-size:13px;color:var(--text-2);margin-top:6px">
+        <input type="checkbox" required style="accent-color:var(--blue);width:16px;height:16px;margin-top:3px" />
+        <span>J'accepte les <a href="emploitic-cgu.html" style="color:var(--blue);font-weight:600">CGU</a> et la <a href="emploitic-confidentialite.html" style="color:var(--blue);font-weight:600">politique de confidentialité</a>.</span>
+      </label>
+
+      <div class="err" id="err"></div>
+      <div class="ok" id="ok"></div>
+      <button type="submit" class="btn btn-lg btn-primary" style="width:100%;margin-top:18px">Créer mon compte</button>
+
+      <div class="divider">ou continuer avec</div>
+      <div class="socials">
+        <button type="button" class="btn btn-outline">🟢 Google</button>
+        <button type="button" class="btn btn-outline">🔵 LinkedIn</button>
+      </div>
+
+      <p style="text-align:center;margin:22px 0 0;color:var(--muted);font-size:14px">
+        Déjà un compte ? <a href="emploitic-login.html" style="color:var(--blue);font-weight:700">Se connecter</a>
+      </p>
+    </form>
+  </div>
+</div>
+
+<script>
+const lbl = document.getElementById('orgLabel');
+document.querySelectorAll('input[name=role]').forEach(r => r.addEventListener('change', () => {
+  lbl.textContent = r.value === 'freelance' ? 'Nom professionnel' : 'Raison sociale';
+}));
+document.getElementById('regForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const f = e.target;
+  const err = document.getElementById('err'); const ok = document.getElementById('ok');
+  err.classList.remove('show'); ok.classList.remove('show');
+  if (f.password.value !== f.confirm.value) { err.textContent = 'Les mots de passe ne correspondent pas.'; err.classList.add('show'); return; }
+  ok.textContent = '✅ Compte créé ! Redirection…'; ok.classList.add('show');
+  setTimeout(() => { location.href = 'choixDash.html'; }, 900);
+});
+</script>
+</body>
+</html>

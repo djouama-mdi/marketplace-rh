@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tarifs — Emploitic · Bronze, Silver, Gold</title>
+<meta name="description" content="Trois formules : Bronze, Silver, Gold. Une version pour les entreprises, une pour les freelances. Sans engagement." />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="marketing.css" />
+</head>
+<body>
+<div id="site-nav"></div>
+
+<section class="page-hero">
+  <div class="container" style="text-align:center;position:relative;z-index:1">
+    <span class="eyebrow fade-in">💎 Tarifs · Marketplace B2B RH</span>
+    <h1 class="fade-in" style="font-size:clamp(32px,5vw,52px);font-weight:800;letter-spacing:-1px;margin:8px 0 12px">Trois formules. Une seule promesse.</h1>
+    <p class="sub fade-in delay-1" style="color:var(--text-2);font-size:17px;max-width:640px;margin:0 auto">Bronze, Silver, Gold — choisissez votre niveau d'accompagnement, sans engagement.</p>
+    <div class="fade-in delay-2" style="display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:24px">
+      <div class="tabs" id="audTabs">
+        <button class="active" data-aud="ent">🏢 Entreprise</button>
+        <button data-aud="free">💼 Freelance</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="grid grid-3" id="plans"></div>
+  </div>
+</section>
+
+<section class="section section-blue">
+  <div class="container" style="max-width:960px">
+    <div class="section-head"><span class="eyebrow">Comparatif détaillé</span><h2 id="cmpTitle">Tout ce qui est inclus</h2></div>
+    <div class="compare reveal">
+      <table>
+        <thead><tr><th>Fonctionnalité</th><th>Bronze</th><th>Silver</th><th>Gold</th></tr></thead>
+        <tbody id="cmpBody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container" style="max-width:760px">
+    <div class="section-head"><span class="eyebrow">FAQ</span><h2>Vos questions, nos réponses</h2></div>
+    <div class="faq-item open"><button class="faq-q">Puis-je changer de formule à tout moment ?<span class="plus">+</span></button><div class="faq-a">Oui — passez à un niveau supérieur ou inférieur depuis votre tableau de bord, sans frais.</div></div>
+    <div class="faq-item"><button class="faq-q">Y a-t-il un engagement ?<span class="plus">+</span></button><div class="faq-a">Aucun. Vous pouvez stopper à tout moment et conserver vos données.</div></div>
+    <div class="faq-item"><button class="faq-q">Quelle est la différence entre Entreprise et Freelance ?<span class="plus">+</span></button><div class="faq-a">L'espace Entreprise est conçu pour le recrutement et la marque employeur. L'espace Freelance permet aux prestataires RH et talents de se rendre visibles et de répondre à des missions.</div></div>
+    <div class="faq-item"><button class="faq-q">Comment fonctionne l'essai ?<span class="plus">+</span></button><div class="faq-a">Le niveau Bronze est gratuit et illimité. Vous pouvez l'utiliser pour découvrir la plateforme à votre rythme.</div></div>
+    <div class="faq-item"><button class="faq-q">Puis-je obtenir une démo personnalisée ?<span class="plus">+</span></button><div class="faq-a">Oui — réservez un créneau via la <a href="emploitic-contact.html" style="color:var(--blue);font-weight:600">page Contact</a> et notre équipe vous présente la plateforme.</div></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="cta-banner">
+      <h2>Pas sûr de la bonne formule ?</h2>
+      <p>Notre équipe vous aide à choisir en 15 minutes — sans engagement.</p>
+      <div class="row">
+        <a href="emploitic-contact.html" class="btn btn-lg btn-white">Réserver une démo</a>
+        <a href="emploitic-register.html" class="btn btn-lg btn-outline">Commencer en Bronze</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="marketing.js"></script>
+<script>
+const DATA = {
+  ent: {
+    plans: [
+      { n:'Bronze', tag:'Pour démarrer', d:"Idéal pour découvrir la marketplace et publier vos premières offres.",
+        f:['3 offres simultanées','100 profils visibles / mois','Page entreprise standard','Messagerie intégrée','Support email'],
+        cta:'Commencer gratuitement', pop:false, badge:'GRATUIT' },
+      { n:'Silver', tag:'Le plus choisi', d:"Pour les équipes RH qui recrutent régulièrement et veulent gagner du temps.",
+        f:['15 offres simultanées','Profils illimités','Page entreprise premium','Tests d\'évaluation','Statistiques avancées','Support prioritaire 4h','Mise en avant des offres'],
+        cta:'Choisir Silver', pop:true, badge:'POPULAIRE' },
+      { n:'Gold', tag:'Sur-mesure', d:"L'accompagnement haut de gamme pour les groupes et recrutements stratégiques.",
+        f:['Offres illimitées','Account manager dédié','Sourcing actif inclus','API & intégrations SIRH','Marque employeur prioritaire','SLA garanti','Formation équipe RH'],
+        cta:'Demander un devis', pop:false, badge:'PREMIUM' },
+    ],
+    cmp: [
+      ['Offres / missions simultanées','3','15','∞'],
+      ['Profils visibles','100 / mois','Illimité','Illimité'],
+      ['Page entreprise premium','—','✓','✓'],
+      ['Mise en avant des offres','—','✓','✓ prioritaire'],
+      ['Tests d\'évaluation','—','✓','✓'],
+      ['Statistiques avancées','Basique','✓','Temps réel'],
+      ['Account manager dédié','—','—','✓'],
+      ['API & intégrations SIRH','—','—','✓'],
+      ['Sourcing actif inclus','—','—','✓'],
+      ['Support','Email','Prioritaire 4h','Téléphone 24/7'],
+    ]
+  },
+  free: {
+    plans: [
+      { n:'Bronze', tag:'Pour démarrer', d:"Créez votre profil, candidatez et accédez à la communauté.",
+        f:['Profil public optimisé','10 candidatures / mois','Alertes missions','Accès au blog & guides','Support email'],
+        cta:'Créer mon profil', pop:false, badge:'GRATUIT' },
+      { n:'Silver', tag:'Le plus choisi', d:"Maximisez votre visibilité et décrochez plus de missions qualifiées.",
+        f:['Profil mis en avant','Candidatures illimitées','Badge vérifié','Recommandations IA','Statistiques de profil','Support prioritaire','Accès anticipé aux missions'],
+        cta:'Passer en Silver', pop:true, badge:'POPULAIRE' },
+      { n:'Gold', tag:'L\'élite', d:"Devenez un expert référencé, contacté en direct par les meilleures entreprises.",
+        f:['Top profil dans les résultats','Coach carrière dédié','Missions sur-mesure proposées','Mise en relation directe avec les DRH','Présence sur le mur des experts','Audit profil & relooking','SLA réponse 4h'],
+        cta:'Rejoindre les Gold', pop:false, badge:'EXPERT' },
+    ],
+    cmp: [
+      ['Candidatures / mois','10','Illimité','Illimité'],
+      ['Profil mis en avant','—','✓','✓ top'],
+      ['Badge vérifié','—','✓','✓ Gold'],
+      ['Recommandations IA','—','✓','✓ avancées'],
+      ['Coach carrière','—','—','✓ dédié'],
+      ['Mise en relation directe DRH','—','—','✓'],
+      ['Audit profil','—','—','✓'],
+      ['Statistiques de profil','Basique','✓','Temps réel'],
+      ['Support','Email','Prioritaire','SLA 4h'],
+    ]
+  }
+};
+let aud = 'ent';
+
+function render() {
+  const d = DATA[aud];
+  document.getElementById('plans').innerHTML = d.plans.map((p,i)=>`
+    <div class="plan ${p.pop?'popular':''} reveal delay-${i+1}">
+      ${p.badge?`<div class="badge">${p.pop?'⭐ ':''}${p.badge}</div>`:''}
+      <div class="tag-name">${p.tag}</div>
+      <h3>${p.n}</h3>
+      <div class="desc">${p.d}</div>
+      <div class="price" style="margin-top:18px"><span class="amount" style="font-size:24px;color:var(--blue-dark)">${p.n==='Gold' ? 'Sur demande' : (p.n==='Bronze'?'Gratuit':'Sur demande')}</span></div>
+      <ul>${p.f.map(x=>`<li>${x}</li>`).join('')}</ul>
+      <a href="${p.n==='Gold'?'emploitic-contact.html':'emploitic-register.html'}" class="btn btn-lg ${p.pop?'btn-primary':'btn-outline'}">${p.cta}</a>
+    </div>`).join('');
+
+  document.getElementById('cmpTitle').textContent = aud==='ent' ? 'Tout ce que les entreprises obtiennent' : 'Tout ce que les freelances obtiennent';
+  document.getElementById('cmpBody').innerHTML = d.cmp.map(row =>
+    `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}</td></tr>`).join('');
+
+  // reveal animate new cards
+  if (window.IntersectionObserver) {
+    const io = new IntersectionObserver(en=>en.forEach(e=>e.isIntersecting&&(e.target.classList.add('in'),io.unobserve(e.target))),{threshold:.12});
+    document.querySelectorAll('#plans .reveal').forEach(el=>io.observe(el));
+  }
+}
+
+document.querySelectorAll('#audTabs button').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('#audTabs button').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  aud = b.dataset.aud;
+  render();
+}));
+render();
+</script>
+</body>
+</html>

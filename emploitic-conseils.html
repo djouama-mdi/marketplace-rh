@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Conseils carrière — Emploitic</title>
+<meta name="description" content="Articles, guides et conseils pratiques pour réussir votre recherche d'emploi et faire évoluer votre carrière." />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="marketing.css" />
+</head>
+<body>
+<div id="site-nav"></div>
+
+<section class="page-hero">
+  <div class="container page-hero-grid">
+    <div class="fade-in">
+      <span class="eyebrow">Magazine · Carrière</span>
+      <h1>Pensez carrière. Avancez plus vite.</h1>
+      <p class="sub">Articles, guides pratiques et tendances pour booster votre parcours professionnel.</p>
+      <div class="row">
+        <a href="#articles" class="btn btn-lg btn-primary">Lire les articles</a>
+        <a href="#news" class="btn btn-lg btn-outline">Newsletter</a>
+      </div>
+    </div>
+    <div class="hero-img fade-in delay-2">
+      <img src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=1200&q=80" alt="" />
+    </div>
+  </div>
+</section>
+
+<section id="articles" class="section">
+  <div class="container">
+    <div class="section-head"><span class="eyebrow">Marketplace · Contenu</span><h2>Derniers articles</h2></div>
+    <div class="chip-row" id="cats" style="justify-content:center;margin-bottom:32px;gap:8px;"></div>
+    <div class="grid grid-3" id="arts"></div>
+  </div>
+</section>
+
+<section id="news" class="section">
+  <div class="container" style="max-width:720px;">
+    <div class="cta-banner newsletter">
+      <h2>La newsletter carrière, chaque vendredi.</h2>
+      <p>Conseils, offres et études — 0 spam.</p>
+      <form onsubmit="event.preventDefault(); alert('Merci ! ✉️');">
+        <input type="email" required placeholder="votre.email@exemple.dz" />
+        <button class="btn btn-lg btn-white">S'abonner</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+
+<script src="marketing.js"></script>
+<script>
+const ARTICLES = [
+  { cat:'CV & Lettre',   t:"10 erreurs à éviter sur votre CV en 2026",            r:'5 min',  img:'https://images.unsplash.com/photo-1586281380349-632531db7ed4?auto=format&fit=crop&w=800&q=80' },
+  { cat:'Entretien',     t:"Réussir son entretien vidéo : guide complet",         r:'8 min',  img:'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=800&q=80' },
+  { cat:'Carrière',      t:"Construire un plan de carrière en 5 étapes",          r:'6 min',  img:'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80' },
+  { cat:'Reconversion',  t:"Changer de métier après 30 ans : par où commencer ?", r:'10 min', img:'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80' },
+  { cat:'Soft Skills',   t:"Les 7 compétences les plus demandées en 2026",        r:'4 min',  img:'https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=800&q=80' },
+  { cat:'Freelance',     t:"Devenir freelance en Algérie : par où commencer ?",   r:'12 min', img:'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=800&q=80' },
+  { cat:'Marketplace',   t:"Comment se démarquer sur une marketplace RH",         r:'7 min',  img:'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=800&q=80' },
+  { cat:'Entretien',     t:"7 questions à poser au recruteur (et pourquoi)",      r:'5 min',  img:'https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=800&q=80' },
+  { cat:'Carrière',      t:"Mentorat : comment trouver son mentor",               r:'6 min',  img:'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80' },
+];
+const CATS = ['Tous','CV & Lettre','Entretien','Carrière','Reconversion','Soft Skills','Freelance','Marketplace'];
+let cat = 'Tous';
+
+function renderCats(){
+  document.getElementById('cats').innerHTML = CATS.map(c=>`<button class="chip ${c===cat?'active':''}" data-c="${c}">${c}</button>`).join('');
+  document.querySelectorAll('#cats .chip').forEach(b=>b.addEventListener('click',()=>{cat=b.dataset.c;renderCats();renderArts();}));
+}
+function renderArts(){
+  const list = cat==='Tous' ? ARTICLES : ARTICLES.filter(a=>a.cat===cat);
+  document.getElementById('arts').innerHTML = list.map((a,i)=>`
+    <article class="art-card fade-in delay-${(i%6)+1}">
+      <div class="img"><img src="${a.img}" alt=""></div>
+      <div class="body">
+        <div class="cat">${a.cat}</div>
+        <h3>${a.t}</h3>
+        <div class="foot"><span>🕒 ${a.r} de lecture</span><strong>Lire →</strong></div>
+      </div>
+    </article>`).join('');
+}
+renderCats(); renderArts();
+</script>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Emploitic — Recrutement & Services RH n°1 en Algérie</title>
+<meta name="description" content="Trouvez l'emploi ou le talent idéal. 15 000+ offres, 3 200+ entreprises, une suite RH complète." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="marketing.css" />
+</head>
+<body>
+<div id="site-nav"></div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container hero-grid">
+    <div class="fade-in">
+      <span class="eyebrow"><span class="pulse-dot"></span> Nouveau · Marketplace RH 2026</span>
+      <h1 class="hero-title">Recrutez. Travaillez.<br/><span class="gradient-text">Évoluez ensemble.</span></h1>
+      <p class="hero-sub">La plateforme RH n°1 en Algérie : 15 000+ offres, 3 200+ entreprises, une suite complète de services pour recruter et faire grandir vos équipes.</p>
+
+      <form class="search-bar" onsubmit="event.preventDefault(); location.href='emploitic-offres-emploi.html';">
+        <div class="field">🔍 <input placeholder="Métier, mot-clé, entreprise…" /></div>
+        <div class="sep"></div>
+        <div class="field">📍 <input placeholder="Ville, région" /></div>
+        <button class="btn btn-primary">Rechercher</button>
+      </form>
+
+      <div class="trends">
+        <strong>Tendances :</strong>
+        <a href="emploitic-offres-emploi.html">Développeur</a>
+        <a href="emploitic-offres-emploi.html">Comptable</a>
+        <a href="emploitic-offres-emploi.html">Commercial</a>
+        <a href="emploitic-offres-emploi.html">Ingénieur</a>
+      </div>
+    </div>
+
+    <div class="hero-visual fade-in delay-2">
+      <img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1400&q=80" alt="Équipe au travail" />
+      <div class="float-card float-1">
+        <div class="ic">✨</div>
+        <div><div class="lbl">Nouvelle offre</div><div class="val">Lead Designer · Alger</div></div>
+      </div>
+      <div class="float-card float-2">
+        <div class="ic">✅</div>
+        <div><div class="lbl">Candidature acceptée</div><div class="val">+24 cette semaine</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="stats">
+      <div class="stat"><div class="v">15 000+</div><div class="l">Offres actives</div></div>
+      <div class="stat"><div class="v">3 200+</div><div class="l">Entreprises</div></div>
+      <div class="stat"><div class="v">850 000+</div><div class="l">Talents inscrits</div></div>
+      <div class="stat"><div class="v">92%</div><div class="l">Recrutements aboutis</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ESPACES -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Vos espaces</span>
+      <h2>Un espace pensé pour chaque profil</h2>
+      <p>Une expérience sur-mesure pour les candidats, les entreprises et les administrateurs.</p>
+    </div>
+    <div class="grid grid-3">
+      <a class="space-card fade-in" href="emploitic-register.html">
+        <div class="blob" style="background:#1E81F0"></div>
+        <div class="ic" style="background:#EBF3FE;color:#1E81F0">💼</div>
+        <h3>Espace Candidat</h3>
+        <p>Profil, candidatures, alertes et CV en ligne.</p>
+        <div class="more" style="color:#1E81F0">Accéder <span>→</span></div>
+      </a>
+      <a class="space-card fade-in delay-1" href="emploitic-register.html">
+        <div class="blob" style="background:#0E5ECA"></div>
+        <div class="ic" style="background:#EBF3FE;color:#0E5ECA">🏢</div>
+        <h3>Espace Entreprise</h3>
+        <p>Publication d'offres, sourcing et tableau de bord.</p>
+        <div class="more" style="color:#0E5ECA">Accéder <span>→</span></div>
+      </a>
+      <a class="space-card fade-in delay-2" href="emploitic-login.html">
+        <div class="blob" style="background:#0A4394"></div>
+        <div class="ic" style="background:#EBF3FE;color:#0A4394">🛡️</div>
+        <h3>Espace Admin</h3>
+        <p>Modération, abonnements et statistiques globales.</p>
+        <div class="more" style="color:#0A4394">Accéder <span>→</span></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- OFFRES A LA UNE -->
+<section class="section" style="padding-top:0;">
+  <div class="container">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:32px;flex-wrap:wrap;gap:12px;">
+      <div>
+        <span class="eyebrow" style="background:var(--blue-light);box-shadow:none;">Marketplace</span>
+        <h2 style="margin:8px 0 0;font-size:32px;font-weight:800;color:#0A1F3D;">Offres à la une</h2>
+      </div>
+      <a href="emploitic-offres-emploi.html" class="btn btn-ghost">Toutes les offres →</a>
+    </div>
+    <div class="grid" style="grid-template-columns:repeat(3,1fr);" id="jobsHome"></div>
+  </div>
+</section>
+
+<!-- ENTREPRISES -->
+<section class="section section-light">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Entreprises qui recrutent</span>
+      <h2>Ils nous font confiance</h2>
+      <p>Plus de 3 200 entreprises algériennes — du grand groupe à la startup.</p>
+    </div>
+    <div class="grid" style="grid-template-columns:repeat(3,1fr);" id="cosHome"></div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Services RH</span>
+      <h2>Une suite complète pour vos équipes</h2>
+      <p>Du sourcing à l'onboarding — gagnez du temps et recrutez mieux.</p>
+    </div>
+    <div class="grid grid-4">
+      <a class="svc-card fade-in" href="emploitic-services-rh.html"><div class="ic">🎯</div><h3>Sourcing premium</h3><p>Identification et qualification des meilleurs candidats.</p></a>
+      <a class="svc-card fade-in delay-1" href="emploitic-services-rh.html"><div class="ic">📊</div><h3>Évaluations & tests</h3><p>Tests techniques, soft-skills et entretiens vidéo.</p></a>
+      <a class="svc-card fade-in delay-2" href="emploitic-services-rh.html"><div class="ic">🧠</div><h3>Marque employeur</h3><p>Page premium, vidéos et campagnes ciblées.</p></a>
+      <a class="svc-card fade-in delay-3" href="emploitic-services-rh.html"><div class="ic">🛡️</div><h3>Conformité RH</h3><p>Contrats, paie, CNAS — 100% Algérie.</p></a>
+    </div>
+  </div>
+</section>
+
+<!-- TÉMOIGNAGES -->
+<section class="section section-blue">
+  <div class="container">
+    <div class="section-head"><span class="eyebrow">Témoignages</span><h2>Ils parlent de nous</h2></div>
+    <div class="grid grid-3">
+      <div class="testi fade-in">
+        <div class="quot">"</div>
+        <p>En 3 mois, nous avons recruté 12 ingénieurs grâce à Emploitic. Le service sourcing est exceptionnel.</p>
+        <div class="who"><img src="https://i.pravatar.cc/96?img=47" alt="" /><div><strong>Lamia Bensalem</strong><span>DRH — Orange Algérie</span></div></div>
+      </div>
+      <div class="testi fade-in delay-1">
+        <div class="quot">"</div>
+        <p>L'interface est ultra fluide, les candidats de qualité, et l'équipe support très réactive.</p>
+        <div class="who"><img src="https://i.pravatar.cc/96?img=12" alt="" /><div><strong>Karim Belkacem</strong><span>Co-fondateur — TechCorp</span></div></div>
+      </div>
+      <div class="testi fade-in delay-2">
+        <div class="quot">"</div>
+        <p>J'ai trouvé mon poste de Data Lead en 2 semaines. La plateforme est claire et rassurante.</p>
+        <div class="who"><img src="https://i.pravatar.cc/96?img=32" alt="" /><div><strong>Sarah Hadj</strong><span>Data Lead — BankAlg</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section">
+  <div class="container">
+    <div class="cta-banner">
+      <h2>Prêt à transformer votre recrutement ?</h2>
+      <p>Créez votre compte en 2 minutes et publiez votre première offre gratuitement.</p>
+      <div class="row" style="justify-content:center;">
+        <a href="emploitic-register.html" class="btn btn-lg btn-white">Créer un compte gratuit</a>
+        <a href="emploitic-tarifs.html" class="btn btn-lg btn-outline">Voir les tarifs</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+
+<script src="marketing.js"></script>
+<script>
+  const JOBS = [
+    { t:'Développeur Full-Stack React', c:'Sopra HR',    city:'Alger',           type:'CDI',       exp:'Confirmé', em:'🟦' },
+    { t:'Chef de Projet Marketing',    c:'TechCorp',     city:'Oran',            type:'CDI',       exp:'Senior',   em:'🟧' },
+    { t:'Ingénieur Pétrolier Senior',  c:'Groupe Alpha', city:'Hassi Messaoud',  type:'CDD',       exp:'Senior',   em:'🟨' },
+    { t:'Responsable Comptable',       c:'BankAlg',      city:'Alger',           type:'CDI',       exp:'Senior',   em:'🟩' },
+    { t:'UX/UI Designer',              c:'PixelNord',    city:'Constantine',     type:'Freelance', exp:'Confirmé', em:'🟪' },
+    { t:'Data Analyst',                c:'Orange',       city:'Alger',           type:'CDI',       exp:'Junior',   em:'🟥' },
+  ];
+  document.getElementById('jobsHome').innerHTML = JOBS.map((j,i)=>`
+    <a class="job-card reveal delay-${(i%4)+1}" href="emploitic-offres-emploi.html">
+      <div class="row"><div class="logo">${j.em}</div><span class="tag tag-green" style="margin-left:auto;">${j.type}</span></div>
+      <div class="title">${j.t}</div>
+      <div class="comp">${j.c}</div>
+      <div class="meta"><span>📍 ${j.city}</span><strong>${j.exp}</strong></div>
+    </a>`).join('');
+
+  const COS = [
+    { n:'Sopra HR Software', s:'IT & Conseil', j:28 },
+    { n:'Orange Algérie', s:'Télécommunications', j:42 },
+    { n:'BNP Paribas El Djazaïr', s:'Banque', j:17 },
+    { n:'Schlumberger', s:'Énergie', j:24 },
+    { n:'Sonatrach', s:'Pétrole & Gaz', j:56 },
+    { n:'Hyundai Motor Algérie', s:'Automobile', j:11 },
+  ];
+  document.getElementById('cosHome').innerHTML = COS.map((c,i)=>`
+    <a class="job-card fade-in delay-${(i%6)+1}" href="emploitic-entreprises.html" style="display:flex;align-items:center;gap:14px;">
+      <div class="logo" style="width:48px;height:48px;background:var(--grad);color:#fff;font-weight:800;font-size:18px;">${c.n[0]}</div>
+      <div style="flex:1;min-width:0;">
+        <div class="title" style="font-size:14px;">${c.n}</div>
+        <div style="font-size:12px;color:var(--muted);">${c.s}</div>
+      </div>
+      <span class="tag tag-blue">${c.j}</span>
+    </a>`).join('');
+</script>
+</body>
+</html>

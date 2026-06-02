@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Centre d'aide — Emploitic</title>
+<meta name="description" content="Trouvez des réponses à vos questions sur Emploitic : compte, recrutement, marketplace, messagerie." />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="marketing.css" />
+</head>
+<body>
+<div id="site-nav"></div>
+
+<section class="page-hero">
+  <div class="container" style="max-width:760px;text-align:center;position:relative;z-index:1">
+    <span class="eyebrow fade-in">🛟 Centre d'aide</span>
+    <h1 class="fade-in" style="font-size:clamp(32px,5vw,48px);font-weight:800;letter-spacing:-1px;margin:8px 0 12px">Comment pouvons-nous vous aider ?</h1>
+    <p class="sub fade-in delay-1" style="color:var(--text-2);font-size:17px">Parcourez les guides, contactez notre équipe ou explorez la FAQ.</p>
+    <form class="search-bar fade-in delay-2" style="margin:24px auto 0;max-width:560px" onsubmit="event.preventDefault();filter();">
+      <div class="field">🔍 <input id="hq" placeholder="Rechercher : 'publier une offre', 'modifier mon profil'…" /></div>
+      <button class="btn btn-primary">Rechercher</button>
+    </form>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head"><span class="eyebrow">Catégories</span><h2>Trouvez votre réponse</h2></div>
+    <div class="grid grid-3">
+      <a class="space-card reveal" href="#cat-compte"><div class="blob" style="background:var(--blue)"></div><div class="ic" style="background:var(--blue-light)">👤</div><h3>Compte & profil</h3><p>Inscription, vérification, paramètres, sécurité.</p><div class="more">12 articles <span>→</span></div></a>
+      <a class="space-card reveal delay-1" href="#cat-reco"><div class="blob" style="background:#10B981"></div><div class="ic" style="background:#DCFCE7">📢</div><h3>Recrutement & offres</h3><p>Publier, modifier, booster une offre, tri des candidatures.</p><div class="more">18 articles <span>→</span></div></a>
+      <a class="space-card reveal delay-2" href="#cat-market"><div class="blob" style="background:#F59E0B"></div><div class="ic" style="background:#FEF3C7">🛒</div><h3>Marketplace RH</h3><p>Choisir un freelance, lancer une mission, livrables.</p><div class="more">14 articles <span>→</span></div></a>
+      <a class="space-card reveal delay-3" href="#cat-mess"><div class="blob" style="background:var(--blue-bright)"></div><div class="ic" style="background:var(--blue-light)">💬</div><h3>Messagerie</h3><p>Conversations, notifications, modèles de réponse.</p><div class="more">7 articles <span>→</span></div></a>
+      <a class="space-card reveal" href="#cat-secu"><div class="blob" style="background:#EF4444"></div><div class="ic" style="background:#FEE2E2">🔐</div><h3>Sécurité & confidentialité</h3><p>RGPD, signalement, blocage, vérifications.</p><div class="more">9 articles <span>→</span></div></a>
+      <a class="space-card reveal delay-1" href="#cat-tech"><div class="blob" style="background:var(--blue-dark)"></div><div class="ic" style="background:var(--blue-light)">⚙️</div><h3>Aide technique</h3><p>Bugs, navigateurs, mobile, performance.</p><div class="more">6 articles <span>→</span></div></a>
+    </div>
+  </div>
+</section>
+
+<section class="section section-blue">
+  <div class="container" style="max-width:820px">
+    <div class="section-head"><span class="eyebrow">FAQ</span><h2>Questions fréquentes</h2></div>
+    <div id="faqlist"></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="cta-banner">
+      <h2>Vous n'avez pas trouvé votre réponse ?</h2>
+      <p>Notre équipe vous répond en moins de 4h ouvrées.</p>
+      <div class="row"><a href="emploitic-contact.html" class="btn btn-lg btn-white">Contacter le support</a></div>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="marketing.js"></script>
+<script>
+const FAQS = [
+  ['Comment créer mon compte Emploitic ?', "Cliquez sur Inscription, choisissez Entreprise ou Freelance, complétez vos informations. Votre profil est vérifié sous 24h ouvrées."],
+  ['Comment publier une offre d\'emploi ?', "Depuis votre tableau de bord, cliquez sur Publier une offre, renseignez le poste, les missions, le profil recherché et publiez."],
+  ['Comment fonctionne la marketplace RH ?', "Vous décrivez un besoin, recevez des propositions de freelances vérifiés, échangez et lancez la mission directement depuis la plateforme."],
+  ['Mon offre n\'apparaît pas, pourquoi ?', "Elle est en cours de modération (max 2h en jour ouvré). Vérifiez aussi qu\'aucun champ obligatoire ne manque."],
+  ['Comment contacter un candidat ?', "Depuis la fiche candidat, utilisez la messagerie intégrée. Toutes les conversations sont archivées et exportables."],
+  ['Mes données sont-elles protégées ?', "Oui — hébergement Algérie/UE, conformité RGPD, chiffrement TLS et accès journalisés. Voir notre page Confidentialité."],
+];
+function renderFAQ(filter=''){
+  const list = FAQS.filter(([q,a]) => !filter || (q+a).toLowerCase().includes(filter.toLowerCase()));
+  document.getElementById('faqlist').innerHTML = list.map(([q,a],i)=>`
+    <div class="faq-item ${i===0?'open':''}"><button class="faq-q">${q}<span class="plus">+</span></button><div class="faq-a">${a}</div></div>`).join('');
+  document.querySelectorAll('.faq-item').forEach(it => it.querySelector('.faq-q').addEventListener('click',()=>it.classList.toggle('open')));
+}
+function filter(){ renderFAQ(document.getElementById('hq').value); }
+renderFAQ();
+</script>
+</body>
+</html>

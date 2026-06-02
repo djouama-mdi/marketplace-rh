@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Connexion — Emploitic</title>
+<meta name="description" content="Connectez-vous à votre espace Emploitic : marketplace B2B RH n°1 en Algérie." />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="marketing.css" />
+</head>
+<body>
+<div class="auth">
+  <aside class="auth-aside">
+    <a href="emploitic-accueil.html" class="logo">
+      <span class="logo-mark">e</span>
+      <span class="logo-text">emploitic<span>.</span></span>
+    </a>
+    <div>
+      <h2>Bienvenue sur la marketplace B2B RH n°1 en Algérie.</h2>
+      <p class="lead">Connectez-vous pour gérer vos offres, échanger avec les talents et piloter votre marque employeur.</p>
+      <ul>
+        <li><span class="ck">✓</span> Plus de 15 000 offres actives</li>
+        <li><span class="ck">✓</span> 3 200+ entreprises vérifiées</li>
+        <li><span class="ck">✓</span> Messagerie sécurisée intégrée</li>
+        <li><span class="ck">✓</span> Tableau de bord temps réel</li>
+      </ul>
+    </div>
+    <div class="quote">
+      <p>« Emploitic nous a permis de structurer notre recrutement en 30 jours. Un partenaire fiable, transparent et humain. »</p>
+      <div class="who"><div class="av">AC</div><div><b>Amina Cherif</b><div style="opacity:.85">DRH · Cevital Industries</div></div></div>
+    </div>
+  </aside>
+
+  <div class="auth-form-wrap">
+    <form class="auth-form fade-in" id="loginForm" novalidate>
+      <div style="margin-bottom:20px">
+        <a href="emploitic-accueil.html" class="logo" style="margin-bottom:10px">
+          <span class="logo-mark">e</span><span class="logo-text">emploitic<span>.</span></span>
+        </a>
+      </div>
+      <h1>Connexion</h1>
+      <p class="sub">Heureux de vous revoir 👋</p>
+
+      <div class="group">
+        <label>Email professionnel</label>
+        <input type="email" name="email" placeholder="vous@entreprise.dz" required />
+      </div>
+      <div class="group">
+        <label>Mot de passe</label>
+        <input type="password" name="password" placeholder="••••••••" required minlength="6" />
+      </div>
+
+      <div class="between">
+        <label style="display:flex;align-items:center;gap:8px;text-transform:none;letter-spacing:0;font-weight:500;margin:0">
+          <input type="checkbox" style="accent-color:var(--blue);width:16px;height:16px"> Se souvenir
+        </label>
+        <a href="emploitic-contact.html">Mot de passe oublié ?</a>
+      </div>
+
+      <div class="err" id="err"></div>
+      <button type="submit" class="btn btn-lg btn-primary" style="width:100%;margin-top:18px">Se connecter</button>
+
+      <div class="divider">ou continuer avec</div>
+      <div class="socials">
+        <button type="button" class="btn btn-outline">🟢 Google</button>
+        <button type="button" class="btn btn-outline">🔵 LinkedIn</button>
+      </div>
+
+      <p style="text-align:center;margin:22px 0 0;color:var(--muted);font-size:14px">
+        Nouveau sur Emploitic ?
+        <a href="emploitic-register.html" style="color:var(--blue);font-weight:700">Créer un compte gratuit</a>
+      </p>
+    </form>
+  </div>
+</div>
+
+<script>
+document.getElementById('loginForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const f = e.target;
+  const err = document.getElementById('err');
+  if (!f.email.value || !f.password.value) { err.textContent = 'Tous les champs sont requis.'; err.classList.add('show'); return; }
+  err.classList.remove('show');
+  const btn = f.querySelector('button[type=submit]');
+  btn.textContent = 'Connexion…'; btn.disabled = true;
+  setTimeout(() => { location.href = 'choixDash.html'; }, 700);
+});
+</script>
+</body>
+</html>
