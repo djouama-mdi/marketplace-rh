@@ -14,35 +14,26 @@
 <script src="app.js"></script>
 <script>
 renderLayout('offers.html');
-let filter = 'Toutes';
-
-const filterMap = {
-  'Toutes':      o => true,
-  'Web':         o => o.domain?.toLowerCase().includes('web'),
-  'Remote':      o => o.mode?.toLowerCase().includes('remote'),
-  'Hybride':     o => o.mode?.toLowerCase().includes('hybride'),
-  'Court terme': o => o.duration?.toLowerCase().includes('mois') && parseInt(o.duration) <= 3,
-};
-
 function render() {
-  const filters = Object.keys(filterMap);
-  const list = state.offers.filter(filterMap[filter] || (() => true));
-
   document.getElementById('page-content').innerHTML = `
     <main class="page">
       <div class="page-header">
         <div>
           <h1 class="page-title">Offres marketplace</h1>
-          <div class="page-sub">${list.length} offre${list.length !== 1 ? 's' : ''} correspondant à votre spécialité — emploitic est une mise en relation : aucun prix n'est affiché.</div>
+          <div class="page-sub">${state.offers.length} offres correspondant à votre spécialité — emploitic est une mise en relation : aucun prix n'est affiché.</div>
         </div>
       </div>
 
       <div class="filters">
-        ${filters.map(f => `<button class="chip ${f === filter ? 'active' : ''}" onclick="setFilter('${f}')">${f}</button>`).join('')}
+        <button class="chip active">Toutes</button>
+        <button class="chip">Web</button>
+        <button class="chip">Remote</button>
+        <button class="chip">Hybride</button>
+        <button class="chip">Court terme</button>
       </div>
 
       <div class="card-row grid-2">
-        ${list.length ? list.map(o => `
+        ${state.offers.map(o => `
           <div class="card">
             <div class="flex between center" style="margin-bottom:6px">
               <span class="text-muted text-sm">${o.company}</span>
@@ -60,13 +51,11 @@ function render() {
               <button class="btn btn-outline btn-sm" onclick="toast('Offre enregistrée')">Enregistrer</button>
             </div>
           </div>
-        `).join('') : `<p class="text-muted" style="grid-column:1/-1;padding:24px 0">Aucune offre pour ce filtre.</p>`}
+        `).join('')}
       </div>
     </main>
   `;
 }
-
-window.setFilter = (f) => { filter = f; render(); };
 render();
 </script>
 </body>
